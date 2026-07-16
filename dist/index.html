@@ -459,9 +459,6 @@ a.tech:hover{background:var(--paper-2)}
   background:var(--kaart-b);border-radius:var(--r-kaart);box-shadow:var(--shadow-soft)}
 .hb-fig .fc-back{border-radius:var(--r-kaart);align-items:center;text-align:center;padding:.8rem .7rem}
 .hb-fig img{width:100%;height:auto;display:block}
-.hb-fig .fc-hint{margin-top:0;padding-top:.55rem;color:var(--ink-faint);text-align:center;
-  font-size:.58rem;letter-spacing:.12em}
-.hb-fig:hover .fc-hint,.hb-fig:focus-visible .fc-hint{letter-spacing:.16em}
 /* Op een telefoon stopt de cartoon met zweven en gaat ze gecentreerd onder de tekst staan,
    maar bewust bescheiden: van rand tot rand ging ze het hoofdstuk domineren in plaats van
    het te verluchten. Het is een terzijde, geen plaat. */
@@ -469,7 +466,6 @@ a.tech:hover{background:var(--paper-2)}
   /* display:block is nodig: een <button> is inline-block, en dan doet margin:auto niets.
      Op desktop verbergt float:right dat, want float blokt het element al. */
   .hb-fig{float:none;display:block;width:min(56%,180px);margin:1.2rem auto}
-  .hb-fig .fc-hint{font-size:.56rem}
 }
 .hb-chapter::after{content:"";display:block;clear:both}
 
@@ -987,9 +983,9 @@ function viewAanpak(){
     + '<h3 class="hb-titel">' + c.titel + '</h3>'
     + (c.citaat ? '<blockquote class="hb-citaat">' + c.citaat.map(r => '<p>' + r + '</p>').join('') + '</blockquote>' : '')
     + (c.beeld ? (function(){ var m = BEELDMATEN[c.beeld] || [];
-      return '<button class="flipcard hb-fig" type="button" aria-label="Draai de cartoon om, voor wie ze voorstelt"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
+      return '<button class="flipcard hb-fig" type="button" aria-label="Draai de cartoon om"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
         + (m[0] ? ' width="' + m[0] + '" height="' + m[1] + '"' : '')
-        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-hint">wie is dit? &#8635;</span></div><div class="fc-back"><span class="fc-lab">De cartoon</span><span class="fc-src">De Meedenkende Mechelaar</span></div></div></button>'; })() : '')
+        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"></div><div class="fc-back"><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
