@@ -145,6 +145,44 @@ def strip_shortcodes(s):
     return _SHORTCODE_RX.sub(" ", s)
 
 
+# De WordPress-insluitingen van tweets, YouTube en Facebook bestaan op dit statische archief
+# niet: hun URL bleef als kale, onaanklikbare tekst achter. 185 keer, in 68 stukken, en juist
+# in de live-verslagen van de gemeenteraad, die de lezer zelf vragen om "door te klikken op een
+# tweet". We maken er gewone links van.
+#
+# Dit zet GEEN cookies en breekt de belofte van de site niet: een <a> laadt niets in, er komt
+# pas iets van Twitter of YouTube in beeld wanneer de bezoeker zelf klikt en dus zelf naar daar
+# gaat. Dat is precies het verschil met een iframe, dat die diensten ONGEVRAAGD in de pagina
+# trekt. De zichtbare tekst blijft de URL zelf: enkel de klik komt erbij.
+_BESCHERMD_RX = re.compile(r"(<a\b[^>]*>.*?</a>|<[^>]+>)", re.DOTALL | re.IGNORECASE)
+_KALE_URL_RX = re.compile(r"https?://[^\s<>\"']+")
+
+
+def _linkify_tekst(s):
+    def _mk(m):
+        url = m.group(0)
+        staart = ""
+        # Leestekens horen bij de zin, niet bij de URL.
+        while url and url[-1] in ".,;:!?)]":
+            staart = url[-1] + staart
+            url = url[:-1]
+        veilig = url.replace("&", "&amp;").replace('"', "&quot;")
+        return '<a href="%s" target="_blank" rel="noopener">%s</a>%s' % (veilig, veilig, staart)
+
+    return _KALE_URL_RX.sub(_mk, s)
+
+
+def linkify_kale_urls(h):
+    """Maakt kale URL's klikbaar, maar raakt niets aan wat al een link of een tag is."""
+    uit, pos = [], 0
+    for m in _BESCHERMD_RX.finditer(h):
+        uit.append(_linkify_tekst(h[pos:m.start()]))
+        uit.append(m.group(0))          # bestaande <a>-blokken en tags: onaangeroerd
+        pos = m.end()
+    uit.append(_linkify_tekst(h[pos:]))
+    return "".join(uit)
+
+
 def strip_html(s):
     # Eerst de shortcodes: anders blijft [caption id="..." width="4096"] als tekst in de
     # excerpt staan, want strip_html kent enkel <tags>.
@@ -590,7 +628,9 @@ def main():
         s = m.group(2).lower()
         return ('href="#/artikel/%s"' % s) if s in slug2id else m.group(0)
     for p in posts:
-        p["html"] = INTERN_A_RX.sub(_intern, p["html"])
+        # Eerst linkify: een kale URL naar een eigen artikel wordt zo een link, en daarna zet
+        # INTERN_A_RX die meteen om naar een archief-route in plaats van naar de dode oude site.
+        p["html"] = INTERN_A_RX.sub(_intern, linkify_kale_urls(p["html"]))
 
     # ---- beste van: uit de links in de jaaroverzichten zelf ----
     # Niet elke interne link in een jaaroverzicht is een keuze: de lopende tekst verwijst
