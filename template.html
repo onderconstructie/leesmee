@@ -449,7 +449,7 @@ a.tech:hover{background:var(--paper-2)}
    kaartje: dat is wat lichter dan de grond, wat het roze lijnwerk goed doet, en het past bij
    dit hoofdstuk, dat over cartoons gaat. Het vlak is --kaart-b, NIET var(--ink): dat is in de
    dag-editie de warme inkt zelf.
-   Ze draait om, op dezelfde .flipcard als de citaten van 'In de pers', met een verschil: daar
+   Ze draait om, op dezelfde .flipcard als de citaten van 'Wat anderen zeiden', met een verschil: daar
    staat de voorkant absoluut en dwingt een vaste hoogte van 190px. Hier blijft de voorkant IN
    DE FLOW, zodat de kaart zich naar de tekening voegt (die is 619x708, geen kaartformaat) en
    de achterkant, die wel absoluut is, precies even groot wordt. */
@@ -948,7 +948,7 @@ const HANDBOEK = [
       stappen:[`Kies een zwaar dossier dat lezers anders links laten liggen.`,`Voeg een scherpe cartoon, een lichtvoetige animatie of een verrassend detailbeeld toe.`,`Publiceer het beeld ook los op sociale media: een goede cartoon reist verder dan het artikel.`],
       beeld:'beelden/kuifje.png',
       casussen:[{ titel:'op audiëntie', tekst:`Het magazine viel van de perslijst, en een gesprek met de stadssecretaris moest uitmaken of het wel journalistiek bedreef. As Gau Paust maakte daar geen klaagstuk van maar tekende het wedervaren uit als striportage: de prints van de Raad voor de Journalistiek die bijna nonchalant op de salontafel lagen, de vraag of hij soms schroom had omdat hij niet op de persbanken zat maar tussen het publiek, en de bedenking dat je je als burger op de openbaarheidswetgeving beroept, niet als journalist. Merci Hergé. De stadssecretaris beloofde hem weer op de perslijst, en de striportage verscheen ook op Apache.` }],
-      stukken:['op-audientie'],
+      stukken:['op-audientie','speelgoedmuseum-overweegt-verhuis-naar-stadhuis','hier-flitst-men-niet'],
       meerLink:{ href:'#/thema/faits-divers', tekst:'Alle cartoons en couleur locale' } },
     { kicker:'Techniek 06', titel:'Bouw je eigen <em>gereedschap</em>', kort:`Zelf data oogsten en er, ook met AI, doorzoekbare tools van maken.`,
       lead:`Zelf gereedschap bouwen was ook waar het magazine het meest experimenteerde: een pijler op zich, waar het nieuwe vormen en tools uitprobeerde en leerde met vallen en opstaan. As Gau Paust oogstte data zelf, door pdf's en webpagina's uit te lezen. Een spreadsheet met alle raadsvragen van zes jaar bracht zo een opvallend zwijgzame groep binnen de meerderheid aan het licht. Vandaag lukt zoiets steeds vaker met AI, zonder programmeerkennis: uit een loodzware Excel maak je een doorzoekbaar dashboard. Begin dan bij een vraag, niet bij een grafiek. Deze site en <a href="https://denkmee.asgaupaust.be">Denk mee met Mechelen</a> zijn zelf zulke tools.`,
@@ -956,8 +956,8 @@ const HANDBOEK = [
       casussen:[{ titel:'met dank aan chatGPT', tekst:`Een schriftelijke vraag buiten de gemeenteraad, van Vooruit-fractieleider Thijs Verbeurgt, deed de oud-schepen van Vastgoed de lijst van de percelen van stad en OCMW prijsgeven, maar dan als platte pdf. De redactie vond er 1.941 percelen in terug en kon er voorlopig 1.886 identificeren: enkele codes bevatten dubbels, andere leken niet te bestaan na een check via de perceel-informatie uit het Grootschalig Referentiebestand, verkregen bij Digitaal Vlaanderen. Die informatie leverde ook de geografische punten die nodig waren om de afzonderlijke gronden op een kaartje zichtbaar te maken. Uiteindelijk was het stagiair AGPbot die, voor de verandering, zelf chatGPT inzette, en wel als leverancier van Python-code: onder meer om de opgehaalde json-bestanden om te zetten naar kml-bestanden, zodat de percelen in Google Maps verschenen. Voortaan kon elke Maneblusser inzoomen en controleren waar de stad of het OCMW een stuk grond of gebouw in de buurt bezat, met de vraag om vreemde dingen te melden. De redactie telde plots een wel heel erg vingervlugge datajournalist in haar rangen.` }],
       stukken:['gemeenteraad-live-27-02-onze-stagiair-bot-maakte-de-voorbeschouwing','dashboard-zet-spotlicht-op-mechelse-gemeenteraad','stadslijst-fractieleider-calvo-skipt-bijna-9-op-de-10-raadscommissies','ontdek-het-patrimonium-van-onze-stad','waartoe-een-dashboard-leiden-kan','en-wat-gebeurde-er-met-jan'],
       meerLink:{ href:'https://denkmee.asgaupaust.be/techniek/', tekst:'Hoe zo\'n tool technisch in elkaar zit' } },
-    { kicker:'In de pers', titel:'Wat anderen schreven',
-      lead:`Ook andere redacties hadden een mening over het magazine:`,
+    { kicker:'Over het magazine', titel:'Wat anderen zeiden',
+      lead:`Ook andere media, journalistieke verenigingen of organisaties hadden een mening over het magazine:`,
       quotes:[
         ['Een uitzondering die het verschil maakt', 'Apache'],
         ['Uit liefde voor het vak en de journalistiek', 'Het Laatste Nieuws'],
@@ -986,7 +986,7 @@ function viewAanpak(){
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
-    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-label="Draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint">wie schreef dit? &#8635;</span></div><div class="fc-back"><span class="fc-lab">In de pers</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
+    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-label="Draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint">wie schreef dit? &#8635;</span></div><div class="fc-back"><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
     + (c.actie ? '<div class="hb-actie"><b>Actie</b>' + c.actie + '</div>' : '')
     + (c.casussen ? c.casussen.map(cs => '<div class="hb-casus"><div class="lab">Casus, ' + cs.titel + '</div><p>' + cs.tekst + '</p></div>').join('') : '')
     + (c.meerLink ? '<a class="doslink" href="' + c.meerLink.href + '">' + c.meerLink.tekst + ' &#8594;</a>' : '')
