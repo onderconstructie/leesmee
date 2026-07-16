@@ -466,14 +466,67 @@ a.tech:hover{background:var(--paper-2)}
 .bv-block .bv-intro{font-style:italic;color:var(--ink-2);max-width:64ch;border-left:2px solid var(--pink);
   padding-left:1rem;margin:.2rem 0 1.3rem;line-height:1.55}
 
-/* footer */
-footer{border-top:1px solid var(--line);padding:2.4rem 0 3rem;margin-top:1rem}
-.foot{display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap}
-.foot .mk{width:50px;height:50px;flex:none}
-.foot p{margin:.1rem 0;font-size:.88rem;color:var(--ink-2);max-width:56ch}
-.foot a{color:var(--pink-text);border-bottom:1px solid var(--pink)}
-.foot .fam{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink-faint);margin-top:.6rem}
+/* ================================================================
+   HET COLOFON — hetzelfde footer-systeem op portaal, Denk mee en Lees mee.
+   Eén ritme-eenheid (1,5rem) stuurt alles: regelhoogte, gat, de maat van
+   het merkteken en de padding zijn er veelvouden van. Het teken is exact
+   twee tekstregels hoog en hangt aan de KAPLIJN van de eerste regel, niet
+   aan de regelbox: zo loopt het van kaplijn 1 tot kaplijn 3.
+   Enkel dit alias-blok verschilt per site (de tokennamen lopen uiteen).
+   ================================================================ */
+.colofon{
+  --c-ink:var(--ink); --c-tekst:var(--ink-2); --c-stil:var(--ink-faint);
+  --c-lijn:var(--line); --c-pink:var(--pink); --c-pink-tekst:var(--pink-text);
+  --c-pink-deep:var(--pink-deep); --c-pink-zacht:var(--pink-soft);
+}
+.colofon{
+  --co-r:1.5rem;
+  --co-teken:calc(var(--co-r) * 2);   /* 48px = twee regels */
+  /* Gemeten uit geist-var.woff2 (cap .710): bij .95rem in een regelbox van
+     24px ligt de kaplijn op 6,6px. Dit is de enige natikwaarde. */
+  --co-kap:.41rem;
+  border-top:1px solid var(--c-lijn);
+  padding-block:calc(var(--co-r) * 2) calc(var(--co-r) * 3);
+  margin-top:1rem;
+}
+.co-shell{
+  max-width:var(--max); margin-inline:auto; padding-inline:var(--pad-x);
+  display:flex; align-items:flex-start; gap:var(--co-r);
+}
+.co-mark{
+  flex:none; display:block;
+  width:var(--co-teken); height:var(--co-teken);
+  margin-top:var(--co-kap);
+  border-radius:50%; transition:box-shadow .16s;
+}
+.co-mark > *{ display:block; width:100%; height:100%; }
+/* De mug-png op het portaal is een VOLLE schijf; de toren-svg tekent r=212 in
+   een viewBox van 480, dus 88,33%. Daar zet een inzet op de img dat gelijk. */
+.co-mark img{ width:88.33%; height:88.33%; margin:5.833%; }
+.co-mark:hover{ box-shadow:0 0 0 4px var(--c-pink-zacht); }
+.co-mark:focus-visible{ outline:2px solid var(--c-pink); outline-offset:3px; }
+.co-body{ max-width:33rem; }     /* rem, niet ch: 'ch' meet de brede nul van Geist */
+.co-zin{
+  margin:0; font-size:.95rem; line-height:var(--co-r);
+  color:var(--c-tekst); text-wrap:pretty;
+}
+.co-zin strong{ font-weight:600; color:var(--c-ink); }
+/* Het merk dat hier spreekt: mono is in de familie de stem van de merknaam.
+   .96em zet de x-hoogte van mono (550) gelijk aan die van Geist (530). */
+.co-zin .co-naam{
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-weight:500; font-size:.96em; letter-spacing:-.015em;
+  color:var(--c-ink); white-space:nowrap;
+}
+.co-zin .co-naam em{ font-style:italic; color:var(--c-pink-tekst); }
+.co-fam{
+  margin:var(--co-r) 0 0;
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.66rem; line-height:var(--co-r); letter-spacing:.1em;
+  text-transform:uppercase; color:var(--c-stil);
+}
+.co-fam a{ color:var(--c-pink-tekst); border-bottom:1px solid var(--c-pink); }
+.co-fam a:hover{ color:var(--c-pink-deep); border-bottom-color:var(--c-pink-deep); }
 
 .totop{position:fixed;right:1.1rem;bottom:1.1rem;width:42px;height:42px;border:1px solid var(--line-strong);
   background:var(--paper);color:var(--ink);cursor:pointer;display:none;align-items:center;justify-content:center;
@@ -554,11 +607,11 @@ footer{border-top:1px solid var(--line);padding:2.4rem 0 3rem;margin-top:1rem}
 
 <main id="app"></main>
 
-<footer><div class="shell foot">
-  <span class="mk"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-label="Sint-Romboutstoren"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></span>
-  <div>
-    <p><strong>Lees mee met Mechelen</strong> is het leesarchief van <strong>As Gau Paust</strong>, zeven jaar hyperlokale journalistiek over Mechelen (2016 tot 2023).</p>
-    <div class="fam">Onderdeel van <a href="https://asgaupaust.be">asgaupaust.be</a></div>
+<footer class="colofon"><div class="co-shell">
+  <a class="co-mark" href="#/" aria-label="Lees mee met Mechelen, naar de startpagina"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></a>
+  <div class="co-body">
+    <p class="co-zin"><strong class="co-naam">Lees mee <em>met Mechelen</em></strong> is het leesarchief van <strong>As Gau Paust</strong>, zeven jaar hyperlokale journalistiek over Mechelen (2016 tot 2023).</p>
+    <p class="co-fam">Onderdeel van <a href="https://asgaupaust.be">asgaupaust.be</a></p>
   </div>
 </div></footer>
 
