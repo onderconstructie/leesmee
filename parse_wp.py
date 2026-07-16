@@ -627,10 +627,37 @@ def main():
     def _intern(m):
         s = m.group(2).lower()
         return ('href="#/artikel/%s"' % s) if s in slug2id else m.group(0)
+
+    # 1c) Wat daarna nog naar het OUDE asgaupaust.be wijst, is sinds het portaal daar staat
+    #     een 404. Nagemeten op 16/07/2026 over alle 38 doelen die in de artikels voorkomen:
+    #       29 leven nog op asgaupaust.wordpress.com     -> daarheen
+    #        1 is opgevolgd door een eigen site          -> /denkmee/ -> denkmee.asgaupaust.be
+    #        4 zijn overal weg, maar staan in het Internet Archive -> daarheen
+    #     Artikel-URL's zijn hierboven al archief-routes geworden, dus die komen hier niet meer.
+    OPGEVOLGD = {"/denkmee/": "https://denkmee.asgaupaust.be/"}
+    ENKEL_IN_ARCHIEF = ("/actief-burgerschap/", "/steun-jij-ons-ook/", "/kantlijn/", "/tag/agenda/")
+    OUD_HOST_RX = re.compile(r'href="https?://(?:www\.)?asgaupaust\.be(/[^"]*)?"', re.IGNORECASE)
+    # Een tikfout uit de oude doos: "asgaupaust.be/steun-jij-ons-ook/" werd ooit zonder protocol
+    # getypt, waardoor WordPress er een pad ONDER het artikel van maakte. 20 keer overgenomen.
+    KAPOT_RELATIEF_RX = re.compile(r"^/\d{4}/\d{2}/\d{2}/[^/]+/asgaupaust\.be(/.*)$", re.IGNORECASE)
+
+    def _oud_pad(m):
+        pad = m.group(1) or "/"
+        herstel = KAPOT_RELATIEF_RX.match(pad)
+        if herstel:
+            pad = herstel.group(1)
+        kaal = pad.split("#")[0].split("?")[0]
+        if kaal in OPGEVOLGD:
+            return 'href="%s"' % OPGEVOLGD[kaal]
+        if kaal in ENKEL_IN_ARCHIEF:
+            return 'href="https://web.archive.org/web/2022/https://asgaupaust.be%s"' % pad
+        return 'href="https://asgaupaust.wordpress.com%s"' % pad
+
     for p in posts:
         # Eerst linkify: een kale URL naar een eigen artikel wordt zo een link, en daarna zet
         # INTERN_A_RX die meteen om naar een archief-route in plaats van naar de dode oude site.
-        p["html"] = INTERN_A_RX.sub(_intern, linkify_kale_urls(p["html"]))
+        # Pas daarna de oude paden: zo kapen we geen artikel-URL's die al een route werden.
+        p["html"] = OUD_HOST_RX.sub(_oud_pad, INTERN_A_RX.sub(_intern, linkify_kale_urls(p["html"])))
 
     # ---- beste van: uit de links in de jaaroverzichten zelf ----
     # Niet elke interne link in een jaaroverzicht is een keuze: de lopende tekst verwijst
