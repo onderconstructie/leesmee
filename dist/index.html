@@ -459,6 +459,21 @@ a.tech:hover{background:var(--paper-2)}
   background:var(--kaart-b);border-radius:var(--r-kaart);box-shadow:var(--shadow-soft)}
 .hb-fig .fc-back{border-radius:var(--r-kaart);align-items:center;text-align:center;padding:.8rem .7rem}
 .hb-fig img{width:100%;height:auto;display:block}
+/* Het enige teken dat de kaart omdraait. Rechtsboven, want dat is de enige hoek die de
+   tekening vrijlaat: nagemeten op kuifje.png is die 0,0% bedekt, tegen 33,6% rechtsonder.
+   Bewust geen tekst: het bijschrift moest weg, de uitnodiging niet. */
+.hb-fig .fc-draai{
+  position:absolute; top:.95rem; right:.85rem;
+  width:24px; height:24px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--paper); color:var(--ink-faint);
+  border:1px solid var(--line-strong);
+  font-size:.8rem; line-height:1;
+  transition:background .15s, color .15s, border-color .15s, transform .25s;
+}
+.hb-fig:hover .fc-draai,.hb-fig:focus-visible .fc-draai{
+  background:var(--pink); color:#fff; border-color:var(--pink); transform:rotate(-90deg);
+}
 /* Op een telefoon stopt de cartoon met zweven en gaat ze gecentreerd onder de tekst staan,
    maar bewust bescheiden: van rand tot rand ging ze het hoofdstuk domineren in plaats van
    het te verluchten. Het is een terzijde, geen plaat. */
@@ -985,7 +1000,7 @@ function viewAanpak(){
     + (c.beeld ? (function(){ var m = BEELDMATEN[c.beeld] || [];
       return '<button class="flipcard hb-fig" type="button" aria-label="Draai de cartoon om"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
         + (m[0] ? ' width="' + m[0] + '" height="' + m[1] + '"' : '')
-        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"></div><div class="fc-back"><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
+        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-draai" aria-hidden="true">&#8635;</span></div><div class="fc-back"><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
