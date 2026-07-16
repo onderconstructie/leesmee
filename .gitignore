@@ -1,0 +1,21 @@
+# --- lees mee (het archief van As Gau Paust) ---
+# De gepubliceerde site is de map dist/ (index.html + fonts + beelden). Die wordt
+# WEL meegecommit. leesmee_data.json ook: zo kan build.py herbouwen zonder de export.
+
+# Python
+__pycache__/
+*.pyc
+
+# De rauwe WordPress-export NIET publiceren: ze bevat contactformulier-inzendingen
+# en betaalorders. Enkel de gepubliceerde artikels (via leesmee_data.json) horen publiek.
+export/
+
+# Bron-afbeeldingen (enkel de map in de repo-root): opnieuw op te halen met
+# fetch_beelden.py. De gepubliceerde kopie in dist/beelden/ wordt WEL meegecommit,
+# daarom een leading slash: dit negeert alleen /beelden/, niet dist/beelden/.
+/beelden/
+
+# Lokale tooling / scratch
+.claude/
+_*.py
+*.bak
