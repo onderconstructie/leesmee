@@ -550,10 +550,14 @@ def main():
 
     # ---- beste van: uit de links in de jaaroverzichten zelf ----
     # Niet elke interne link in een jaaroverzicht is een keuze: de lopende tekst verwijst
-    # ook zijdelings naar andere stukken. Twee signalen uit de bron zelf bakenen de lijst af:
-    #   1. wijst het overzicht zijn keuzes aan met een "lees het (volledige) artikel"-link,
+    # ook zijdelings naar andere stukken. Drie signalen uit de bron zelf bakenen de lijst af:
+    #   1. een jaaroverzicht licht stukken UIT DAT JAAR uit, dus een link naar een ouder stuk
+    #      is een terzijde en geen keuze. Zonder deze regel stonden er in "beste van 2022" een
+    #      stuk uit 2018 en een uit 2019: het overzicht verwees ernaar in een zin die ze zelfs
+    #      uitdrukkelijk "buiten beschouwing" liet;
+    #   2. wijst het overzicht zijn keuzes aan met een "lees het (volledige) artikel"-link,
     #      dan zijn enkel die links de lijst;
-    #   2. noemt de titel zelf een aantal ("Vijf verhalen..."), dan telt de lijst er zoveel.
+    #   3. noemt de titel zelf een aantal ("Vijf verhalen..."), dan telt de lijst er zoveel.
     LINK_RX = re.compile(r"asgaupaust\.(?:be|wordpress\.com)/\d{4}/\d{2}/\d{2}/([a-z0-9\-]+)/?", re.IGNORECASE)
     ANCHOR_RX = re.compile(
         r'<a\b[^>]*href=(["\'])https?://asgaupaust\.(?:be|wordpress\.com)/\d{4}/\d{2}/\d{2}/([a-z0-9\-]+)/?[^"\']*\1[^>]*>(.*?)</a>',
@@ -573,16 +577,22 @@ def main():
 
     beste_van = []
     overzicht_ids = {pid for _, pid, _, _ in year_overviews}
+    id2jaar = {p["id"]: str(p.get("datum", ""))[:4] for p in posts}
+
+    def _telt_mee(tid, pid, jaar):
+        return (tid and tid != pid and tid not in overzicht_ids
+                and id2jaar.get(tid) == str(jaar))
+
     for jaar, pid, raw, titel in year_overviews:
         kandidaten = []  # (post_id, is_leeslink)
         for mm in ANCHOR_RX.finditer(raw):
             tid = slug2id.get(mm.group(2).lower())
-            if tid and tid != pid and tid not in overzicht_ids:
+            if _telt_mee(tid, pid, jaar):
                 kandidaten.append((tid, bool(LEES_RX.search(strip_html(mm.group(3))))))
         if not kandidaten:  # vangnet: kale URL's zonder <a>-tag
             for mm in LINK_RX.finditer(raw):
                 tid = slug2id.get(mm.group(1).lower())
-                if tid and tid != pid and tid not in overzicht_ids:
+                if _telt_mee(tid, pid, jaar):
                     kandidaten.append((tid, False))
         if any(lees for _, lees in kandidaten):
             kandidaten = [k for k in kandidaten if k[1]]
