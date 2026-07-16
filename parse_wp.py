@@ -131,10 +131,54 @@ def txt(node, path):
     return e.text if e is not None and e.text is not None else ""
 
 
+# WordPress-shortcodes die de export als kale tekst achterlaat. We noemen ze bij NAAM en
+# vangen dus niet elk blokje tussen rechte haken: "[UPDATE]" hoort bij een titel en moet
+# blijven staan. Bij [caption ...]tekst[/caption] verdwijnt enkel het omhulsel; het bijschrift
+# zelf is gewone tekst en blijft.
+_SHORTCODE_RX = re.compile(
+    r"\[/?(?:caption|gallery|embed|video|audio|playlist|googleapps|googlemaps|youtube|vimeo|"
+    r"soundcloud|wpvideo|slideshow|contact-form|contact-field)\b[^\]]*/?\]",
+    re.IGNORECASE)
+
+
+def strip_shortcodes(s):
+    return _SHORTCODE_RX.sub(" ", s)
+
+
 def strip_html(s):
+    # Eerst de shortcodes: anders blijft [caption id="..." width="4096"] als tekst in de
+    # excerpt staan, want strip_html kent enkel <tags>.
+    s = strip_shortcodes(s)
     s = re.sub(r"<[^>]+>", " ", s)
     s = htmllib.unescape(s)
     return re.sub(r"\s+", " ", s).strip()
+
+
+# De WordPress-plugins die Google Spreadsheets en Google Maps insloten, bestaan op dit
+# statische archief niet. Zonder ingreep blijft hun shortcode als kale tekst in het artikel
+# staan EN is het cijfermateriaal onbereikbaar: dat is het ergste van twee werelden, want juist
+# bij deze stukken (subsidiedatabanken, agendapunten, het patrimonium) is de tabel het bewijs.
+# We maken er een gewone link van, zodat de data bij het stuk blijft horen.
+_GOOGLEMAPS_RX = re.compile(r"\[googlemaps\s+(https?://[^\s\]]+)[^\]]*\]", re.IGNORECASE)
+_GOOGLEAPPS_RX = re.compile(
+    r'\[googleapps\s+domain="([^"]+)"\s+dir="([^"]+)"(?:[^\]]*?query="([^"]*)")?[^\]]*\]',
+    re.IGNORECASE)
+
+
+def embeds_naar_links(s):
+    def _maps(m):
+        return ('<p class="oud-embed"><a href="%s" target="_blank" rel="noopener">'
+                'Bekijk de kaart bij dit artikel &#8594;</a></p>' % htmllib.unescape(m.group(1)))
+
+    def _apps(m):
+        domein, pad, query = m.group(1), htmllib.unescape(m.group(2)), htmllib.unescape(m.group(3) or "")
+        url = "https://%s.google.com/%s" % (domein, pad.lstrip("/"))
+        if query:
+            url += "?" + query
+        return ('<p class="oud-embed"><a href="%s" target="_blank" rel="noopener">'
+                'Bekijk de tabel bij dit artikel &#8594;</a></p>' % url)
+
+    return _GOOGLEAPPS_RX.sub(_apps, _GOOGLEMAPS_RX.sub(_maps, s))
 
 
 _JETPACK_WIDGET_RX = re.compile(
@@ -486,7 +530,7 @@ def main():
             elif c.get("domain") == "post_tag":
                 tags.append({"naam": naam, "slug": nn})
 
-        raw = strip_jetpack_widgets(txt(it, "content:encoded"))
+        raw = embeds_naar_links(strip_jetpack_widgets(txt(it, "content:encoded")))
         html_clean = clean_content(raw, inline_map)
         woorden = len(strip_html(raw).split())
         leestijd = max(1, round(woorden / 200))
