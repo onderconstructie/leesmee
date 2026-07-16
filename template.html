@@ -643,9 +643,14 @@ function viewHome(){
     ['kookboek','De aanpak','Zes technieken om een stad transparant te maken, elk met de stukken waarin het gebeurde.','#/aanpak','het kookboek','rader'],
     ['volledig &amp; doorzoekbaar','Lezen','Het complete archief, filterbaar op thema en jaar, met zoeken op inhoud.','#/lezen','alle '+c.posts,'artikel']
   ];
-  // een handvol sterke stukken: de meest recente uit de laatste volle beste-van-jaargang
-  const laatsteBV = D.beste_van.filter(b => b.post_ids.length).slice(-1)[0];
-  const uitgelicht = (laatsteBV ? laatsteBV.post_ids : []).map(id => byId[id]).filter(Boolean).slice(0,3);
+  // Drie handgekozen instapstukken (redactionele keuze, geen automatische selectie).
+  // filter(Boolean): valt een slug ooit weg uit het archief, dan verdwijnt enkel die kaart.
+  const START = [
+    'mechels-stadsbestuur-houdt-verslagen-gecoro-en-kwaliteitskamer-liever-onder-de-radar',
+    'schepen-voorzitter-zorgbedrijf-rivierenland-verdubbelt-per-abuis-het-presentiegeld-van-de-voorzitter',
+    'stad-mechelen-wist-eind-2018-al-van-pfos-verontreiniging-bij-brandweer-door-blusschuim'
+  ];
+  const uitgelicht = START.map(s => bySlug[s]).filter(Boolean);
 
   return ''
   + '<header class="hero"><div class="shell">'
@@ -686,7 +691,7 @@ function viewHome(){
   + (uitgelicht.length ? '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">Begin hier</div><h2 class="sec-h2">Enkele <em>sterke stukken</em> om te starten</h2>'
-  +     '<p class="sec-lede">Uit de laatste jaargang die het magazine zelf uitlichtte. Meer via <a class="pink" href="#/beste-van">beste van</a>.</p></div></div>'
+  +     '<p class="sec-lede">Drie stukken om mee te beginnen: verslagen die uit het zicht bleven, een presentiegeld dat verdubbelde, en een vervuiling die de stad al kende. Meer via <a class="pink" href="#/beste-van">beste van</a>.</p></div></div>'
   +   grid(uitgelicht)
   + '</div></section>' : '');
 }
