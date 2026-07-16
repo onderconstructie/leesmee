@@ -8,8 +8,11 @@ zelf-gehoste fonts en de uitgelichte beelden gaan mee naar dist/. Geen internet.
 from pathlib import Path
 import sys
 import os
+import re
 import json
 import shutil
+
+from PIL import Image
 
 for _s in (sys.stdout, sys.stderr):
     try:
@@ -35,6 +38,22 @@ data.pop("inline_beelden", None)
 #    "</script>" in een brontekst de <script>-tag niet vroegtijdig kan sluiten.
 data_json = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 html = template.replace("__LEESMEE_DATA__", data_json)
+
+# 2b) De echte afmetingen van de handboek-cartoons meegeven. Zonder width/height reserveert
+#     de browser geen ruimte: de omdraaikaart klapte in tot enkel haar hint (nagemeten
+#     210x44 in plaats van 210x284) en de tekst sprong zodra het beeld binnenkwam. We meten
+#     ze hier in plaats van ze in te tikken, zodat een volgende cartoon vanzelf klopt.
+beeld_maten = {}
+for _rel in sorted(set(re.findall(r"beeld:'([^']+)'", template))):
+    _pad = BASE / _rel
+    if not _pad.exists():
+        print("       LET OP: handboek-beeld ontbreekt: %s" % _rel)
+        continue
+    with Image.open(_pad) as _im:
+        beeld_maten[_rel] = list(_im.size)
+html = html.replace("__BEELDMATEN__", json.dumps(beeld_maten, ensure_ascii=False))
+print("       handboek-beelden gemeten: %s" % (", ".join("%s %dx%d" % (k.split("/")[-1], v[0], v[1])
+                                                         for k, v in beeld_maten.items()) or "geen"))
 
 # 3) Eindproduct schrijven.
 out_dir = BASE / "dist"

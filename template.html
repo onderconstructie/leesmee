@@ -448,18 +448,28 @@ a.tech:hover{background:var(--paper-2)}
 /* De cartoon is in het merkroze getekend, zoals de mug van het portaal. Ze staat op haar eigen
    kaartje: dat is wat lichter dan de grond, wat het roze lijnwerk goed doet, en het past bij
    dit hoofdstuk, dat over cartoons gaat. Het vlak is --kaart-b, NIET var(--ink): dat is in de
-   dag-editie de warme inkt zelf. */
-.hb-fig{float:right;width:clamp(140px,20vw,210px);margin:.1rem 0 .9rem 1.6rem;
-  background:var(--kaart-b);border-radius:var(--r-kaart);padding:.6rem .5rem;box-shadow:var(--shadow-soft)}
+   dag-editie de warme inkt zelf.
+   Ze draait om, op dezelfde .flipcard als de citaten van 'In de pers', met een verschil: daar
+   staat de voorkant absoluut en dwingt een vaste hoogte van 190px. Hier blijft de voorkant IN
+   DE FLOW, zodat de kaart zich naar de tekening voegt (die is 619x708, geen kaartformaat) en
+   de achterkant, die wel absoluut is, precies even groot wordt. */
+.hb-fig{float:right;width:clamp(140px,20vw,210px);margin:.1rem 0 .9rem 1.6rem;height:auto}
+.hb-fig .fc-inner{height:auto}
+.hb-fig .fc-front{position:relative;padding:.6rem .5rem;border:1px solid var(--line-kaart);
+  background:var(--kaart-b);border-radius:var(--r-kaart);box-shadow:var(--shadow-soft)}
+.hb-fig .fc-back{border-radius:var(--r-kaart);align-items:center;text-align:center;padding:.8rem .7rem}
 .hb-fig img{width:100%;height:auto;display:block}
-.hb-fig figcaption{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-faint);text-align:center;padding:.55rem .2rem .15rem}
+.hb-fig .fc-hint{margin-top:0;padding-top:.55rem;color:var(--ink-faint);text-align:center;
+  font-size:.58rem;letter-spacing:.12em}
+.hb-fig:hover .fc-hint,.hb-fig:focus-visible .fc-hint{letter-spacing:.16em}
 /* Op een telefoon stopt de cartoon met zweven en gaat ze gecentreerd onder de tekst staan,
    maar bewust bescheiden: van rand tot rand ging ze het hoofdstuk domineren in plaats van
    het te verluchten. Het is een terzijde, geen plaat. */
 @media(max-width:600px){
-  .hb-fig{float:none;width:min(56%,180px);margin:1.2rem auto;padding:.6rem .5rem}
-  .hb-fig figcaption{font-size:.6rem;padding-top:.5rem;padding-bottom:.15rem}
+  /* display:block is nodig: een <button> is inline-block, en dan doet margin:auto niets.
+     Op desktop verbergt float:right dat, want float blokt het element al. */
+  .hb-fig{float:none;display:block;width:min(56%,180px);margin:1.2rem auto}
+  .hb-fig .fc-hint{font-size:.56rem}
 }
 .hb-chapter::after{content:"";display:block;clear:both}
 
@@ -636,6 +646,10 @@ a.tech:hover{background:var(--paper-2)}
 <script>
 window.LEESMEE_DATA = __LEESMEE_DATA__;
 const D = window.LEESMEE_DATA;
+/* De echte pixelmaten van de handboek-cartoons, door build.py uit de bestanden zelf
+   gemeten. Ze gaan als width/height op de <img> zodat de browser vooraf ruimte
+   reserveert en de omdraaikaart niet inklapt tot haar hint. */
+const BEELDMATEN = __BEELDMATEN__;
 
 /* ---- indexen ---- */
 const byId = {}, bySlug = {};
@@ -970,7 +984,10 @@ function viewAanpak(){
     + '<div class="hb-kicker">' + c.kicker + '</div>'
     + '<h3 class="hb-titel">' + c.titel + '</h3>'
     + (c.citaat ? '<blockquote class="hb-citaat">' + c.citaat.map(r => '<p>' + r + '</p>').join('') + '</blockquote>' : '')
-    + (c.beeld ? '<figure class="hb-fig"><img src="' + c.beeld + '" alt="Cartoonfiguur van As Gau Paust" loading="lazy"><figcaption>De Meedenkende Mechelaar</figcaption></figure>' : '')
+    + (c.beeld ? (function(){ var m = BEELDMATEN[c.beeld] || [];
+      return '<button class="flipcard hb-fig" type="button" aria-label="Draai de cartoon om, voor wie ze voorstelt"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
+        + (m[0] ? ' width="' + m[0] + '" height="' + m[1] + '"' : '')
+        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-hint">wie is dit? &#8635;</span></div><div class="fc-back"><span class="fc-lab">De cartoon</span><span class="fc-src">De Meedenkende Mechelaar</span></div></div></button>'; })() : '')
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
