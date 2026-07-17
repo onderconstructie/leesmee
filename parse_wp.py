@@ -487,10 +487,58 @@ def clean_content(raw, inline_map):
     s = _bgcolor_naar_stijl(s)
     s = _weeg_kleuren(s)
     s = _merk_bijschriften(s)
-    # 6) lege figure/alinea's opkuisen die na het strippen kunnen overblijven
+    # 6) koppenstructuur rechtzetten (zie _normaliseer_koppen)
+    s = _normaliseer_koppen(s)
+    # 7) lege figure/alinea's opkuisen die na het strippen kunnen overblijven
     s = re.sub(r"<figure>\s*</figure>", "", s, flags=re.IGNORECASE)
     s = re.sub(r"<p>\s*</p>", "", s, flags=re.IGNORECASE)
     return s.strip()
+
+
+_KOP_RX = re.compile(r"<(/?)h([1-6])\b([^>]*)>", re.IGNORECASE)
+# Een kop langer dan dit is geen kop maar een lede-zin: WordPress zette de vetgezette
+# openingszin vaak als <h3>. Die hoort een alinea te zijn, geen niveau in de inhoudsopgave.
+_LEDE_DREMPEL = 100
+
+def _normaliseer_koppen(s):
+    """De koppen in de body nesten onder de artikel-h1, en geen enkele body-kop is zelf een h1.
+
+    Twee dingen liepen mis in de WordPress-erfenis:
+    1. Zeven stukken hadden losse <h1>'s in de body (de "gemeenteraad live"-reeks), die
+       concurreerden met de artikeltitel. Meerdere h1's op één pagina is een echte fout.
+    2. 253 van de 256 stukken met koppen begonnen bij <h3>, met sprongen naar h2 en h4
+       ertussen: de inhoudsopgave sprong heen en weer.
+
+    De ingreep is zuiver structureel, de tekst blijft woord voor woord gelijk: we verschuiven
+    alle body-koppen zó dat de ondiepste <h2> wordt (nestelt netjes onder de artikel-<h1>),
+    en een openingskop die eigenlijk een lede-zin is (langer dan de drempel) wordt een
+    <p class="lede">. Zo blijft er precies één h1 per artikelpagina, de titel.
+    """
+    if not _KOP_RX.search(s):
+        return s
+
+    # Eerst de openingskop, als die een lede-zin is, tot alinea degraderen. Enkel de eerste
+    # kop, en enkel als hij te lang is om nog een echte kop te kunnen zijn.
+    eerste = _KOP_RX.search(s)
+    if eerste and not eerste.group(1):
+        sluit = re.search(r"</h%s\s*>" % eerste.group(2), s[eerste.end():], re.IGNORECASE)
+        if sluit:
+            binnen = s[eerste.end():eerste.end() + sluit.start()]
+            if len(strip_html(binnen)) > _LEDE_DREMPEL:
+                s = (s[:eerste.start()] + '<p class="lede">' + binnen + "</p>"
+                     + s[eerste.end() + sluit.end():])
+
+    # Verschuiving pas nú berekenen, op wat er ná de degradatie nog aan koppen staat, zodat
+    # de ondiepste overgebleven kop een h2 wordt en er geen nieuwe sprong ontstaat.
+    niveaus = [int(m.group(2)) for m in _KOP_RX.finditer(s) if not m.group(1)]
+    if not niveaus:
+        return s
+    verschuif = 2 - min(niveaus)   # ondiepste kop wordt h2
+
+    def verschuif_kop(m):
+        nieuw = min(6, max(2, int(m.group(2)) + verschuif))
+        return "<%sh%d%s>" % (m.group(1), nieuw, m.group(3))
+    return _KOP_RX.sub(verschuif_kop, s)
 
 
 def _knip(t, limit=230):

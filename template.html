@@ -66,6 +66,14 @@ body{margin:0;background:var(--paper);color:var(--ink);
 a{color:inherit;text-decoration:none}
 img{max-width:100%;height:auto;display:block}
 :focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+/* Skiplink: onzichtbaar tot hij focus krijgt, dan springt hij in beeld. Zonder deze link
+   loopt elke toetsenbordgebruiker bij elke routewissel eerst de hele kop weer door. */
+.skiplink{position:absolute;left:.75rem;top:-3rem;z-index:100;background:var(--ink);color:var(--paper);
+  padding:.55rem .9rem;border-radius:var(--r-input);font-size:.9rem;transition:top .15s}
+.skiplink:focus{top:.75rem}
+/* De paginakop krijgt bij een routewissel de focus, zodat een schermlezer de nieuwe pagina
+   aankondigt. Geen zichtbare rand: de gebruiker klikte er niet zelf op. */
+#app :is(h1,h2)[tabindex="-1"]:focus{outline:none}
 
 /* scroll-voortgang */
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--pink);width:0;z-index:60;transition:width .1s linear}
@@ -144,7 +152,11 @@ section:first-of-type{border-top:0}
 .sec-num em{font-family:'JetBrains Mono',monospace;font-style:normal;font-weight:300;
   font-size:clamp(2.6rem,6vw,4.4rem);color:var(--pink);line-height:.8}
 .sec-h2{font-size:var(--h2);margin:.3rem 0 .3rem;text-wrap:balance}
-.sec-h2 em{color:var(--pink);font-style:normal}
+/* --pink-text, niet --pink: op desktop is deze em 32px en haalt --pink net AA (drempel 3),
+   maar op de telefoon valt --h2 terug op 22,4px en geldt drempel 4,5, waar --pink met 3,23:1
+   door zakt. Het donkerder roze haalt 4,9:1 op papier, net als .brand em al doet. Los van de
+   merkkeuze wit-op-roze: dit is roze tekst op papier. */
+.sec-h2 em{color:var(--pink-text);font-style:normal}
 .sec-lede{color:var(--ink-2);max-width:62ch;font-size:.98rem}
 
 /* hero */
@@ -254,7 +266,9 @@ a.stat:hover .l{color:var(--pink-text)}
 .chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:auto}
 .chip{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;
   border:1px solid var(--line-strong);padding:.2rem .45rem;border-radius:999px;color:var(--ink-dim);cursor:pointer;transition:.15s}
-.chip:hover{border-color:var(--pink);color:var(--pink-text)}
+/* Geen eigen hover: de chip is een metadata-label binnen de kaart, geen aparte filter.
+   Individueel oplichten wekte de indruk dat je erop kon klikken om te filteren, terwijl
+   een klik gewoon de kaart (het artikel) opent. De kaart zelf licht wel op bij hover. */
 .chip.pink{background:var(--pink-soft);border-color:var(--pink);color:var(--pink-text)}
 .chip.beste::before{content:'\2605 ';color:var(--pink)}
 
@@ -262,8 +276,10 @@ a.stat:hover .l{color:var(--pink-text)}
 .filterbar{display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem}
 .searchwrap{position:relative;max-width:420px}
 .searchwrap .ic{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--pink);font-size:1rem}
-.search{width:100%;padding:.75rem 2.6rem .75rem 2rem;border:1px solid var(--line-strong);background:var(--kaart-b);
-  border-radius:var(--r-input);font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink)}
+.search{width:100%;padding:.7rem 2.6rem .7rem 2rem;border:1px solid var(--line-strong);background:var(--kaart-b);
+  /* 1rem = 16px: onder die grens zoomt Safari op iOS in bij de tik en niet meer uit.
+     De padding iets kleiner houdt de balk even compact ondanks de grotere letter. */
+  border-radius:var(--r-input);font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--ink)}
 .search::placeholder{color:var(--ink-faint)}
 .search:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-soft)}
 .searchwrap .search-clear{position:absolute;right:.4rem;top:50%;transform:translateY(-50%);width:30px;height:30px;
@@ -317,7 +333,11 @@ a.stat:hover .l{color:var(--pink-text)}
 .lees blockquote{margin:1.5rem 0;padding:.4rem 0 .4rem 1.2rem;border-left:2px solid var(--pink);
   font-style:italic;color:var(--ink)}
 .lees strong{color:var(--ink)}
-.lees > h3:first-child,.lees > h3:first-of-type{font-family:'Geist',sans-serif;font-weight:600;font-size:1.18rem;
+/* De openingslede. WordPress zette die als eerste <h3>; parse_wp.py maakt er nu een
+   <p class="lede"> van (een lange zin is geen kop, en één h1 per pagina volstaat). De
+   eerste-h3-selector blijft staan voor de handvol stukken waar de lede kort genoeg was
+   om een echte kop te blijven. */
+.lees .lede,.lees > h3:first-child,.lees > h3:first-of-type{font-family:'Geist',sans-serif;font-weight:600;font-size:1.18rem;
   line-height:1.45;color:var(--ink);letter-spacing:0;border-left:2px solid var(--pink);padding-left:1rem;margin:.2rem 0 1.5rem}
 
 /* Vlakken die uit de oude site meekomen. De parser weegt elk vlak tegen zijn eigen helderheid
@@ -352,8 +372,8 @@ a.stat:hover .l{color:var(--pink-text)}
 
 /* artikel-voet: dossier / beste van / verwant / bron */
 .art-foot{max-width:760px;margin:2.4rem auto 0;border-top:2px solid var(--ink);padding-top:1.6rem;display:flex;flex-direction:column;gap:1.6rem}
-.foot-block .lab{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink-faint);margin-bottom:.7rem}
+.foot-block .lab{font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 .7rem}
 .linkrow{display:flex;gap:.5rem;flex-wrap:wrap}
 .doslink{font-family:'JetBrains Mono',monospace;font-size:.72rem;border:1px solid var(--line-strong);
   padding:.45rem .7rem;color:var(--ink);cursor:pointer;transition:.15s}
@@ -393,8 +413,17 @@ a.tech:hover{background:var(--paper-2)}
 .hb-lead b,.hb-lead strong{color:var(--pink-text);font-weight:600}
 .hb-lead a{color:var(--pink-text);border-bottom:1px solid var(--line-pink)}
 .hb-lead a:hover{border-bottom-color:var(--pink)}
-.hb-citaat{max-width:64ch;background:var(--pink);color:#fff;padding:1.3rem 1.5rem;margin:0 0 1.4rem;border-radius:var(--r-kaart)}
-.hb-citaat p{margin:0;font-family:'JetBrains Mono',monospace;font-style:italic;font-weight:500;font-size:1.08rem;line-height:1.65}
+/* Het citaat-blok van het eerste hoofdstuk: de fonetische naamverklaring uit het Mechelse
+   volkslied. Een groot, vaag aanhalingsteken als watermerk maakt er een echt citaat van, en
+   een zachte lift tilt het van het papier. */
+.hb-citaat{position:relative;overflow:hidden;max-width:60ch;background:var(--pink);color:#fff;
+  padding:1.6rem 1.8rem 1.5rem;margin:.2rem 0 1.5rem;border-radius:var(--r-kaart);
+  box-shadow:0 14px 30px -18px rgba(200,0,84,.55)}
+.hb-citaat::before{content:'\201C';position:absolute;top:.05rem;right:.75rem;
+  font-family:Georgia,'Times New Roman',serif;font-size:5.2rem;line-height:1;
+  color:rgba(255,255,255,.2);pointer-events:none}
+.hb-citaat p{position:relative;margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-style:italic;font-weight:500;font-size:1.1rem;line-height:1.78;text-wrap:balance}
 .hb-stappen{max-width:64ch;background:var(--pink);color:#fff;padding:1.15rem 1.35rem 1.3rem;margin:0 0 1.4rem;border-radius:var(--r-kaart)}
 .hb-stappen .lab{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#fff;margin-bottom:.95rem}
 .hb-stappen ol{margin:0;padding:0;list-style:none;counter-reset:stap;display:grid;gap:.75rem}
@@ -434,12 +463,28 @@ a.tech:hover{background:var(--paper-2)}
 .hb-lijst.plain li::before{content:none}
 .hb-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;max-width:68ch;margin:.4rem 0 1.4rem}
 .flipcard{background:none;border:0;padding:0;font:inherit;text-align:left;cursor:pointer;perspective:1000px;height:190px}
-.fc-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.16,1,.3,1);transform-style:preserve-3d}
-.flipcard.flipped .fc-inner{transform:rotateY(180deg)}
-.fc-front,.fc-back{position:absolute;inset:0;display:flex;flex-direction:column;padding:1.05rem 1.15rem;border:1px solid var(--line-strong);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.16,1,.3,1);
+  -webkit-transform-style:preserve-3d;transform-style:preserve-3d}
+.flipcard.flipped .fc-inner{-webkit-transform:rotateY(180deg);transform:rotateY(180deg)}
+/* iOS Safari verbergt de achterkant niet altijd betrouwbaar met backface-visibility (de
+   -webkit-transform-style hierboven is de eerste fix). Als vangnet zetten we de inhoud van de
+   weg-gedraaide kant ook op opacity:0, met een schakel rond het midden van de flip (0s
+   transitie, vertraagd). Zo is de ruststand hoe dan ook schoon: geen citaat dat door de
+   ommezijde schemert. */
+.fc-front,.fc-back{position:absolute;inset:0;display:flex;flex-direction:column;padding:1.05rem 1.15rem;
+  border:1px solid var(--line-strong);-webkit-backface-visibility:hidden;backface-visibility:hidden;
+  transition:opacity 0s linear .27s}
 .fc-front{background:var(--pink)}
-.fc-back{background:var(--bg-diep);border-color:var(--op-eiland-15);transform:rotateY(180deg);justify-content:center}
-.fc-q{font-size:1.02rem;line-height:1.38;color:#fff;font-weight:700}
+.fc-back{background:var(--bg-diep);border-color:var(--op-eiland-15);opacity:0;
+  -webkit-transform:rotateY(180deg);transform:rotateY(180deg);justify-content:center}
+.flipcard.flipped .fc-front{opacity:0}
+.flipcard.flipped .fc-back{opacity:1}
+/* Een groot, vaag aanhalingsteken als watermerk: het citaat leest meteen als citaat, en
+   de tekst staat er verticaal gecentreerd overheen, niet meer bovenaan zwevend. */
+.fc-mark{position:absolute;top:.1rem;left:.7rem;font-family:Georgia,'Times New Roman',serif;
+  font-size:3.8rem;line-height:1;color:rgba(255,255,255,.32);pointer-events:none}
+.fc-q{flex:1;display:flex;align-items:center;position:relative;z-index:1;
+  font-size:1.05rem;line-height:1.44;color:#fff;font-weight:600;font-style:italic}
 .fc-hint{margin-top:auto;padding-top:.7rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#fff}
 .flipcard:hover .fc-hint,.flipcard:focus-visible .fc-hint{letter-spacing:.14em}
 .flipcard:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
@@ -586,7 +631,10 @@ a.tech:hover{background:var(--paper-2)}
   .tabbar a{position:relative;display:flex;flex-direction:column;align-items:center;gap:.28rem;
     padding:.6rem 0 .55rem;color:var(--ink-faint);transition:color .15s}
   .tabbar a .ic-svg{width:20px;height:20px}
-  .tabbar a span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.54rem;letter-spacing:.06em;text-transform:uppercase}
+  /* .68rem = 10,9px. Op .54rem (8,64px) was dit de kleinste tekst van de site, ruim onder
+     wat iOS (10px) en Material (12px) aanhouden, en op een telefoon de enige navigatie.
+     "BESTE VAN" blijft met ~65px binnen een vak van 75px. */
+  .tabbar a span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase}
   .tabbar a.active{color:var(--pink-text)}
   .tabbar a.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--pink)}
   body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
@@ -597,9 +645,19 @@ a.tech:hover{background:var(--paper-2)}
 </style>
 </head>
 <body>
+<a class="skiplink" href="#app">Naar de inhoud</a>
+
+<!-- Privacymelding vooraan in de DOM, zodat een toetsenbordgebruiker haar vroeg in de
+     tabvolgorde tegenkomt (het is een eerste-bezoek-melding, die hoort niet als laatste).
+     De vaste positionering houdt ze visueel gewoon onderaan. -->
+<div id="cookieNote" class="cookie-note" hidden role="note" aria-label="Privacy">
+  <p class="cn-text"><strong>Geen cookies, geen trackers.</strong> Alleen onze host (GitHub) ziet je IP-adres, zoals bij elke webserver, om de site te tonen en te beveiligen.</p>
+  <button type="button" class="cn-ok" id="cnOk">Begrepen</button>
+</div>
+
 <div class="progress" id="progress"></div>
 
-<nav class="nav"><div class="shell nav-in">
+<nav class="nav" aria-label="Hoofdnavigatie"><div class="shell nav-in">
   <a class="brand" href="#/">
     <span class="mk"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-label="Sint-Romboutstoren"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></span>
     Lees mee <em>met Mechelen</em>
@@ -611,7 +669,7 @@ a.tech:hover{background:var(--paper-2)}
     <a href="#/beste-van" data-r="beste-van">Beste van</a>
     <a href="#/aanpak" data-r="aanpak">De aanpak</a>
   </div>
-  <button class="nav-burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
 
 <div class="menu-overlay" id="menuOverlay" hidden>
@@ -643,13 +701,6 @@ a.tech:hover{background:var(--paper-2)}
 <nav class="tabbar" id="tabbar" aria-label="Snelnavigatie"></nav>
 
 <button class="totop" id="totop" aria-label="Naar boven">&#8593;</button>
-
-<!-- Eerlijke privacymelding (geen toestemmingsbanner). De site zet geen cookies en geen
-     trackers; het enige dat we bewaren is dat je deze melding al zag (in je eigen browser). -->
-<div id="cookieNote" class="cookie-note" hidden role="note" aria-label="Privacy">
-  <p class="cn-text"><strong>Geen cookies, geen trackers.</strong> Alleen onze host (GitHub) ziet je IP-adres, zoals bij elke webserver, om de site te tonen en te beveiligen.</p>
-  <button type="button" class="cn-ok" id="cnOk">Begrepen</button>
-</div>
 
 <script>
 window.LEESMEE_DATA = __LEESMEE_DATA__;
@@ -757,7 +808,7 @@ function viewHome(){
   +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
-  +     '<a class="stat" href="#/beste-van"><div class="n">'+c.jaren+'</div><div class="l">jaargangen</div></a>'
+  +     '<a class="stat" href="#/beste-van"><div class="n">'+D.beste_van.length+'</div><div class="l">jaargangen</div></a>'
   +     '<a class="stat" href="#/themas"><div class="n">'+c.themas+'</div><div class="l">thema&#39;s</div></a>'
   +     '<a class="stat" href="#/dossiers"><div class="n">'+c.dossiers+'</div><div class="l">dossiers</div></a>'
   +   '</div>'
@@ -796,25 +847,38 @@ function viewLezen(params){
   const html = ''
   + '<section><div class="shell">'
   +   '<div class="sec-head"><div class="sec-num sec-ic">'+ic('artikel')+'</div><div>'
-  +     '<div class="eyebrow">Het volledige archief</div><h2 class="sec-h2">Lezen: <em>alle '+D.counts.posts+' stukken</em></h2>'
+  +     '<div class="eyebrow">Het volledige archief</div><h1 class="sec-h2" tabindex="-1">Lezen: <em>alle '+D.counts.posts+' stukken</em></h1>'
   +     '<p class="sec-lede">Filter op thema of jaar, of zoek op titel, inhoud en trefwoord.</p></div></div>'
   +   '<div class="filterbar">'
-  +     '<div class="searchwrap"><span class="ic">&#9906;</span><input class="search" id="q" placeholder="Zoek op inhoud, bv. PFOS of mandaten" value="'+esc(params.get('q')||'')+'" autocomplete="off"><button class="search-clear" id="qClear" type="button" aria-label="Wis zoekopdracht"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>'
+  +     '<div class="searchwrap"><span class="ic" aria-hidden="true">&#9906;</span><input class="search" id="q" aria-label="Zoek in het archief op inhoud" placeholder="Zoek op inhoud, bv. PFOS of mandaten" value="'+esc(params.get('q')||'')+'" autocomplete="off"><button class="search-clear" id="qClear" type="button" aria-label="Wis zoekopdracht"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>'
   +     '<div class="fgroup"><div class="filterlab">Thema</div>'
   +       '<div class="fchips" id="themachips">'
-  +         '<button class="fc'+(!state.thema?' on':'')+'" data-thema="">Alle<span class="c">'+D.counts.posts+'</span></button>'
-  +         themaOpts.map(t => '<button class="fc'+(state.thema===t.slug?' on':'')+'" data-thema="'+t.slug+'">'+esc(t.naam)+'<span class="c">'+t.count+'</span></button>').join('')
+  +         '<button class="fc'+(!state.thema?' on':'')+'" data-thema="" aria-pressed="'+(!state.thema)+'">Alle<span class="c">'+D.counts.posts+'</span></button>'
+  +         themaOpts.map(t => '<button class="fc'+(state.thema===t.slug?' on':'')+'" data-thema="'+t.slug+'" aria-pressed="'+(state.thema===t.slug)+'">'+esc(t.naam)+'<span class="c">'+t.count+'</span></button>').join('')
   +       '</div></div>'
   +     '<div class="fgroup"><div class="filterlab">Jaar</div>'
   +       '<div class="fchips" id="jaarchips">'
-  +         '<button class="fc'+(!state.jaar?' on':'')+'" data-jaar="">Alle jaren</button>'
-  +         D.jaren.map(j => '<button class="fc'+(state.jaar===j?' on':'')+'" data-jaar="'+j+'">'+j+'</button>').join('')
+  +         '<button class="fc'+(!state.jaar?' on':'')+'" data-jaar="" aria-pressed="'+(!state.jaar)+'">Alle jaren</button>'
+  +         D.jaren.map(j => '<button class="fc'+(state.jaar===j?' on':'')+'" data-jaar="'+j+'" aria-pressed="'+(state.jaar===j)+'">'+j+'</button>').join('')
   +       '</div></div>'
   +   '</div>'
-  +   '<div class="resultcount" id="rc"></div>'
+  +   '<div class="resultcount" id="rc" role="status"></div>'
   +   '<div id="lijst"></div>'
   + '</div></section>';
   const done = () => {
+    // De filterkeuze in de hash schrijven, zodat viewLezen haar terugleest als de bezoeker
+    // een stuk opent en met Terug terugkeert. Zonder dit was filter, zoekterm en al zijn
+    // plek in 269 kaarten weg. replaceState, want elke tik in het zoekveld een historie-
+    // stap geven zou de Terug-knop onbruikbaar maken. Bonus: een gefilterde lijst is nu
+    // deelbaar met een link.
+    const bewaarStaat = () => {
+      const q = new URLSearchParams();
+      if(state.thema) q.set('thema', state.thema);
+      if(state.jaar) q.set('jaar', state.jaar);
+      if(state.q) q.set('q', state.q);
+      const s = q.toString();
+      history.replaceState(null, '', '#/lezen' + (s ? '?' + s : ''));
+    };
     const render = () => {
       let list = D.posts.filter(p => {
         if(state.thema && p.themas.indexOf(state.thema) < 0) return false;
@@ -825,9 +889,16 @@ function viewLezen(params){
         }
         return true;
       });
-      document.getElementById('rc').textContent = list.length + (list.length===1?' stuk':' stukken');
+      // Zelfdragende tekst voor de role="status": een schermlezer leest hem los van context voor.
+      document.getElementById('rc').textContent = list.length + (list.length===1?' stuk gevonden':' stukken gevonden');
       document.getElementById('lijst').innerHTML = grid(list);
+      bewaarStaat();
     };
+    const drukChip = (groep, actief) => document.querySelectorAll('#'+groep+' .fc').forEach(x => {
+      const aan = x === actief;
+      x.classList.toggle('on', aan);
+      x.setAttribute('aria-pressed', aan);
+    });
     const qEl = document.getElementById('q');
     const qClear = document.getElementById('qClear');
     const syncClear = () => qClear.classList.toggle('show', qEl.value.length > 0);
@@ -838,13 +909,13 @@ function viewLezen(params){
     document.getElementById('themachips').addEventListener('click', e => {
       const b = e.target.closest('[data-thema]'); if(!b) return;
       state.thema = b.dataset.thema;
-      document.querySelectorAll('#themachips .fc').forEach(x=>x.classList.toggle('on', x===b));
+      drukChip('themachips', b);
       render();
     });
     document.getElementById('jaarchips').addEventListener('click', e => {
       const b = e.target.closest('[data-jaar]'); if(!b) return;
       state.jaar = b.dataset.jaar;
-      document.querySelectorAll('#jaarchips .fc').forEach(x=>x.classList.toggle('on', x===b));
+      drukChip('jaarchips', b);
       render();
     });
     syncClear();
@@ -856,7 +927,7 @@ function viewLezen(params){
 function viewThemas(){
   return '<section><div class="shell">'
   + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('thema')+'</div><div>'
-  +   '<div class="eyebrow">Rubrieken</div><h2 class="sec-h2">Lezen per <em>thema</em></h2>'
+  +   '<div class="eyebrow">Rubrieken</div><h1 class="sec-h2" tabindex="-1">Lezen per <em>thema</em></h1>'
   +   '<p class="sec-lede">De rode draden van zeven jaar. Kies een thema om alle stukken erover te lezen.</p></div></div>'
   + '<div class="grid">'+ D.themas.slice().sort((a,b)=>b.count-a.count).map(t =>
       '<a class="cell" href="#/thema/'+t.slug+'"><span class="k">'+t.count+' stukken</span><h3>'+esc(t.naam)+'</h3><p>'+esc(t.omschrijving)+'</p><span class="go">lees het thema &#8594;</span></a>'
@@ -870,7 +941,7 @@ function viewThema(slug){
   return '<section><div class="shell">'
   + '<a class="crumb" href="#/themas">&#8592; Alle thema&#39;s</a>'
   + '<div class="sec-head"><div class="sec-num"><em>'+list.length+'</em></div><div>'
-  +   '<div class="eyebrow">Thema</div><h2 class="sec-h2">'+esc(t.naam)+'</h2>'
+  +   '<div class="eyebrow">Thema</div><h1 class="sec-h2" tabindex="-1">'+esc(t.naam)+'</h1>'
   +   '<p class="sec-lede">'+esc(t.omschrijving)+'</p></div></div>'
   + grid(list) + '</div></section>';
 }
@@ -878,7 +949,7 @@ function viewThema(slug){
 function viewDossiers(){
   return '<section><div class="shell">'
   + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('dossiers')+'</div><div>'
-  +   '<div class="eyebrow">Verhaallijnen</div><h2 class="sec-h2">De <em>dossiers</em></h2>'
+  +   '<div class="eyebrow">Verhaallijnen</div><h1 class="sec-h2" tabindex="-1">De <em>dossiers</em></h1>'
   +   '<p class="sec-lede">Zaken die over jaren en vele stukken liepen. Elk dossier leest als een tijdlijn.</p></div></div>'
   + '<div class="grid">'+ D.dossiers.slice().sort((a,b)=>b.count-a.count).map(d =>
       '<a class="cell" href="#/dossier/'+d.slug+'"><span class="k">'+d.count+' stukken &#183; '+esc(d.jaar_van)+'&#8211;'+esc(d.jaar_tot)+'</span><h3>'+esc(d.naam)+'</h3><p>'+esc(d.omschrijving)+'</p><span class="go">volg het dossier &#8594;</span></a>'
@@ -896,7 +967,7 @@ function viewDossier(slug){
   return '<section><div class="shell">'
   + '<a class="crumb" href="#/dossiers">&#8592; Alle dossiers</a>'
   + '<div class="sec-head"><div class="sec-num"><em>'+d.count+'</em></div><div>'
-  +   '<div class="eyebrow">Dossier &#183; '+esc(d.jaar_van)+' tot '+esc(d.jaar_tot)+'</div><h2 class="sec-h2">'+esc(d.naam)+'</h2>'
+  +   '<div class="eyebrow">Dossier &#183; '+esc(d.jaar_van)+' tot '+esc(d.jaar_tot)+'</div><h1 class="sec-h2" tabindex="-1">'+esc(d.naam)+'</h1>'
   +   '<p class="sec-lede">'+esc(d.omschrijving)+'</p></div></div>'
   + '<ul class="tl">'+items+'</ul></div></section>';
 }
@@ -913,7 +984,7 @@ function viewBesteVan(){
   }).join('');
   return '<section><div class="shell">'
   + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('ster')+'</div><div>'
-  +   '<div class="eyebrow">Wat het magazine uitlichtte</div><h2 class="sec-h2">Beste van, <em>zeven jaargangen</em></h2>'
+  +   '<div class="eyebrow">Wat het magazine uitlichtte</div><h1 class="sec-h2" tabindex="-1">Beste van, <em>zeven jaargangen</em></h1>'
   +   '<p class="sec-lede">Elk jaar lichtte As Gau Paust zelf de sterkste verhalen uit. Deze selecties komen letterlijk uit die jaaroverzichten.</p></div></div>'
   + '<div class="years">'+chips+'</div>'+body+'</div></section>';
 }
@@ -964,7 +1035,6 @@ const HANDBOEK = [
     { kicker:'Techniek 05', titel:'Zware kost, <em>licht</em> gebracht', kort:`Cartoons, animaties en verrassende beelden om droge dossiers leesbaar te houden.`,
       lead:`Zware dossiers lezen lichter met een scherpe zwart-wit cartoon of een lichtvoetige animatie ertussen: grappig, deelbaar en kritisch, uit liefde voor de stad. En een verrassend beeld, een detail van een kathedraalvloer of een simpel infobord, valt meer op dan de zoveelste foto van mannen in pak.`,
       stappen:[`Kies een zwaar dossier dat lezers anders links laten liggen.`,`Voeg een scherpe cartoon, een lichtvoetige animatie of een verrassend detailbeeld toe.`,`Publiceer het beeld ook los op sociale media: een goede cartoon reist verder dan het artikel.`],
-      beeld:'beelden/kuifje.png',
       casussen:[{ titel:'op audiëntie', tekst:`Het magazine viel van de perslijst, en een gesprek met de stadssecretaris moest uitmaken of het wel journalistiek bedreef. As Gau Paust maakte daar geen klaagstuk van maar tekende het wedervaren uit als striportage: de prints van de Raad voor de Journalistiek die bijna nonchalant op de salontafel lagen, de vraag of hij soms schroom had omdat hij niet op de persbanken zat maar tussen het publiek, en de bedenking dat je je als burger op de openbaarheidswetgeving beroept, niet als journalist. Merci Hergé. De stadssecretaris beloofde hem weer op de perslijst, en de striportage verscheen ook op Apache.` }],
       stukken:['op-audientie','speelgoedmuseum-overweegt-verhuis-naar-stadhuis','hier-flitst-men-niet'],
       meerLink:{ href:'#/thema/faits-divers', tekst:'Alle cartoons en couleur locale' } },
@@ -980,6 +1050,7 @@ const HANDBOEK = [
         ['Uit liefde voor het vak en de journalistiek', 'Het Laatste Nieuws'],
         ['Inspiratie voor andere hyperlocals', 'Vlaams Journalistiek Fonds'],
         ['Een reeks unieke nieuwsverhalen', 'De Journalist'],
+        ['Nieuws uit vaak onverwachte hoek', 'Apache'],
         ['Kansen en uitdagingen van lokale journalistiek zijn talrijk. Dat maakte As Gau Paust met zijn bijdrage duidelijk.', 'Vereniging van Onderzoeksjournalisten (VVOJ)']
       ] },
     { kicker:'Tot slot', titel:'Volharding is gratis, tijd niet',
@@ -997,13 +1068,13 @@ function viewAanpak(){
     + '<h3 class="hb-titel">' + c.titel + '</h3>'
     + (c.citaat ? '<blockquote class="hb-citaat">' + c.citaat.map(r => '<p>' + r + '</p>').join('') + '</blockquote>' : '')
     + (c.beeld ? (function(){ var m = BEELDMATEN[c.beeld] || [];
-      return '<button class="flipcard hb-fig" type="button" aria-label="Draai de cartoon om"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
+      return '<button class="flipcard hb-fig" type="button" aria-pressed="false" aria-label="Cartoon, draai om voor de boodschap"><div class="fc-inner"><div class="fc-front"><img src="' + c.beeld + '"'
         + (m[0] ? ' width="' + m[0] + '" height="' + m[1] + '"' : '')
-        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-draai" aria-hidden="true">&#8635;</span></div><div class="fc-back"><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
+        + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-draai" aria-hidden="true">&#8635;</span></div><div class="fc-back" inert><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
-    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-label="Draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint">wie schreef dit? &#8635;</span></div><div class="fc-back"><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
+    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-pressed="false" aria-label="Citaat &#8220;' + esc(q[0]) + '&#8221;, draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-mark" aria-hidden="true">&#8220;</span><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint">wie schreef dit? &#8635;</span></div><div class="fc-back" inert><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
     + (c.actie ? '<div class="hb-actie"><b>Actie</b>' + c.actie + '</div>' : '')
     + (c.casussen ? c.casussen.map(cs => '<div class="hb-casus"><div class="lab">Casus, ' + cs.titel + '</div><p>' + cs.tekst + '</p></div>').join('') : '')
     + (c.meerLink ? '<a class="doslink" href="' + c.meerLink.href + '">' + c.meerLink.tekst + ' &#8594;</a>' : '')
@@ -1013,7 +1084,7 @@ function viewAanpak(){
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
     + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('garde')+'</div><div>'
-    +   '<div class="eyebrow">De aanpak, een kookboek</div><h2 class="sec-h2">Zo maak je een stad <em>transparant</em></h2>'
+    +   '<div class="eyebrow">De aanpak, een kookboek</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
     + '<aside class="hb-banner">'
@@ -1037,14 +1108,17 @@ function viewArtikel(slug){
   const related = (p.gerelateerd||[]).map(id => byId[id]).filter(Boolean).slice(0,4);
   const eyebrow = [p.datum_disp].concat(p.categorieen.map(c=>c.naam)).concat([p.leestijd+' min lezen'])
     .map(x=>'<span>'+esc(x)+'</span>').join('<span class="dot">&#183;</span>');
+  // De labels zijn h2's, niet losse divs: zo hangen de verwante-stukken-kaarten onder een
+  // echte kop "Verwante stukken" in plaats van onder het laatste hoofdstuk van het artikel.
+  // De class .foot-block .lab houdt de vorm gelijk aan het oude label.
   let foot = '<div class="art-foot">';
   if(p.beste_van && p.beste_van.length)
-    foot += '<div class="foot-block"><div class="lab">Uitgelicht</div><div class="bronline">Dit stuk zat in de beste van <strong>'+p.beste_van.map(esc).join(', ')+'</strong>. <a href="#/beste-van">Bekijk de jaargang &#8594;</a></div></div>';
+    foot += '<div class="foot-block"><h2 class="lab">Uitgelicht</h2><div class="bronline">Dit stuk zat in de beste van <strong>'+p.beste_van.map(esc).join(', ')+'</strong>. <a href="#/beste-van">Bekijk de jaargang &#8594;</a></div></div>';
   if(dossiers.length)
-    foot += '<div class="foot-block"><div class="lab">Hoort bij dossier</div><div class="linkrow">'
+    foot += '<div class="foot-block"><h2 class="lab">Hoort bij dossier</h2><div class="linkrow">'
       + dossiers.map(d => '<a class="doslink" href="#/dossier/'+d.slug+'">'+esc(d.naam)+' &#8594;</a>').join('')+'</div></div>';
   if(related.length)
-    foot += '<div class="foot-block"><div class="lab">Verwante stukken</div>'+grid(related)+'</div>';
+    foot += '<div class="foot-block"><h2 class="lab">Verwante stukken</h2>'+grid(related)+'</div>';
   foot += '<div class="foot-block"><div class="bronline">Oorspronkelijk verschenen op As Gau Paust op '+esc(p.datum_disp)
     + (p.bron_url ? '. <a href="'+esc(p.bron_url)+'" rel="noopener">Bekijk het originele stuk &#8594;</a>' : '.')+'</div></div>';
   foot += '</div>';
@@ -1073,10 +1147,17 @@ function parseHash(){
   return { parts, params: new URLSearchParams(query || '') };
 }
 function setActiveNav(root){
-  document.querySelectorAll('#navlinks a').forEach(a => a.classList.toggle('on', a.dataset.r === root));
-  document.querySelectorAll('#tabbar a').forEach(a => a.classList.toggle('active', a.dataset.r === root));
+  // Naast de klasse ook aria-current="page": een schermlezer zegt dan bij de actieve link
+  // "huidige pagina", in plaats van dat de stand enkel aan de kleur hangt.
+  const merk = a => {
+    const aan = a.dataset.r === root;
+    if(aan) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    return aan;
+  };
+  document.querySelectorAll('#navlinks a').forEach(a => a.classList.toggle('on', merk(a)));
+  document.querySelectorAll('#tabbar a').forEach(a => a.classList.toggle('active', merk(a)));
 }
-function render(){
+function render(isNav){
   const { parts, params } = parseHash();
   const root = parts[0] || '';
   let out, after = null;
@@ -1099,9 +1180,24 @@ function render(){
   app.innerHTML = out;
   setActiveNav(root);
   const _mov = document.getElementById('menuOverlay');
-  if(_mov && !_mov.hidden){ _mov.hidden = true; document.getElementById('burger').classList.remove('open'); document.body.style.overflow = ''; }
+  if(_mov && !_mov.hidden){ _mov.hidden = true; document.getElementById('burger').classList.remove('open'); document.getElementById('burger').setAttribute('aria-expanded','false'); document.body.style.overflow = ''; }
+
+  // Titel per route, afgeleid van de zichtbare kop zodat hij nooit uit de pas loopt met wat
+  // op het scherm staat. Op de voorpagina de volledige merknaam; elders "<kop> · Lees mee".
+  const kop = app.querySelector('h1');
+  const BASIS = 'Lees mee met Mechelen, het archief van As Gau Paust';
+  document.title = (root === '' || !kop) ? BASIS : (kop.textContent.trim() + ' · Lees mee met Mechelen');
+
   // niet scrollen bij een anker binnen beste-van
   if(!location.hash.includes('#bv-')) window.scrollTo(0, 0);
+
+  // Bij een routewissel de focus naar de nieuwe paginakop, zodat een schermlezer de wissel
+  // aankondigt en een toetsenbordgebruiker meteen in de inhoud staat. Niet bij de eerste
+  // paginalading: dan stelen we de focus niet van de top.
+  if(isNav && kop){
+    if(!kop.hasAttribute('tabindex')) kop.setAttribute('tabindex', '-1');
+    kop.focus({ preventScroll: true });
+  }
   if(after) after();
 }
 /* De vijf ingangen, op een plek: [route, href, icoon, kort label (balk), lang label (menu)].
@@ -1119,9 +1215,11 @@ document.getElementById('tabbar').innerHTML = INGANGEN
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
 
-window.addEventListener('hashchange', render);
-window.addEventListener('DOMContentLoaded', render);
-render();
+// isNav=true bij een hashwissel (een echte navigatie: dan focus naar de nieuwe kop),
+// false bij de eerste lading (dan de focus met rust laten).
+window.addEventListener('hashchange', () => render(true));
+window.addEventListener('DOMContentLoaded', () => render(false));
+render(false);
 
 /* ---- chrome: burger, scroll-progress, to-top ---- */
 function toggleMenu(){
@@ -1130,6 +1228,7 @@ function toggleMenu(){
   const willOpen = ov.hidden;
   ov.hidden = !willOpen;
   bg.classList.toggle('open', willOpen);
+  bg.setAttribute('aria-expanded', willOpen);   // de knop meldt nu of het menu open of dicht is
   document.body.style.overflow = willOpen ? 'hidden' : '';
 }
 document.getElementById('burger').addEventListener('click', toggleMenu);
@@ -1149,7 +1248,17 @@ app.addEventListener('click', e => {
     return;
   }
   const card = e.target.closest('.flipcard');
-  if(card) card.classList.toggle('flipped');
+  if(card){
+    const om = !card.classList.contains('flipped');
+    card.classList.toggle('flipped', om);
+    // aria-pressed volgt de stand: een schermlezer hoort nu of de kaart om is of niet.
+    // De achterzijde krijgt de zichtbare kant, de voorzijde wordt voor de a11y-boom
+    // verborgen, zodat voor- en achterkant niet samen worden voorgelezen.
+    card.setAttribute('aria-pressed', om);
+    const front = card.querySelector('.fc-front'), back = card.querySelector('.fc-back');
+    if(front) front.toggleAttribute('inert', om);
+    if(back) back.toggleAttribute('inert', !om);
+  }
 });
 const prog = document.getElementById('progress'), totop = document.getElementById('totop');
 totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
