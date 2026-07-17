@@ -485,8 +485,11 @@ a.tech:hover{background:var(--paper-2)}
   font-size:3.8rem;line-height:1;color:rgba(255,255,255,.32);pointer-events:none}
 .fc-q{flex:1;display:flex;align-items:center;position:relative;z-index:1;
   font-size:1.05rem;line-height:1.44;color:#fff;font-weight:600;font-style:italic}
-.fc-hint{margin-top:auto;padding-top:.7rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#fff}
-.flipcard:hover .fc-hint,.flipcard:focus-visible .fc-hint{letter-spacing:.14em}
+/* Alleen het draai-icoon als affordance (geen tekst): rechtsonder, en het draait mee bij
+   hover of focus. De knop heeft al een aria-label, dus het icoon mag aria-hidden zijn. */
+.fc-hint{margin-top:auto;padding-top:.7rem;align-self:flex-end;font-size:1.2rem;line-height:1;
+  color:#fff;opacity:.85;transition:transform .25s ease,opacity .2s}
+.flipcard:hover .fc-hint,.flipcard:focus-visible .fc-hint{opacity:1;transform:rotate(-45deg)}
 .flipcard:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .fc-lab{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--op-eiland-65);margin-bottom:.5rem}
 .fc-src{font-family:'JetBrains Mono',monospace;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;color:var(--eiland-pink);line-height:1.3}
@@ -829,7 +832,7 @@ function viewHome(){
   +     '<p class="sec-lede">Het kookboek legt de aanpak uit, pijler per pijler en techniek per techniek, met de stukken waarin ze tot leven kwamen.</p></div></div>'
   +   '<div class="techrow">'+HANDBOEK.filter(c => c.kort).map(c =>
         '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3><p>'+c.kort+'</p>'
-        + '<span class="go" style="font-family:\'JetBrains Mono\',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-text)">lees dit hoofdstuk &#8594;</span></a>'
+        + '<span class="go" style="font-family:\'JetBrains Mono\',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-text)">lees dit onderdeel &#8594;</span></a>'
       ).join('')+'</div>'
   + '</div></section>'
   // uitgelicht
@@ -1043,6 +1046,9 @@ const HANDBOEK = [
       stappen:[`Kies één concrete vraag over je stad, en zoek welke pdf of webpagina het antwoord verstopt.`,`Oogst de data zelf: lees pdf's en webpagina's uit met TabulaPDF of OpenRefine, of laat AI je eigen Python-code schrijven.`,`Maak er een doorzoekbaar dashboard van, desnoods met AI en zonder programmeerkennis.`],
       casussen:[{ titel:'met dank aan chatGPT', tekst:`Een schriftelijke vraag buiten de gemeenteraad leverde alle percelen van stad en OCMW op, maar dan als platte pdf: 1.941 stuks, waarvan er voorlopig 1.886 te identificeren vielen. Stagiair AGPbot zette voor de verandering zelf chatGPT in, als leverancier van Python-code, en goot de coördinaten uit het Grootschalig Referentiebestand in een kaart. Voortaan kon elke Maneblusser inzoomen en controleren of stad of OCMW iets in zijn buurt bezat. De redactie telde plots een wel heel erg vingervlugge datajournalist in haar rangen.` }],
       stukken:['gemeenteraad-live-27-02-onze-stagiair-bot-maakte-de-voorbeschouwing','dashboard-zet-spotlicht-op-mechelse-gemeenteraad','stadslijst-fractieleider-calvo-skipt-bijna-9-op-de-10-raadscommissies','ontdek-het-patrimonium-van-onze-stad','waartoe-een-dashboard-leiden-kan','en-wat-gebeurde-er-met-jan'] },
+    { kicker:'Techniek 07', titel:'Leg je notitieboekje <em>open</em>', kort:`Losse notities en bevindingen delen terwijl je werkt, op het kanaal waar je lezers zitten.`,
+      lead:`Niet elke vondst werd meteen een volwaardig stuk. As Gau Paust deelde losse notities en tussenvondsten apart op Facebook, en noemde dat zijn open notitieboekje. Dat past bij de mug in de kamer: ook een klein spoor mag al licht krijgen, en wie wilde kon meekijken terwijl het zoeken nog liep. Waar je zulke notities deelt, hangt af van waar je nog onbekende lezers zitten. Facebook was het toen, vandaag bereik je hen eerder op Instagram, TikTok, Bluesky of het voormalige Twitter.`,
+      stappen:[`Deel losse notities en tussenvondsten terwijl je nog zoekt, niet pas bij het afgewerkte stuk.`,`Post daar waar je nieuwe lezers vindt, dus op een sociaal medium zoals Instagram, TikTok, Bluesky of het voormalige Twitter, niet in een nieuwsbrief die enkel je vaste publiek bereikt.`,`Laat lezers meekijken en aanvullen: wat zij herkennen, brengt je verder.`] },
     { kicker:'Over het magazine', titel:'Wat anderen zeiden',
       lead:`Ook andere media, journalistieke verenigingen of organisaties hadden een mening over het magazine:`,
       quotes:[
@@ -1074,7 +1080,7 @@ function viewAanpak(){
     + '<p class="hb-lead">' + c.lead + '</p>'
     + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
-    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-pressed="false" aria-label="Citaat &#8220;' + esc(q[0]) + '&#8221;, draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-mark" aria-hidden="true">&#8220;</span><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint">wie schreef dit? &#8635;</span></div><div class="fc-back" inert><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
+    + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-pressed="false" aria-label="Citaat &#8220;' + esc(q[0]) + '&#8221;, draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-mark" aria-hidden="true">&#8220;</span><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint" aria-hidden="true">&#8635;</span></div><div class="fc-back" inert><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
     + (c.actie ? '<div class="hb-actie"><b>Actie</b>' + c.actie + '</div>' : '')
     + (c.casussen ? c.casussen.map(cs => '<div class="hb-casus"><div class="lab">Casus, ' + cs.titel + '</div><p>' + cs.tekst + '</p></div>').join('') : '')
     + (c.meerLink ? '<a class="doslink" href="' + c.meerLink.href + '">' + c.meerLink.tekst + ' &#8594;</a>' : '')
