@@ -201,6 +201,20 @@ section:first-of-type{border-top:0}
 .btn.pink:hover{background:var(--pink-deep);border-color:var(--pink-deep)}
 .btn.ghost:hover{background:var(--ink);color:var(--paper)}
 .btn .ar{transition:transform .16s}.btn:hover .ar{transform:translateX(4px)}
+/* Op een telefoon moeten de twee hero-knoppen naast elkaar blijven staan in plaats van onder
+   elkaar te vallen. Ze delen de rij gelijk (flex:1 1 0) en de zijpadding krimpt, wat bij een
+   rij van 340px zo'n 120px per label overlaat: goed voor veertien tekens. Blijven de labels
+   daaronder, dan breekt hier niets. */
+@media(max-width:480px){
+  .hero .cta-row{flex-wrap:nowrap;gap:.5rem}
+  .hero .cta-row .btn{flex:1 1 0;min-width:0;justify-content:center;padding:.8rem .6rem;gap:.35rem;
+    white-space:nowrap}
+}
+/* Op de smalste toestellen (320px) blijft er anders maar een paar pixel over. De letterspatie
+   krimpt mee, wat bij mono-hoofdletters ruimte scheelt zonder dat het opvalt. */
+@media(max-width:360px){
+  .hero .cta-row .btn{padding:.8rem .45rem;letter-spacing:.06em}
+}
 
 /* data-strip */
 .strip{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-kaart);background:var(--line-kaart);
@@ -427,6 +441,11 @@ a.tech:hover{background:var(--paper-2)}
 .tech .tech-k{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink-text)}
 .tech h3{font-size:1.22rem;margin:.5rem 0 .55rem}
 .tech p{font-size:.92rem;color:var(--ink-2);line-height:1.55;margin:0 0 1rem}
+/* Het voorproefje op de voorpagina: één letterlijke stap uit het hoofdstuk. De roze kantlijn
+   zet ze apart van gewone uitleg, zodat ze leest als iets wat je kunt doen. */
+.tech-lab{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);margin-top:.9rem}
+.tech p.tech-stap{margin:.45rem 0 0;padding-left:.9rem;border-left:2px solid var(--pink);color:var(--ink-2)}
 /* aanpak-handboek */
 .hb-chapter{border-top:1px solid var(--line);padding-top:1.9rem;margin-top:2.2rem;scroll-margin-top:80px}
 .hb-chapter.first{border-top:0;margin-top:1rem;padding-top:0}
@@ -829,6 +848,14 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 function viewHome(){
   const c = D.counts;
+  // Het kookboek-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
+  // omschrijving VAN een hoofdstuk (die staat al op /aanpak), maar één echte stap UIT dat
+  // hoofdstuk. Welke hoofdstukken en welke stap staat in de data (teaserStap), zodat dit blok
+  // vanzelf meeschuift als het kookboek verandert. Wijst een teaserStap buiten het bereik,
+  // dan valt de kaart terug op de eerste stap in plaats van leeg te renderen.
+  const hoofdstukken = HANDBOEK.filter(c => c.kort).length;
+  const voorproefje = HANDBOEK.filter(c => c.teaserStap && c.stappen && c.stappen.length)
+    .map(c => ({ ...c, teaserStap: c.stappen[c.teaserStap - 1] ? c.teaserStap : 1 }));
   // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
   // kookboek bundelt de stukken niet, het staat als trekpleister in het blok hierboven.
   const ingangen = [
@@ -852,8 +879,8 @@ function viewHome(){
   +     '<div class="hero-meta"><span class="pulse"></span><span>Experiment</span></div>'
   +     '<h1 class="hero-title"><span class="box">Lees mee</span> met wat Mechelen liever niet gelezen zag</h1>'
   +     '<p class="hero-lede">Zeven jaar hyperlokale journalistiek over Mechelen, van 2016 tot 2023. <b>'+c.posts+' stukken</b>, niet zomaar op een rij maar gebundeld per thema en dossier, met de sterkste verhalen die het magazine zelf uitlichtte.</p>'
-  +     '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk de aanpak <span class="ar">&#8594;</span></a>'
-  +       '<a class="btn ghost" href="#/lezen">Begin met lezen <span class="ar">&#8594;</span></a></div>'
+  +     '<div class="cta-row"><a class="btn pink" href="#/aanpak">Doe het na <span class="ar">&#8594;</span></a>'
+  +       '<a class="btn ghost" href="#/lezen">Kies en lees <span class="ar">&#8594;</span></a></div>'
   +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
@@ -866,12 +893,13 @@ function viewHome(){
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
-  +     '<p class="sec-lede">Het kookboek legt de aanpak uit, pijler per pijler en techniek per techniek, met de stukken waarin ze tot leven kwamen.</p></div></div>'
-  +   '<div class="techrow">'+HANDBOEK.filter(c => c.kort).map(c =>
-        '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3><p>'+c.kort+'</p>'
-        + '<span class="go" style="font-family:\'JetBrains Mono\',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-text)">lees dit onderdeel &#8594;</span></a>'
+  +     '<p class="sec-lede">Het kookboek telt '+hoofdstukken+' hoofdstukken over hoe deze stukken er kwamen, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
+  +   '<div class="techrow">'+voorproefje.map(c =>
+        '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
+        + '<div class="tech-lab">zo doe je dat</div>'
+        + '<p class="tech-stap">'+c.stappen[c.teaserStap - 1]+'</p></a>'
       ).join('')+'</div>'
-  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Lees het hele kookboek <span class="ar">&#8594;</span></a></div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Open het kookboek <span class="ar">&#8594;</span></a></div>'
   + '</div></section>'
   // ingangen: de manieren om het archief zelf te lezen
   + '<section><div class="shell">'
@@ -1052,7 +1080,7 @@ const HANDBOEK = [
       citaat:['As gau paust','dat de paus oep au paust','Paust dan ma gau eet anders'],
       lead:`As Gau Paust was zeven jaar lang een onafhankelijk experiment voor lokale journalistiek, waarheidsgetrouw en met respect voor de journalistieke code. De naam is een eerbetoon aan het officieuze Mechelse volkslied (een klassieker van Günther Neefs met tekst van Mark Uytterhoeven): denk niet dat de macht aan jou denkt, blijf vooral zelf kritisch nadenken. Het magazine koos bewust voor minder en meer:`,
       lijst:['minder gechambreerde persberichten, meer eigen nieuwsverhalen','minder morrelen in de marge, meer aandacht voor de structuren van het systeem','minder snelheid in de nieuwskaravaan, meer tijd om te reflecteren'] },
-    { kicker:'Mindset', titel:'Kies de kant van de <em>feiten</em>', kort:`De feiten laten spreken: een uitspraak toetsen aan de begroting, het document, het cijfer.`,
+    { kicker:'Mindset', teaserStap:2, titel:'Kies de kant van de <em>feiten</em>', kort:`De feiten laten spreken: een uitspraak toetsen aan de begroting, het document, het cijfer.`,
       lead:`Veel lokale media blijven hangen in enerzijds, anderzijds: de burgemeester zegt iets, de oppositie het tegendeel, en de lezer zoekt het zelf maar uit. As Gau Paust deed dat anders. Klopt een uitspraak niet met de begroting, dan staat dat er ook zo. Wederhoor blijft, maar de waarheid ligt niet altijd in het midden. En het magazine schreef voor de meedenkende Mechelaar die wil weten waar zijn geld heen gaat, niet voor de burgemeester.`,
       stappen:[`Kies deze week één uitspraak uit een persbericht of de gemeenteraad, en vraag het document erachter op.`,`Leg uitspraak en document naast elkaar: het verschil is je verhaal.`,`Link bij elk stuk naar de bron, zodat elke lezer je kan controleren.`],
       stukken:['vlaanderen-plaatste-van-meet-af-aan-vraagtekens-bij-verwacht-bezoekcijfer-hof-van-busleyden','bvba-van-schepen-voor-vastgoed-doet-ook-in-vastgoed','marketinglessen-uit-mechelen-vn-kiest-voor-mechelen-en-omgekeerd','de-niet-zo-geheime-stemming-van-ivarem','stad-mechelen-wist-eind-2018-al-van-pfos-verontreiniging-bij-brandweer-door-blusschuim','organisator-overheidsorganisatie-van-het-jaar-weigert-juryrapporten-bloot-te-geven'] },
@@ -1077,7 +1105,7 @@ const HANDBOEK = [
       lead:`Hoe de stad haar ruimte gebruikt, bepaalt hoe ze er morgen uitziet: een nieuwe toren, een gekapt bos, een opgehoogd terrein. Zulke keuzes zitten vaak vol jargon. As Gau Paust vertaalde ze naar herkenbare plekken, welk park of welke straat verandert, en bracht dat terwijl er nog inspraak of bezwaar mogelijk was.`,
       stappen:[`Loop elke week de openbare onderzoeken en bekendmakingen van de stad na: daar kondigt elke verandering zich aan.`,`Zoek de herkenbare plek achter het jargon: welk park, welk bos, welke straat.`,`Publiceer voor de bezwaartermijn sluit, zodat lezers nog kunnen reageren.`],
       stukken:['mechelen-mist-hoogbouwvisie','vergeet-die-100-000-maneblussers-mechelen-streeft-naar-120-000-inwoners-in-minder-dan-20-jaar-tijd','stadsbestuur-topt-toren-van-rup-komet','comet-site-opgehoogd-met-vervuilde-grond','de-lus-redenering-of-hoe-natuurpunt-mechelen-haar-battles-kiest','ontmasker-zorro-nu-het-nog-kan-deel-ii'] },
-    { kicker:'Techniek 04', titel:'Breek de <em>raadzaal</em> open', kort:`De agenda vooraf duiden, live verslag geven, en aandringen op een livestream.`,
+    { kicker:'Techniek 04', teaserStap:2, titel:'Breek de <em>raadzaal</em> open', kort:`De agenda vooraf duiden, live verslag geven, en aandringen op een livestream.`,
       lead:`De gemeenteraad is voor veel mensen een gesloten bolwerk. As Gau Paust vroeg de ontwerpbesluiten vooraf op, schreef een onafhankelijke voorbeschouwing op de hele agenda en deed live verslag onder een vaste hashtag die van elke Mechelaar is (#grmechelen). En het bleef aandringen op een permanente livestream, zodat iedereen achteraf kan zien wie wat zei.`,
       stappen:[`Vraag de ontwerpbesluiten van de gemeenteraad vooraf op.`,`Schrijf een onafhankelijke voorbeschouwing op de hele agenda.`,`Doe live verslag onder een vaste, open hashtag (#grmechelen).`],
       casussen:[{ titel:'de mug beet', tekst:`Een discussie in de gemeenteraad opnemen of een standpunt filmen: verboden. Toch beloofde de coalitie in haar bestuursakkoord dat burgers de gemeenteraad live online moesten kunnen volgen. Het magazine bleef op die belofte wijzen, rekende voor dat het technisch en financieel twee keer niets kostte, en versloeg de raad intussen zelf live op Twitter. Een nieuwsitem bij RTV (spontane partnerschappen, weet je wel) en steun uit de gemeenteraad zelf brachten de livestream uiteindelijk daar. Het rimpeleffect van de mug in de kamer.` }],
@@ -1088,7 +1116,7 @@ const HANDBOEK = [
       casussen:[{ titel:'op audiëntie', tekst:`Het magazine viel van de perslijst, en een gesprek met de stadssecretaris moest uitmaken of het wel journalistiek bedreef. As Gau Paust maakte daar geen klaagstuk van maar tekende het wedervaren uit als striportage: de prints van de Raad voor de Journalistiek die bijna nonchalant op de salontafel lagen, de vraag of hij soms schroom had omdat hij niet op de persbanken zat maar tussen het publiek, en de bedenking dat je je als burger op de openbaarheidswetgeving beroept, niet als journalist. Merci Hergé. De stadssecretaris beloofde hem weer op de perslijst, en de striportage verscheen ook op Apache.` }],
       stukken:['op-audientie','speelgoedmuseum-overweegt-verhuis-naar-stadhuis','hier-flitst-men-niet'],
       meerLink:{ href:'#/thema/faits-divers', tekst:'Alle cartoons en couleur locale' } },
-    { kicker:'Techniek 06', titel:'Bouw je eigen <em>gereedschap</em>', kort:`Zelf data oogsten en er, ook met AI, doorzoekbare tools van maken.`,
+    { kicker:'Techniek 06', teaserStap:1, titel:'Bouw je eigen <em>gereedschap</em>', kort:`Zelf data oogsten en er, ook met AI, doorzoekbare tools van maken.`,
       lead:`Zelf gereedschap bouwen was ook waar het magazine het meest experimenteerde: een pijler op zich, waar het nieuwe vormen en tools uitprobeerde en leerde met vallen en opstaan. As Gau Paust oogstte data zelf, door pdf's en webpagina's uit te lezen. Een spreadsheet met alle raadsvragen van zes jaar bracht zo een opvallend zwijgzame groep binnen de meerderheid aan het licht. Vandaag lukt zoiets steeds vaker met AI, zonder programmeerkennis: uit een loodzware Excel maak je een doorzoekbaar dashboard. Begin dan bij een vraag, niet bij een grafiek. Deze site en <a href="https://denkmee.asgaupaust.be">Denk mee met Mechelen</a> zijn zelf zulke tools.`,
       stappen:[`Kies één concrete vraag over je stad, en zoek welke pdf of webpagina het antwoord verstopt.`,`Oogst de data zelf: lees pdf's en webpagina's uit met TabulaPDF of OpenRefine, of laat AI je eigen Python-code schrijven.`,`Maak er een doorzoekbaar dashboard van, desnoods met AI en zonder programmeerkennis.`],
       casussen:[{ titel:'met dank aan chatGPT', tekst:`Een schriftelijke vraag buiten de gemeenteraad leverde alle percelen van stad en OCMW op, maar dan als platte pdf: 1.941 stuks, waarvan er voorlopig 1.886 te identificeren vielen. Stagiair AGPbot zette voor de verandering zelf chatGPT in, als leverancier van Python-code, en goot de coördinaten uit het Grootschalig Referentiebestand in een kaart. Voortaan kon elke Maneblusser inzoomen en controleren of stad of OCMW iets in zijn buurt bezat. De redactie telde plots een wel heel erg vingervlugge datajournalist in haar rangen.` }],
