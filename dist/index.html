@@ -137,6 +137,10 @@ img{max-width:100%;height:auto;display:block}
 .eyebrow{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;
   font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
 .eyebrow::before{content:'';width:.5em;height:.5em;background:var(--pink);margin-right:.6em;flex:none}
+/* Experiment-aanhef in de hero, net als op Denk mee: een pulserende bol + 'Experiment'. */
+.hero-meta{display:flex;gap:12px;align-items:center;margin:0 0 .1rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
+.hero-meta .pulse{width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,0,102,.5);animation:pulse 2s infinite;flex:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,0,102,.5)}70%{box-shadow:0 0 0 7px rgba(255,0,102,0)}100%{box-shadow:0 0 0 0 rgba(255,0,102,0)}}
 h1,h2,h3{font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:-.02em;line-height:1.08}
 .pink{color:var(--pink-text)}
 
@@ -797,7 +801,7 @@ function viewHome(){
   return ''
   + '<header class="hero"><div class="shell">'
   +   '<div class="hero-grid"><div class="hero-copy">'
-  +     '<span class="eyebrow">Het archief van As Gau Paust</span>'
+  +     '<div class="hero-meta"><span class="pulse"></span><span>Experiment</span></div>'
   +     '<h1 class="hero-title"><span class="box">Lees mee</span> met wat Mechelen liever niet gelezen zag</h1>'
   +     '<p class="hero-lede">Zeven jaar hyperlokale journalistiek over Mechelen, van 2016 tot 2023. <b>'+c.posts+' stukken</b>, niet zomaar op een rij maar gebundeld per thema en dossier, met de sterkste verhalen die het magazine zelf uitlichtte.</p>'
   +     '<div class="cta-row"><a class="btn pink" href="#/lezen">Begin met lezen <span class="ar">&#8594;</span></a>'
