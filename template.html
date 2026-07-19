@@ -1278,11 +1278,18 @@ window.addEventListener('scroll', () => {
 (function(){
   const el = document.getElementById('cookieNote');
   const ok = document.getElementById('cnOk');
-  let gezien = false;
-  try{ gezien = localStorage.getItem('leesmee.privacyok') === '1'; }catch(e){}
-  if(!gezien) el.hidden = false;
+  // Veerkrachtig over lagen: een in-app-browser (Facebook/Instagram) of de privémodus kan
+  // localStorage blokkeren. Dan bleef de vlag onbewaard en kwam de melding op elke load terug,
+  // niet meer weg te klikken. sessionStorage overleeft een reload binnen hetzelfde tabblad.
+  const gezien = () => {
+    try{ if(localStorage.getItem('leesmee.privacyok') === '1') return true; }catch(e){}
+    try{ if(sessionStorage.getItem('leesmee.privacyok') === '1') return true; }catch(e){}
+    return false;
+  };
+  if(!gezien()) el.hidden = false;
   ok.addEventListener('click', () => {
     try{ localStorage.setItem('leesmee.privacyok','1'); }catch(e){}
+    try{ sessionStorage.setItem('leesmee.privacyok','1'); }catch(e){}
     el.hidden = true;
   });
 })();
