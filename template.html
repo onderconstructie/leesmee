@@ -634,13 +634,15 @@ a.tech:hover{background:var(--paper-2)}
     padding-bottom:env(safe-area-inset-bottom)}
   .tabbar a{position:relative;display:flex;flex-direction:column;align-items:center;gap:.28rem;
     padding:.6rem 0 .55rem;color:var(--ink-faint);transition:color .15s}
-  .tabbar a .ic-svg{width:20px;height:20px}
-  /* .68rem = 10,9px. Op .54rem (8,64px) was dit de kleinste tekst van de site, ruim onder
-     wat iOS (10px) en Material (12px) aanhouden, en op een telefoon de enige navigatie.
-     "BESTE VAN" blijft met ~65px binnen een vak van 75px. */
-  .tabbar a span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase}
-  .tabbar a.active{color:var(--pink-text)}
-  .tabbar a.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--pink)}
+  .tabbar a .ic-svg{width:22px;height:22px;flex:none}
+  .tabbar a .tab-mug{width:22px;height:22px;flex:none;border-radius:50%;display:block}
+  /* Kleine mono-caps, net als op het portaal: dit is nu een sitewissel-balk (Start, Denk
+     mee, Lees mee, En meer, Contact), niet meer de enige navigatie. De sectie-navigatie
+     van deze site zit in het menu. "DENK MEE" past met nowrap binnen een vak van 75px. */
+  .tabbar a span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.55rem;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+  .tabbar a:hover{color:var(--pink-text)}
+  .tabbar a[aria-current="page"]{color:var(--pink-text)}
+  .tabbar a[aria-current="page"]::before{content:'';position:absolute;top:0;left:24%;right:24%;height:2px;background:var(--pink)}
   body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
   .totop{bottom:calc(70px + env(safe-area-inset-bottom))}
   .cookie-note{bottom:calc(70px + env(safe-area-inset-bottom))}
@@ -699,7 +701,16 @@ a.tech:hover{background:var(--paper-2)}
   </div>
 </div></footer>
 
-<nav class="tabbar" id="tabbar" aria-label="Snelnavigatie"></nav>
+<!-- Sitewissel-balk (app-navigatie op smartphone): exact dezelfde balk op alle sites van
+     As Gau Paust. Start (de mug) gaat naar het portaal, dan de deelsites, En meer en Contact.
+     De sectie-navigatie van deze site (Lezen, Thema's, ...) zit in het hamburgermenu. -->
+<nav class="tabbar" id="tabbar" aria-label="As Gau Paust, spring tussen de sites">
+  <a href="https://asgaupaust.be/"><img class="tab-mug" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512"><span>Start</span></a>
+  <a href="https://denkmee.asgaupaust.be/"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><g transform="translate(2.4 -1.5) scale(0.8)"><path stroke-width="2" d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></g><circle cx="7.6" cy="17.2" r="1.3"/><circle cx="5.1" cy="20.9" r=".75"/></svg><span>Denk mee</span></a>
+  <a href="https://leesmee.asgaupaust.be/" aria-current="page"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg><span>Lees mee</span></a>
+  <a href="https://asgaupaust.be/en-meer/"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" stroke-dasharray="3 2.4"/><line x1="12" y1="8.5" x2="12" y2="15.5"/><line x1="8.5" y1="12" x2="15.5" y2="12"/></svg><span>En meer</span></a>
+  <a href="https://asgaupaust.be/#contact"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3.6 7l8.4 6.4L20.4 7"/></svg><span>Contact</span></a>
+</nav>
 
 <button class="totop" id="totop" aria-label="Naar boven">&#8593;</button>
 
@@ -1159,7 +1170,8 @@ function setActiveNav(root){
     return aan;
   };
   document.querySelectorAll('#navlinks a').forEach(a => a.classList.toggle('on', merk(a)));
-  document.querySelectorAll('#tabbar a').forEach(a => a.classList.toggle('active', merk(a)));
+  // De tabbalk onderaan is nu een vaste sitewissel-balk (Lees mee staat er met aria-current
+  // vast in de HTML). Alleen het menu volgt nog de interne route.
 }
 function render(isNav){
   const { parts, params } = parseHash();
@@ -1204,9 +1216,9 @@ function render(isNav){
   }
   if(after) after();
 }
-/* De vijf ingangen, op een plek: [route, href, icoon, kort label (balk), lang label (menu)].
-   Zowel de knoppenbalk onderaan als het burgermenu tekenen hieruit, zodat een icoon of een
-   naam nooit meer op een van de twee plekken achterblijft. */
+/* De vijf ingangen van deze site, op een plek: [route, href, icoon, kort label, lang label].
+   Het hamburgermenu tekent hieruit. (De knoppenbalk onderaan is nu de vaste sitewissel-balk
+   van As Gau Paust, met de andere sites, en staat rechtstreeks in de HTML.) */
 const INGANGEN = [
   ['lezen','#/lezen','artikel','Lezen','Lezen'],
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
@@ -1214,8 +1226,6 @@ const INGANGEN = [
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
   ['aanpak','#/aanpak','garde','Aanpak','De aanpak']
 ];
-document.getElementById('tabbar').innerHTML = INGANGEN
-  .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'">'+ic(t[2])+'<span>'+t[3]+'</span></a>').join('');
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
 
