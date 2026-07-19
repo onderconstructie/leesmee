@@ -81,7 +81,14 @@ img{max-width:100%;height:auto;display:block}
 /* nav */
 .nav{position:sticky;top:0;z-index:40;background:rgba(245,241,232,.82);
   backdrop-filter:blur(20px) saturate(140%);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:1.2rem;height:62px}
+/* 67px + de 1px onderrand = 68px, exact de nav-hoogte van Denk mee. Samen met de identieke
+   hero-padding hieronder begint de inhoud op beide deelsites op dezelfde hoogte. */
+.nav-in{display:flex;align-items:center;gap:1.2rem;height:67px}
+/* Denk mee krimpt zijn hamburger onder 430px van 38 naar 34px, en omdat die knop daar de
+   hoogste is in de balk zakt de nav mee van 68 naar 64px totaal. Lees mee heeft een vaste
+   hoogte, dus we volgen die sprong op exact dezelfde breedte: anders begint de inhoud op
+   een smalle telefoon alsnog 4px lager dan op de zustersite. */
+@media(max-width:430px){ .nav-in{height:63px} .menu-head{height:63px} }
 /* Merkregel bovenaan: één standaard over de drie sites van As Gau Paust
    (mug.png op 34px, 1rem/600, gap .65rem, "Paust" roze en rechtop). */
 .brand{display:flex;align-items:center;gap:.65rem;font-family:'JetBrains Mono',monospace;
@@ -93,6 +100,13 @@ img{max-width:100%;height:auto;display:block}
 .nav-links a{padding:.2rem 0;border-bottom:2px solid transparent;transition:.15s}
 .nav-links a:hover{color:var(--pink-text)}
 .nav-links a.on{color:var(--ink);border-bottom-color:var(--pink)}
+/* Het kookboek is de trekpleister: het archief toont wat er gebeurde, de aanpak is wat een
+   lezer elders zelf kan gebruiken. Daarom staat die ene link als knop tussen de tekstlinks.
+   Deze regels staan na .on, want ze hebben dezelfde specificiteit. */
+.nav-links a.nav-cta{margin-left:.35rem;padding:.36rem .9rem;border:1px solid var(--pink);
+  border-radius:999px;background:var(--pink);color:#fff}
+.nav-links a.nav-cta:hover{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff}
+.nav-links a.nav-cta.on{color:#fff;background:var(--pink-deep);border-color:var(--pink-deep)}
 .nav-burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-strong);
   width:40px;height:36px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color .15s}
 .nav-burger span{width:18px;height:2px;background:var(--ink);transition:transform .2s ease,opacity .2s ease}
@@ -115,7 +129,7 @@ img{max-width:100%;height:auto;display:block}
   border-left:1px solid var(--line-strong);box-shadow:-32px 0 80px -10px rgba(72,56,38,.22);overflow-y:auto;
   animation:slideIn .3s cubic-bezier(.16,1,.3,1)}
 @keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
-.menu-head{display:flex;justify-content:space-between;align-items:center;height:62px;padding:0 var(--pad-x);
+.menu-head{display:flex;justify-content:space-between;align-items:center;height:67px;padding:0 var(--pad-x);
   border-bottom:1px solid var(--line);flex-shrink:0}
 .menu-head .brand{display:flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1rem;letter-spacing:-.01em}
 .menu-head .brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
@@ -128,6 +142,9 @@ img{max-width:100%;height:auto;display:block}
 .menu-list a:hover{background:var(--paper-2)}
 .menu-list a:last-child{border-bottom:none}
 .menu-list a:hover .menu-num{color:var(--pink)}
+/* Onder 760px vervangt dit menu de balk, dus ook hier springt het kookboek eruit. */
+.menu-list a[data-r="aanpak"] .menu-name{color:var(--pink-text)}
+.menu-list a[data-r="aanpak"] .menu-num{color:var(--pink)}
 .menu-num{color:var(--ink-faint);transition:color .15s;display:flex}
 .menu-num svg{width:22px;height:22px;display:block}
 .menu-name{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:500;letter-spacing:-.005em}
@@ -140,7 +157,9 @@ img{max-width:100%;height:auto;display:block}
   font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
 .eyebrow::before{content:'';width:.5em;height:.5em;background:var(--pink);margin-right:.6em;flex:none}
 /* Experiment-aanhef in de hero, net als op Denk mee: een pulserende bol + 'Experiment'. */
-.hero-meta{display:flex;gap:12px;align-items:center;margin:0 0 .1rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
+/* 2,5rem = 40px onder de Experiment-regel: exact de ruimte die Denk mee daar laat, zodat
+   niet alleen "Experiment" maar ook de hoofdtitel eronder op dezelfde hoogte begint. */
+.hero-meta{display:flex;gap:12px;align-items:center;margin:0 0 2.5rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
 .hero-meta .pulse{width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,0,102,.5);animation:pulse 2s infinite;flex:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,0,102,.5)}70%{box-shadow:0 0 0 7px rgba(255,0,102,0)}100%{box-shadow:0 0 0 0 rgba(255,0,102,0)}}
 h1,h2,h3{font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:-.02em;line-height:1.08}
@@ -163,7 +182,11 @@ section:first-of-type{border-top:0}
 .sec-lede{color:var(--ink-2);max-width:62ch;font-size:.98rem}
 
 /* hero */
-.hero{position:relative;overflow:hidden;padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(1.6rem,4vw,2.6rem);
+/* De bovenpadding is letterlijk die van Denk mee (clamp(1.5rem,3vw,2.5rem)), niet zomaar een
+   waarde die bij 1280px toevallig klopt: samen met de gelijke nav-hoogte begint "Experiment"
+   daardoor op élke schermbreedte op dezelfde hoogte als op de zustersite. De onderpadding
+   blijft van Lees mee zelf, die bepaalt alleen de lengte van de hero. */
+.hero{position:relative;overflow:hidden;padding:clamp(1.5rem,3vw,2.5rem) 0 clamp(1.6rem,4vw,2.6rem);
   background:radial-gradient(1100px 480px at 78% -10%, rgba(255,0,102,.16), transparent 65%)}
 .hero-title{font-size:var(--display);margin:.85rem 0 0;max-width:17ch;letter-spacing:-.035em;line-height:1.16;text-wrap:balance}
 .hero-title .box{color:var(--pink);background:var(--ink);
@@ -654,6 +677,11 @@ a.tech:hover{background:var(--paper-2)}
   body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
   .totop{bottom:calc(70px + env(safe-area-inset-bottom))}
   .cookie-note{bottom:calc(70px + env(safe-area-inset-bottom))}
+  /* Zelfde start als Denk mee op smartphone: daar krijgt de hero padding-top:1rem en zakt
+     de ruimte onder de Experiment-regel naar .85rem. Zonder deze twee begon Lees mee hier
+     12px lager, ook al klopte het op desktop al. */
+  .hero{padding-top:1rem}
+  .hero-meta{margin-bottom:.85rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -681,7 +709,7 @@ a.tech:hover{background:var(--paper-2)}
     <a href="#/themas" data-r="themas">Thema&#39;s</a>
     <a href="#/dossiers" data-r="dossiers">Dossiers</a>
     <a href="#/beste-van" data-r="beste-van">Beste van</a>
-    <a href="#/aanpak" data-r="aanpak">De aanpak</a>
+    <a class="nav-cta" href="#/aanpak" data-r="aanpak">De aanpak</a>
   </div>
   <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
@@ -801,11 +829,12 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 function viewHome(){
   const c = D.counts;
+  // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
+  // kookboek bundelt de stukken niet, het staat als trekpleister in het blok hierboven.
   const ingangen = [
     ['rubrieken','Thema&#39;s','De rode draden van zeven jaar, van openbaarheid tot mandaten, schuld, vastgoed en privacy.','#/themas', c.themas+' thema&#39;s','thema'],
     ['verhaallijnen','Dossiers','Zaken die over jaren en vele stukken lopen, gebundeld als tijdlijn.','#/dossiers', c.dossiers+' dossiers','dossiers'],
     ['uitgelicht per jaar','Beste van','De jaarlijkse selectie van het magazine zelf, met de originele motivatie.','#/beste-van', D.beste_van.length+' jaargangen','ster'],
-    ['kookboek','De aanpak','Zes technieken om een stad transparant te maken, elk met de stukken waarin het gebeurde.','#/aanpak','het kookboek','garde'],
     ['volledig &amp; doorzoekbaar','Lezen','Het complete archief, filterbaar op thema en jaar, met zoeken op inhoud.','#/lezen','alle '+c.posts,'artikel']
   ];
   // Drie handgekozen instapstukken (redactionele keuze, geen automatische selectie).
@@ -823,8 +852,8 @@ function viewHome(){
   +     '<div class="hero-meta"><span class="pulse"></span><span>Experiment</span></div>'
   +     '<h1 class="hero-title"><span class="box">Lees mee</span> met wat Mechelen liever niet gelezen zag</h1>'
   +     '<p class="hero-lede">Zeven jaar hyperlokale journalistiek over Mechelen, van 2016 tot 2023. <b>'+c.posts+' stukken</b>, niet zomaar op een rij maar gebundeld per thema en dossier, met de sterkste verhalen die het magazine zelf uitlichtte.</p>'
-  +     '<div class="cta-row"><a class="btn pink" href="#/lezen">Begin met lezen <span class="ar">&#8594;</span></a>'
-  +       '<a class="btn ghost" href="#/aanpak">De aanpak <span class="ar">&#8594;</span></a></div>'
+  +     '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk de aanpak <span class="ar">&#8594;</span></a>'
+  +       '<a class="btn ghost" href="#/lezen">Begin met lezen <span class="ar">&#8594;</span></a></div>'
   +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
@@ -833,16 +862,7 @@ function viewHome(){
   +     '<a class="stat" href="#/dossiers"><div class="n">'+c.dossiers+'</div><div class="l">dossiers</div></a>'
   +   '</div>'
   + '</div></header>'
-  // ingangen
-  + '<section><div class="shell">'
-  +   '<div class="sec-head no-num"><div>'
-  +     '<div class="eyebrow">Ingangen</div><h2 class="sec-h2">Kies je eigen <em>manier van lezen</em></h2>'
-  +     '<p class="sec-lede">Niet de datum staat centraal, maar de inhoud. Elk pad bundelt dezelfde '+c.posts+' stukken op een andere manier.</p></div></div>'
-  +   '<div class="grid">'+ingangen.map(i =>
-        '<a class="cell" href="'+i[3]+'"><span class="cell-ic">'+ic(i[5])+'</span><span class="k">'+i[0]+'</span><h3>'+i[1]+'</h3><p>'+i[2]+'</p><span class="go">'+i[4]+' &#8594;</span></a>'
-      ).join('')+'</div>'
-  + '</div></section>'
-  // de aanpak (teaser)
+  // de aanpak (de trekpleister, dus meteen na de hero)
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
@@ -850,6 +870,16 @@ function viewHome(){
   +   '<div class="techrow">'+HANDBOEK.filter(c => c.kort).map(c =>
         '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3><p>'+c.kort+'</p>'
         + '<span class="go" style="font-family:\'JetBrains Mono\',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-text)">lees dit onderdeel &#8594;</span></a>'
+      ).join('')+'</div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Lees het hele kookboek <span class="ar">&#8594;</span></a></div>'
+  + '</div></section>'
+  // ingangen: de manieren om het archief zelf te lezen
+  + '<section><div class="shell">'
+  +   '<div class="sec-head no-num"><div>'
+  +     '<div class="eyebrow">Ingangen</div><h2 class="sec-h2">Kies je eigen <em>manier van lezen</em></h2>'
+  +     '<p class="sec-lede">Niet de datum staat centraal, maar de inhoud. Elk pad bundelt dezelfde '+c.posts+' stukken op een andere manier.</p></div></div>'
+  +   '<div class="grid">'+ingangen.map(i =>
+        '<a class="cell" href="'+i[3]+'"><span class="cell-ic">'+ic(i[5])+'</span><span class="k">'+i[0]+'</span><h3>'+i[1]+'</h3><p>'+i[2]+'</p><span class="go">'+i[4]+' &#8594;</span></a>'
       ).join('')+'</div>'
   + '</div></section>'
   // uitgelicht
