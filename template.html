@@ -82,10 +82,12 @@ img{max-width:100%;height:auto;display:block}
 .nav{position:sticky;top:0;z-index:40;background:rgba(245,241,232,.82);
   backdrop-filter:blur(20px) saturate(140%);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:1.2rem;height:62px}
-.brand{display:flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;
+/* Merkregel bovenaan: één standaard over de drie sites van As Gau Paust
+   (mug.png op 34px, 1rem/600, gap .65rem, "Paust" roze en rechtop). */
+.brand{display:flex;align-items:center;gap:.65rem;font-family:'JetBrains Mono',monospace;
   font-weight:600;font-size:1rem;letter-spacing:-.01em}
-.brand .mk{width:32px;height:32px;flex:none}
-.brand em{color:var(--pink-text);font-style:italic;font-weight:600}
+.brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
+.brand em{color:var(--pink-text);font-style:normal;font-weight:600}
 .nav-links{display:flex;gap:1.3rem;margin-left:auto;font-family:'JetBrains Mono',monospace;
   font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .nav-links a{padding:.2rem 0;border-bottom:2px solid transparent;transition:.15s}
@@ -116,8 +118,8 @@ img{max-width:100%;height:auto;display:block}
 .menu-head{display:flex;justify-content:space-between;align-items:center;height:62px;padding:0 var(--pad-x);
   border-bottom:1px solid var(--line);flex-shrink:0}
 .menu-head .brand{display:flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1rem;letter-spacing:-.01em}
-.menu-head .brand .mk{width:32px;height:32px;flex:none}
-.menu-head .brand em{color:var(--pink-text);font-style:italic;font-weight:600}
+.menu-head .brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
+.menu-head .brand em{color:var(--pink-text);font-style:normal;font-weight:600}
 .menu-close{font-size:1.9rem;width:38px;height:38px;color:var(--ink);cursor:pointer;line-height:1;background:none;border:0;flex-shrink:0}
 .menu-close:hover{color:var(--pink-text)}
 .menu-list{display:flex;flex-direction:column;flex:1}
@@ -671,7 +673,7 @@ a.tech:hover{background:var(--paper-2)}
 
 <nav class="nav" aria-label="Hoofdnavigatie"><div class="shell nav-in">
   <a class="brand" href="https://asgaupaust.be/" aria-label="As Gau Paust, naar het portaal">
-    <img class="mk" src="/beelden/mug-gaas.png" alt="" aria-hidden="true" width="512" height="512">
+    <img class="mk" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512">
     As Gau <em>Paust</em>
   </a>
   <div class="nav-links" id="navlinks">
@@ -687,7 +689,7 @@ a.tech:hover{background:var(--paper-2)}
 <div class="menu-overlay" id="menuOverlay" hidden>
   <div class="menu-card">
     <div class="menu-head">
-      <a class="brand" href="https://asgaupaust.be/" aria-label="As Gau Paust, naar het portaal"><img class="mk" src="/beelden/mug-gaas.png" alt="" aria-hidden="true" width="512" height="512">As Gau <em>Paust</em></a>
+      <a class="brand" href="https://asgaupaust.be/" aria-label="As Gau Paust, naar het portaal"><img class="mk" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512">As Gau <em>Paust</em></a>
       <button class="menu-close" aria-label="Sluit menu">&times;</button>
     </div>
     <!-- Wordt gevuld uit INGANGEN, net als de knoppenbalk onderaan: een icoon hoort maar op
@@ -742,8 +744,8 @@ const MARK = '<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria
 
 // De mug in de kamer: het platform-teken van As Gau Paust (identiek aan asgaupaust.be:
 // papierwitte lijnen, muggengaas in de vleugels), hier enkel bij het handboek; de toren
-// blijft het sitemerk. mug-gaas.png is een bewerkt eigen bestand, geen gefetcht beeld.
-const MUG = '<img src="/beelden/mug-gaas.png" alt="De mug in de kamer" width="512" height="512">';
+// blijft het sitemerk. mug.png is een bewerkt eigen bestand, geen gefetcht beeld.
+const MUG = '<img src="/beelden/mug.png" alt="De mug in de kamer" width="512" height="512">';
 
 function ic(name){
   const p = {
@@ -1009,7 +1011,7 @@ function viewBesteVan(){
 
 const hbSlug = k => k.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 // alternatief voor de banner: drie skylines in vierkant/cirkel/driehoek, elk in een 48x48-vlak
-// (actueel embleem: beelden/mug-gaas.png, de mug-tekening van het magazine zelf)
+// (actueel embleem: beelden/mug.png, de mug-tekening van het magazine zelf)
 const HBB_SKY = [
   '<rect x="0" y="38" width="8" height="10"/><rect x="8" y="32" width="7" height="16"/><rect x="15" y="40" width="9" height="8"/><rect x="24" y="28" width="8" height="20"/><rect x="32" y="36" width="8" height="12"/><rect x="40" y="31" width="8" height="17"/>',
   '<rect x="10" y="36" width="7" height="12"/><rect x="17" y="31" width="7" height="17"/><rect x="24" y="39" width="7" height="9"/><rect x="31" y="34" width="7" height="14"/>',
@@ -1110,7 +1112,7 @@ function viewAanpak(){
     + blok
     + '<aside class="hb-banner">'
     +   '<div class="hbb-geo" aria-hidden="true">'
-    +     '<img src="beelden/mug-gaas.png" alt="De mug in de kamer" width="512" height="512" loading="lazy">'
+    +     '<img src="beelden/mug.png" alt="De mug in de kamer" width="512" height="512" loading="lazy">'
     +   '</div>'
     +   '<div class="hbb-txt">'
     +     '<div class="hbb-kicker">Oproep</div>'
