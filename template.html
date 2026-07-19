@@ -129,12 +129,18 @@ img{max-width:100%;height:auto;display:block}
 .menu-num{color:var(--ink-faint);transition:color .15s;display:flex}
 .menu-num svg{width:22px;height:22px;display:block}
 .menu-name{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:500;letter-spacing:-.005em}
-.menu-foot{display:flex;background:var(--pink);flex-shrink:0}
-.menu-foot a{flex:1;display:flex;align-items:center;gap:.55rem;padding:1.15rem 1.6rem;
-  font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#fff}
-.menu-foot a:hover{background:var(--pink-deep)}
-.menu-foot a .mf-arr{transition:transform .18s}
-.menu-foot a:hover .mf-arr{transform:translateX(4px)}
+/* Portaal-terugkeer bovenaan het menu: een rustige recessieband met de mug, het platform-teken
+   van As Gau Paust. Zo herken je de familie en spring je terug naar het portaal; de toren blijft
+   het sitemerk van Lees mee. */
+.menu-portal{display:flex;align-items:center;gap:.8rem;padding:.7rem var(--pad-x) .75rem;
+  background:var(--paper-3);color:var(--ink);border-bottom:1px solid var(--line);transition:background .18s}
+.menu-portal:hover{background:#e6dfce}
+.menu-portal .mpo-mug{width:32px;height:32px;flex:none;display:block}
+.menu-portal .mpo-text{display:flex;flex-direction:column;gap:.05rem;line-height:1.2}
+.menu-portal .mpo-title{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.menu-portal .mpo-sub{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.03em;color:var(--pink-text)}
+.menu-portal .mpo-arr{margin-left:auto;font-size:1.05rem;color:var(--pink-text);transition:transform .18s}
+.menu-portal:hover .mpo-arr{transform:translateX(4px)}
 
 /* eyebrow / koppen */
 .eyebrow{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;
@@ -681,13 +687,21 @@ a.tech:hover{background:var(--paper-2)}
       <span class="brand"><span class="mk"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-label="Sint-Romboutstoren"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></span>Lees mee <em>met Mechelen</em></span>
       <button class="menu-close" aria-label="Sluit menu">&times;</button>
     </div>
+    <!-- Portaal-terugkeer: de mug is het platform-teken van As Gau Paust, de toren blijft het
+         sitemerk van Lees mee. Zo zie je meteen dat dit een bouwblok van As Gau Paust is en
+         spring je in één tik terug naar het portaal. -->
+    <a class="menu-portal" href="https://asgaupaust.be" aria-label="Naar het portaal van As Gau Paust">
+      <img class="mpo-mug" src="/beelden/mug-gaas.png" alt="" aria-hidden="true" width="512" height="512">
+      <span class="mpo-text">
+        <span class="mpo-title">As Gau Paust</span>
+        <span class="mpo-sub">Terug naar het portaal</span>
+      </span>
+      <span class="mpo-arr" aria-hidden="true">&#8594;</span>
+    </a>
     <!-- Wordt gevuld uit INGANGEN, net als de knoppenbalk onderaan: een icoon hoort maar op
          een plek te staan. Stonden de svg's hier hardgecodeerd, dan liepen ze uit de pas
          (de radertjes bleven hier staan toen de aanpak al keukengerei had). -->
     <nav class="menu-list" id="menulist"></nav>
-    <div class="menu-foot">
-      <a href="https://asgaupaust.be">As Gau Paust <span class="mf-arr" aria-hidden="true">&#8594;</span></a>
-    </div>
   </div>
 </div>
 
