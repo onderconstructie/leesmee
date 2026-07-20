@@ -143,8 +143,8 @@ img{max-width:100%;height:auto;display:block}
 .menu-list a:last-child{border-bottom:none}
 .menu-list a:hover .menu-num{color:var(--pink)}
 /* Onder 760px vervangt dit menu de balk, dus ook hier springt de aanpak eruit. */
-.menu-list a[data-r="aanpak"] .menu-name{color:var(--pink-text)}
-.menu-list a[data-r="aanpak"] .menu-num{color:var(--pink)}
+.menu-list a[data-r="formule"] .menu-name{color:var(--pink-text)}
+.menu-list a[data-r="formule"] .menu-num{color:var(--pink)}
 .menu-num{color:var(--ink-faint);transition:color .15s;display:flex}
 .menu-num svg{width:22px;height:22px;display:block}
 .menu-name{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:500;letter-spacing:-.005em}
@@ -193,6 +193,8 @@ section:first-of-type{border-top:0}
   padding:0 .1em;margin-right:-.22em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .hero-lede{font-size:clamp(1.02rem,1.5vw,1.2rem);line-height:1.6;max-width:60ch;margin:1.3rem 0 0;color:var(--ink-2)}
 .hero-lede b{color:var(--pink-text);font-weight:600}
+/* De aansporing onder de hoofdtitel, zelfde plek en maat als op Denk mee. */
+.hero-tagline{margin:1.15rem 0 0;font-size:clamp(1.1rem,1.9vw,1.45rem);line-height:1.3;font-weight:500;color:var(--ink)}
 .cta-row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.6rem}
 .btn{display:inline-flex;align-items:center;gap:.55rem;padding:.8rem 1.25rem;cursor:pointer;
   font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
@@ -217,11 +219,21 @@ section:first-of-type{border-top:0}
 }
 
 /* data-strip */
+/* De hero-knop 'Kies en lees' springt hierheen; 80px houdt de kop vrij van de plakkende
+   navbalk, net als bij de andere ankers op de site. */
+#ingangen{scroll-margin-top:80px}
 .strip{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-kaart);background:var(--line-kaart);
   margin-top:2.4rem;border-radius:var(--r-kaart);overflow:hidden}
 .stat{flex:1 1 140px;background:linear-gradient(180deg,var(--kaart-a),var(--kaart-b));padding:1rem 1.15rem;color:inherit;transition:background .15s}
 a.stat:hover{background:var(--paper-2)}
 a.stat:hover .l{color:var(--pink-text)}
+/* Elke teller is een echte tik-tegel: het pijltje en de roze onderlijn zeggen dat je erop
+   kunt, ook op touch waar hover niet bestaat. Zelfde redenering als de cockpit van Denk mee. */
+a.stat{position:relative;border-bottom:2px solid transparent}
+a.stat::after{content:'\2192';position:absolute;right:.9rem;top:.95rem;font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;color:var(--pink);opacity:.55;transition:transform .16s,opacity .16s}
+a.stat:hover::after,a.stat:focus-visible::after{opacity:1;transform:translateX(3px)}
+a.stat:hover{border-bottom-color:var(--pink)}
 .stat .n{font-family:'JetBrains Mono',monospace;font-weight:300;font-size:1.9rem;line-height:1;letter-spacing:-.02em}
 .stat .n b{color:var(--pink);font-weight:400}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
@@ -263,6 +275,27 @@ a.stat:hover .l{color:var(--pink-text)}
 @media(max-width:820px){
   .hero-grid{grid-template-columns:1fr}
   .hero-mark{width:clamp(140px,42vw,200px);margin:.6rem auto 0}
+}
+/* Smartphone: de vier tellers moeten meteen in beeld staan, dus die schuiven boven de toren.
+   display:contents haalt het hero-raster als doos weg, waardoor de tekstkolom, de tellers en
+   de toren broers worden in dezelfde flexkolom en met order herschikt kunnen worden. */
+@media(max-width:700px){
+  /* De hele hero wordt één flexkolom: door hero-grid en hero-copy op display:contents te
+     zetten worden hun kinderen broers, en pas dan kan order ze herschikken. De vier tellers
+     schuiven zo naar boven, vlak na de knoppen, en de lede en de toren zakken eronder. Dat
+     is nodig omdat de zichtbare hoogte op een telefoon van 667px in werkelijkheid rond de
+     550px ligt: de adresbalk van de browser eet de rest op. */
+  .hero .shell{display:flex;flex-direction:column}
+  .hero-grid,.hero-copy{display:contents}
+  .hero-meta{order:1;margin-bottom:.9rem}
+  .hero-title{order:2}
+  .hero-tagline{order:3;margin-top:.8rem}
+  .cta-row{order:4;margin-top:1.1rem}
+  .strip{order:5;margin-top:1.3rem}
+  .hero-lede{order:6;margin-top:1.4rem;font-size:.97rem}
+  .hero-mark{order:7;margin:1.4rem auto .2rem;width:clamp(118px,32vw,160px)}
+  .hero{padding-top:.5rem}
+  .stat{padding:.8rem 1rem}
 }
 
 /* filter-groepen op de lezen-pagina */
@@ -728,7 +761,7 @@ a.tech:hover{background:var(--paper-2)}
     <a href="#/themas" data-r="themas">Thema&#39;s</a>
     <a href="#/dossiers" data-r="dossiers">Dossiers</a>
     <a href="#/beste-van" data-r="beste-van">Beste van</a>
-    <a class="nav-cta" href="#/aanpak" data-r="aanpak">Ontdek de formule</a>
+    <a class="nav-cta" href="#/formule" data-r="formule">Ontdek de formule</a>
   </div>
   <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
@@ -877,9 +910,10 @@ function viewHome(){
   +   '<div class="hero-grid"><div class="hero-copy">'
   +     '<div class="hero-meta"><span class="pulse"></span><span>Experiment</span></div>'
   +     '<h1 class="hero-title"><span class="box">Lees mee</span> met wat Mechelen liever niet gelezen zag</h1>'
+  +     '<p class="hero-tagline">Laat je inspireren.</p>'
   +     '<p class="hero-lede">Zeven jaar hyperlokale journalistiek over Mechelen, van 2016 tot 2023. <b>'+c.posts+' stukken</b>, niet zomaar op een rij maar gebundeld per thema en dossier, met de sterkste verhalen die het magazine zelf uitlichtte.</p>'
-  +     '<div class="cta-row"><a class="btn pink" href="#/aanpak">Doe het na <span class="ar">&#8594;</span></a>'
-  +       '<a class="btn ghost" href="#/lezen">Kies en lees <span class="ar">&#8594;</span></a></div>'
+  +     '<div class="cta-row"><a class="btn pink" href="#/formule">Doe ons na <span class="ar">&#8594;</span></a>'
+  +       '<a class="btn ghost" href="#/ingangen">Kies en lees <span class="ar">&#8594;</span></a></div>'
   +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
@@ -891,17 +925,17 @@ function viewHome(){
   // de aanpak (de trekpleister, dus meteen na de hero)
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
-  +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
+  +     '<div class="eyebrow">De formule</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
   +     '<p class="sec-lede">De formules leggen uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
   +   '<div class="techrow">'+voorproefje.map(c =>
-        '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
+        '<a class="tech" href="#/formule/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
         + '<div class="tech-lab">zo doe je dat</div>'
         + '<p class="tech-stap">'+c.stappen[c.teaserStap - 1]+'</p></a>'
       ).join('')+'</div>'
-  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk alle formules <span class="ar">&#8594;</span></a></div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/formule">Bekijk alle formules <span class="ar">&#8594;</span></a></div>'
   + '</div></section>'
   // ingangen: de manieren om het archief zelf te lezen
-  + '<section><div class="shell">'
+  + '<section id="ingangen"><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">Ingangen</div><h2 class="sec-h2">Kies je eigen <em>manier van lezen</em></h2>'
   +     '<p class="sec-lede">Niet de datum staat centraal, maar de inhoud. Elk pad bundelt dezelfde '+c.posts+' stukken op een andere manier.</p></div></div>'
@@ -1164,7 +1198,7 @@ function viewAanpak(){
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
     + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('labofles')+'</div><div>'
-    +   '<div class="eyebrow">De aanpak, in formules</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
+    +   '<div class="eyebrow">De formule, stap voor stap</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
     + '<aside class="hb-banner">'
@@ -1250,9 +1284,15 @@ function render(isNav){
     case 'dossiers': out = viewDossiers(); break;
     case 'dossier': out = viewDossier(parts[1]); break;
     case 'beste-van': out = viewBesteVan(); break;
-    case 'aanpak':
+    // De hero-knop 'Kies en lees' wijst hierheen: dezelfde voorpagina, maar meteen bij de
+    // leesingangen. Zo hoeft de bezoeker niet eerst langs het formule-blok te scrollen.
+    case 'ingangen':
+      out = viewHome();
+      after = () => { const el = document.getElementById('ingangen'); if(el) el.scrollIntoView({block:'start'}); };
+      break;
+    case 'formule':
       out = viewAanpak();
-      // #/aanpak/<hoofdstuk> scrollt naar dat hoofdstuk (deep-link vanaf de voorpagina)
+      // #/formule/<onderdeel> scrollt daarheen (deep-link vanaf de voorpagina)
       if(parts[1]) after = () => { const el = document.getElementById('hb-'+parts[1]); if(el) el.scrollIntoView({block:'start'}); };
       break;
     case 'artikel': out = viewArtikel(parts[1]); break;
@@ -1267,7 +1307,7 @@ function render(isNav){
   // op het scherm staat. Op de voorpagina de volledige merknaam; elders "<kop> · Lees mee".
   const kop = app.querySelector('h1');
   const BASIS = 'Lees mee met Mechelen, het archief van As Gau Paust';
-  document.title = (root === '' || !kop) ? BASIS : (kop.textContent.trim() + ' · Lees mee met Mechelen');
+  document.title = (root === '' || root === 'ingangen' || !kop) ? BASIS : (kop.textContent.trim() + ' · Lees mee met Mechelen');
 
   // niet scrollen bij een anker binnen beste-van
   if(!location.hash.includes('#bv-')) window.scrollTo(0, 0);
@@ -1289,7 +1329,7 @@ const INGANGEN = [
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
   ['dossiers','#/dossiers','dossiers','Dossiers','Dossiers'],
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
-  ['aanpak','#/aanpak','labofles','Aanpak','De aanpak']
+  ['formule','#/formule','labofles','Formule','De formule']
 ];
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
