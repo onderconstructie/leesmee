@@ -227,7 +227,7 @@ a.stat:hover .l{color:var(--pink-text)}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-faint);margin-top:.45rem}
 
-/* iconen (artikel, dossierstapel, thema-tag, ster, koksmuts) */
+/* iconen (artikel, dossierstapel, thema-tag, ster, pollepel) */
 .ic-svg{display:block}
 .cell-ic{color:var(--pink);margin-bottom:.85rem}
 .cell-ic .ic-svg{width:30px;height:30px}
@@ -800,18 +800,15 @@ function ic(name){
     dossiers:'<rect x="8" y="4" width="11" height="14"/><rect x="5" y="7" width="11" height="14"/><line x1="8" y1="11" x2="13" y2="11"/><line x1="8" y1="14.5" x2="13" y2="14.5"/>',
     thema:'<path d="M13 3H4v9l9 9 9-9z"/><circle cx="7.6" cy="7.6" r="1.4" fill="currentColor" stroke="none"/>',
     ster:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.1 6.6 20l1-6.1L3.2 9.5l6.1-.9z"/>',
-    /* De aanpak is een kookboek, dus staat er een koksmuts. Drie dingen dragen de herkenning
-       op 20px, waar een eerdere poging als een paddenstoel las: de band is breed (bij een
-       echte toque loopt hij bijna even ver door als de kroon), de kroon steekt maar een
-       beetje over, en tussen de drie bollen zitten echte inkepingen. Zonder die inkepingen
-       wordt de bovenkant één bol en leest het als een wolk. De ronde uiteinden staan hier
-       expliciet, want de stylesheet zet stroke-linecap op square en dat hakt de bollen af. */
-    koksmuts:'<g stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
-        + '<path d="M6.2 14.6C4.6 14.6 3.6 13.2 4 11.6 2.9 9.9 4.2 7.6 6.3 7.8'
-        +   ' 6.5 5.4 9.2 4.4 10.6 6.1 11 4 13 4 13.4 6.1 14.8 4.4 17.5 5.4 17.7 7.8'
-        +   ' 19.8 7.6 21.1 9.9 20 11.6 20.4 13.2 19.4 14.6 17.8 14.6"/>'
-        + '<path d="M6.2 14.6h11.6V20H6.2z"/>'
-        + '</g>',
+    /* De aanpak is een kookboek, dus staat er een pollepel. De kom is GEVULD, en dat is het
+       hele punt: een omlijnde kom op een steel leest als een vergrootglas, wat op een site
+       met een zoekfunctie ronduit misleidend is. Gevuld leest hij meteen als lepel, tot op
+       20px. De kom is ook bewust ovaal en niet rond, want een ronde kom kantelt weer naar
+       dat vergrootglas. De ronde punt staat expliciet, want de stylesheet zet linecap op
+       square en dat geeft de steel een afgehakt uiteinde. */
+    pollepel:'<g><path d="M7.07 20.51 12.67 10.43" stroke-width="1.6" stroke-linecap="round"/>'
+        + '<ellipse cx="15.02" cy="6.18" rx="2.46" ry="4.7" transform="rotate(29.4 15.02 6.18)"'
+        +   ' fill="currentColor" stroke="none"/></g>',
     info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11.5" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r=".95" fill="currentColor" stroke="none"/>'
   }[name] || '';
   return '<svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true">'+p+'</svg>';
@@ -1162,7 +1159,7 @@ function viewAanpak(){
   ).join('');
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
-    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('koksmuts')+'</div><div>'
+    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('pollepel')+'</div><div>'
     +   '<div class="eyebrow">De aanpak, een kookboek</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
@@ -1288,7 +1285,7 @@ const INGANGEN = [
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
   ['dossiers','#/dossiers','dossiers','Dossiers','Dossiers'],
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
-  ['aanpak','#/aanpak','koksmuts','Aanpak','De aanpak']
+  ['aanpak','#/aanpak','pollepel','Aanpak','De aanpak']
 ];
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
