@@ -223,18 +223,24 @@ section:first-of-type{border-top:0}
 /* De hero-knop 'Kies en lees' springt hierheen; 80px houdt de kop vrij van de plakkende
    navbalk, net als bij de andere ankers op de site. */
 #ingangen{scroll-margin-top:80px}
-.strip{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-kaart);background:var(--line-kaart);
-  margin-top:2.4rem;border-radius:var(--r-kaart);overflow:hidden}
-.stat{flex:1 1 140px;background:linear-gradient(180deg,var(--kaart-a),var(--kaart-b));padding:1rem 1.15rem;color:inherit;transition:background .15s}
-a.stat:hover{background:var(--paper-2)}
+/* De tellers als LOSSE tik-tegels, dezelfde knoptaal als de cockpit van Denk mee: elk met een
+   eigen rand, eigen afronding en lucht ertussen. Daardoor lezen ze in rust al als knop. Ze zaten
+   eerder aaneengeplakt in één omlijnde balk met haarlijntjes ertussen, en dat oogde als een
+   tabel: iets om te lézen, niet om op te tikken. */
+.strip{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2.4rem}
+.stat{flex:1 1 140px;background:linear-gradient(180deg,var(--kaart-a),var(--kaart-b));
+  border:1px solid var(--line-kaart);border-radius:var(--r-kaart);
+  padding:.9rem 1.05rem;color:inherit;
+  transition:background .15s,border-color .15s,box-shadow .15s}
+a.stat{position:relative}
+/* Het pijltje staat altijd zichtbaar en niet pas bij hover: op een telefoon bestaat hover niet,
+   en dan zou de tegel er als dood tekstblok bij liggen. */
+a.stat::after{content:'\2192';position:absolute;right:.85rem;top:.9rem;font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;color:var(--pink);opacity:.6;transition:transform .16s,opacity .16s}
+a.stat:hover{background:var(--paper-2);border-color:var(--pink);box-shadow:var(--shadow-soft)}
 a.stat:hover .l{color:var(--pink-text)}
-/* Elke teller is een echte tik-tegel: het pijltje en de roze onderlijn zeggen dat je erop
-   kunt, ook op touch waar hover niet bestaat. Zelfde redenering als de cockpit van Denk mee. */
-a.stat{position:relative;border-bottom:2px solid transparent}
-a.stat::after{content:'\2192';position:absolute;right:.9rem;top:.95rem;font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;color:var(--pink);opacity:.55;transition:transform .16s,opacity .16s}
 a.stat:hover::after,a.stat:focus-visible::after{opacity:1;transform:translateX(3px)}
-a.stat:hover{border-bottom-color:var(--pink)}
+a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .stat .n{font-family:'JetBrains Mono',monospace;font-weight:300;font-size:1.9rem;line-height:1;letter-spacing:-.02em}
 .stat .n b{color:var(--pink);font-weight:400}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
