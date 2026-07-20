@@ -228,7 +228,11 @@ section:first-of-type{border-top:0}
    eerder aaneengeplakt in één omlijnde balk met haarlijntjes ertussen, en dat oogde als een
    tabel: iets om te lézen, niet om op te tikken. */
 .strip{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2.4rem}
-.stat{flex:1 1 140px;background:linear-gradient(180deg,var(--kaart-a),var(--kaart-b));
+/* Bewust niet het volle kaartwit: op het zandkleurige papier sprongen die tegels er als
+   knalwitte blokken uit. Een half-doorschijnend wit tilt ze net genoeg op, laat de roze
+   hero-gloed er zacht doorheen spelen, en houdt het vlak rustig. Het volle wit bewaren we
+   voor de hover, zodat aanraken wél iets doet. */
+.stat{flex:1 1 140px;background:rgba(255,255,255,.5);
   border:1px solid var(--line-kaart);border-radius:var(--r-kaart);
   padding:.9rem 1.05rem;color:inherit;
   transition:background .15s,border-color .15s,box-shadow .15s}
@@ -755,6 +759,20 @@ a.tech:hover{background:var(--paper-2)}
      12px lager, ook al klopte het op desktop al. */
   .hero{padding-top:1rem}
   .hero-meta{margin-bottom:.85rem}
+}
+/* KORTE telefoon (SE-formaat, of zodra de adresbalk in beeld staat): daar viel de onderste rij
+   tellers 24px onder de vouw, dus zag je de cockpit maar half. Hier wordt alles boven de
+   cockpit strakker begroot. Bewust op schermHOOGTE en niet op breedte: een hoge telefoon houdt
+   de ruimere indeling, want daar is het probleem er niet. */
+@media(max-width:700px) and (max-height:700px){
+  .hero{padding-top:.2rem}
+  .hero-title{font-size:clamp(1.6rem,7.2vw,1.95rem)}
+  .hero-lede{margin-top:.6rem}
+  .cta-row{margin-top:.8rem}
+  .strip{margin-top:.7rem}
+  .stat{padding:.55rem .85rem}
+  .stat .n{font-size:1.4rem}
+  .stat .l{margin-top:.25rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
