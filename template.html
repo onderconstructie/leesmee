@@ -227,7 +227,7 @@ a.stat:hover .l{color:var(--pink-text)}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-faint);margin-top:.45rem}
 
-/* iconen (artikel, dossierstapel, thema-tag, ster, microscoop) */
+/* iconen (artikel, dossierstapel, thema-tag, ster, labofles) */
 .ic-svg{display:block}
 .cell-ic{color:var(--pink);margin-bottom:.85rem}
 .cell-ic .ic-svg{width:30px;height:30px}
@@ -728,7 +728,7 @@ a.tech:hover{background:var(--paper-2)}
     <a href="#/themas" data-r="themas">Thema&#39;s</a>
     <a href="#/dossiers" data-r="dossiers">Dossiers</a>
     <a href="#/beste-van" data-r="beste-van">Beste van</a>
-    <a class="nav-cta" href="#/aanpak" data-r="aanpak">De aanpak</a>
+    <a class="nav-cta" href="#/aanpak" data-r="aanpak">Ontdek de formule</a>
   </div>
   <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
@@ -800,15 +800,18 @@ function ic(name){
     dossiers:'<rect x="8" y="4" width="11" height="14"/><rect x="5" y="7" width="11" height="14"/><line x1="8" y1="11" x2="13" y2="11"/><line x1="8" y1="14.5" x2="13" y2="14.5"/>',
     thema:'<path d="M13 3H4v9l9 9 9-9z"/><circle cx="7.6" cy="7.6" r="1.4" fill="currentColor" stroke="none"/>',
     ster:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.1 6.6 20l1-6.1L3.2 9.5l6.1-.9z"/>',
-    /* De aanpak staat onder een microscoop: van dichtbij kijken naar wat een stad doet.
-       De buis krijgt een eigen, dikkere lijn (2,6 tegen 1,6); zonder dat verschil valt het
-       geheel op 22px uiteen in losse streepjes. Het dwarsstreepje bovenaan is het oculair
-       en draagt de herkenning: zonder dat leest de vorm als een willekeurig statief. */
-    microscoop:'<g stroke-linecap="round">'
-        + '<path d="M15.2 4.6 10 10.4" stroke-width="2.6"/>'
-        + '<path d="M13.2 2.8 16.8 6"/>'
-        + '<path d="M7 13.6h7.8"/><path d="M16.4 7v6.6"/>'
-        + '<path d="M11.2 13.6v6.2"/><path d="M6 19.8h12"/>'
+    /* De aanpak is een labo: proberen, meten, bijstellen. Twee dingen dragen de herkenning
+       op 22px. De vloeistoflijn maakt er een fles MET iets in van, zonder die lijn blijft het
+       een leeg driehoekje. En de bellen staan BOVEN de hals, niet erin: daar lezen ze als
+       borrelen, terwijl ze binnenin tegen de schuine wanden wegvallen. De bellen zijn gevuld,
+       net als het stipje in het thema-icoon; omlijnd zouden ze op deze maat dichtslibben. */
+    labofles:'<g stroke-linecap="round" stroke-linejoin="round">'
+        + '<path d="M9.6 6.8h4.8"/>'
+        + '<path d="M10.5 6.8v3.8L5.6 19.6h12.8l-4.9-9V6.8"/>'
+        + '<path d="M7.9 16h8.2"/>'
+        + '<circle cx="12" cy="3.3" r="1.2" fill="currentColor" stroke="none"/>'
+        + '<circle cx="14.8" cy="4.6" r=".85" fill="currentColor" stroke="none"/>'
+        + '<circle cx="9.4" cy="4.4" r=".7" fill="currentColor" stroke="none"/>'
         + '</g>',
     info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11.5" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r=".95" fill="currentColor" stroke="none"/>'
   }[name] || '';
@@ -845,15 +848,15 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 function viewHome(){
   const c = D.counts;
-  // Het recepten-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
+  // Het formule-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
   // omschrijving VAN een pijler of techniek (die staat al op /aanpak), maar één echte stap
   // eruit. Welke onderdelen en welke stap staat in de data (teaserStap), zodat dit blok
-  // vanzelf meeschuift als de recepten veranderen. Wijst een teaserStap buiten het bereik,
+  // vanzelf meeschuift als de formules veranderen. Wijst een teaserStap buiten het bereik,
   // dan valt de kaart terug op de eerste stap in plaats van leeg te renderen.
   const voorproefje = HANDBOEK.filter(c => c.teaserStap && c.stappen && c.stappen.length)
     .map(c => ({ ...c, teaserStap: c.stappen[c.teaserStap - 1] ? c.teaserStap : 1 }));
   // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
-  // de recepten bundelen de stukken niet, het staat als trekpleister in het blok hierboven.
+  // de formules bundelen de stukken niet, het staat als trekpleister in het blok hierboven.
   const ingangen = [
     ['rubrieken','Thema&#39;s','De rode draden van zeven jaar, van openbaarheid tot mandaten, schuld, vastgoed en privacy.','#/themas', c.themas+' thema&#39;s','thema'],
     ['verhaallijnen','Dossiers','Zaken die over jaren en vele stukken lopen, gebundeld als tijdlijn.','#/dossiers', c.dossiers+' dossiers','dossiers'],
@@ -889,13 +892,13 @@ function viewHome(){
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
-  +     '<p class="sec-lede">De recepten leggen uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
+  +     '<p class="sec-lede">De formules leggen uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
   +   '<div class="techrow">'+voorproefje.map(c =>
         '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
         + '<div class="tech-lab">zo doe je dat</div>'
         + '<p class="tech-stap">'+c.stappen[c.teaserStap - 1]+'</p></a>'
       ).join('')+'</div>'
-  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk alle recepten <span class="ar">&#8594;</span></a></div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk alle formules <span class="ar">&#8594;</span></a></div>'
   + '</div></section>'
   // ingangen: de manieren om het archief zelf te lezen
   + '<section><div class="shell">'
@@ -1131,7 +1134,7 @@ const HANDBOEK = [
         ['Kansen en uitdagingen van lokale journalistiek zijn talrijk. Dat maakte As Gau Paust met zijn bijdrage duidelijk.', 'Vereniging van Onderzoeksjournalisten (VVOJ)']
       ] },
     { kicker:'Tot slot', titel:'Volharding is gratis, tijd niet',
-      lead:`Lokale journalistiek is geen luxe, maar een vorm van controle op de macht. Ze heeft ook een prijs, en een eerlijk recept benoemt die: As Gau Paust maakte zeven jaar lang vele tientallen stukken, onafhankelijk en onbezoldigd, en staat sinds 2023 op pauze. Dat is geen detail. Subsidies voor de hyperlokale vierde macht zijn uiterst zeldzaam, terwijl net die onafhankelijke journalistiek structurele ondersteuning verdient.` },
+      lead:`Lokale journalistiek is geen luxe, maar een vorm van controle op de macht. Ze heeft ook een prijs, en die hoort er eerlijk bij: As Gau Paust maakte zeven jaar lang vele tientallen stukken, onafhankelijk en onbezoldigd, en staat sinds 2023 op pauze. Dat is geen detail. Subsidies voor de hyperlokale vierde macht zijn uiterst zeldzaam, terwijl net die onafhankelijke journalistiek structurele ondersteuning verdient.` },
 ];
 function viewAanpak(){
   const stukjes = slugs => {
@@ -1149,7 +1152,7 @@ function viewAanpak(){
         + (m[0] ? ' width="' + m[0] + '" height="' + m[1] + '"' : '')
         + ' alt="Cartoonfiguur van As Gau Paust" loading="lazy"><span class="fc-draai" aria-hidden="true">&#8635;</span></div><div class="fc-back" inert><span class="fc-src">Meer tijd om te reflecteren</span></div></div></button>'; })() : '')
     + '<p class="hb-lead">' + c.lead + '</p>'
-    + (c.stappen ? '<div class="hb-stappen"><div class="lab">In stappen</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
+    + (c.stappen ? '<div class="hb-stappen"><div class="lab">De formule</div><ol>' + c.stappen.map(s => '<li>' + s + '</li>').join('') + '</ol></div>' : '')
     + (c.lijst ? '<ul class="hb-lijst'+(c.lijstPlain?' plain':'')+'">' + c.lijst.map(x => '<li>' + x + '</li>').join('') + '</ul>' : '')
     + (c.quotes ? '<div class="hb-cards">' + c.quotes.map(q => '<button class="flipcard" type="button" aria-pressed="false" aria-label="Citaat &#8220;' + esc(q[0]) + '&#8221;, draai om voor de bron"><div class="fc-inner"><div class="fc-front"><span class="fc-mark" aria-hidden="true">&#8220;</span><span class="fc-q">' + esc(q[0]) + '</span><span class="fc-hint" aria-hidden="true">&#8635;</span></div><div class="fc-back" inert><span class="fc-lab">Wat anderen zeiden</span><span class="fc-src">' + esc(q[1]) + '</span></div></div></button>').join('') + '</div>' : '')
     + (c.actie ? '<div class="hb-actie"><b>Actie</b>' + c.actie + '</div>' : '')
@@ -1160,8 +1163,8 @@ function viewAanpak(){
   ).join('');
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
-    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('microscoop')+'</div><div>'
-    +   '<div class="eyebrow">De aanpak, in recepten</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
+    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('labofles')+'</div><div>'
+    +   '<div class="eyebrow">De aanpak, in formules</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
     + '<aside class="hb-banner">'
@@ -1286,7 +1289,7 @@ const INGANGEN = [
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
   ['dossiers','#/dossiers','dossiers','Dossiers','Dossiers'],
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
-  ['aanpak','#/aanpak','microscoop','Aanpak','De aanpak']
+  ['aanpak','#/aanpak','labofles','Aanpak','De aanpak']
 ];
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
