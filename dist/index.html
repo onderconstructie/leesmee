@@ -100,7 +100,7 @@ img{max-width:100%;height:auto;display:block}
 .nav-links a{padding:.2rem 0;border-bottom:2px solid transparent;transition:.15s}
 .nav-links a:hover{color:var(--pink-text)}
 .nav-links a.on{color:var(--ink);border-bottom-color:var(--pink)}
-/* Het kookboek is de trekpleister: het archief toont wat er gebeurde, de aanpak is wat een
+/* De aanpak is de trekpleister: het archief toont wat er gebeurde, de aanpak is wat een
    lezer elders zelf kan gebruiken. Daarom staat die ene link als knop tussen de tekstlinks.
    Deze regels staan na .on, want ze hebben dezelfde specificiteit. */
 .nav-links a.nav-cta{margin-left:.35rem;padding:.36rem .9rem;border:1px solid var(--pink);
@@ -142,7 +142,7 @@ img{max-width:100%;height:auto;display:block}
 .menu-list a:hover{background:var(--paper-2)}
 .menu-list a:last-child{border-bottom:none}
 .menu-list a:hover .menu-num{color:var(--pink)}
-/* Onder 760px vervangt dit menu de balk, dus ook hier springt het kookboek eruit. */
+/* Onder 760px vervangt dit menu de balk, dus ook hier springt de aanpak eruit. */
 .menu-list a[data-r="aanpak"] .menu-name{color:var(--pink-text)}
 .menu-list a[data-r="aanpak"] .menu-num{color:var(--pink)}
 .menu-num{color:var(--ink-faint);transition:color .15s;display:flex}
@@ -227,7 +227,7 @@ a.stat:hover .l{color:var(--pink-text)}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-faint);margin-top:.45rem}
 
-/* iconen (artikel, dossierstapel, thema-tag, ster, pollepel) */
+/* iconen (artikel, dossierstapel, thema-tag, ster, microscoop) */
 .ic-svg{display:block}
 .cell-ic{color:var(--pink);margin-bottom:.85rem}
 .cell-ic .ic-svg{width:30px;height:30px}
@@ -800,15 +800,16 @@ function ic(name){
     dossiers:'<rect x="8" y="4" width="11" height="14"/><rect x="5" y="7" width="11" height="14"/><line x1="8" y1="11" x2="13" y2="11"/><line x1="8" y1="14.5" x2="13" y2="14.5"/>',
     thema:'<path d="M13 3H4v9l9 9 9-9z"/><circle cx="7.6" cy="7.6" r="1.4" fill="currentColor" stroke="none"/>',
     ster:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.1 6.6 20l1-6.1L3.2 9.5l6.1-.9z"/>',
-    /* De aanpak is een kookboek, dus staat er een pollepel. De kom is GEVULD, en dat is het
-       hele punt: een omlijnde kom op een steel leest als een vergrootglas, wat op een site
-       met een zoekfunctie ronduit misleidend is. Gevuld leest hij meteen als lepel, tot op
-       20px. De kom is ook bewust ovaal en niet rond, want een ronde kom kantelt weer naar
-       dat vergrootglas. De ronde punt staat expliciet, want de stylesheet zet linecap op
-       square en dat geeft de steel een afgehakt uiteinde. */
-    pollepel:'<g><path d="M7.07 20.51 12.67 10.43" stroke-width="1.6" stroke-linecap="round"/>'
-        + '<ellipse cx="15.02" cy="6.18" rx="2.46" ry="4.7" transform="rotate(29.4 15.02 6.18)"'
-        +   ' fill="currentColor" stroke="none"/></g>',
+    /* De aanpak staat onder een microscoop: van dichtbij kijken naar wat een stad doet.
+       De buis krijgt een eigen, dikkere lijn (2,6 tegen 1,6); zonder dat verschil valt het
+       geheel op 22px uiteen in losse streepjes. Het dwarsstreepje bovenaan is het oculair
+       en draagt de herkenning: zonder dat leest de vorm als een willekeurig statief. */
+    microscoop:'<g stroke-linecap="round">'
+        + '<path d="M15.2 4.6 10 10.4" stroke-width="2.6"/>'
+        + '<path d="M13.2 2.8 16.8 6"/>'
+        + '<path d="M7 13.6h7.8"/><path d="M16.4 7v6.6"/>'
+        + '<path d="M11.2 13.6v6.2"/><path d="M6 19.8h12"/>'
+        + '</g>',
     info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11.5" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r=".95" fill="currentColor" stroke="none"/>'
   }[name] || '';
   return '<svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true">'+p+'</svg>';
@@ -844,15 +845,15 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 function viewHome(){
   const c = D.counts;
-  // Het kookboek-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
+  // Het recepten-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
   // omschrijving VAN een pijler of techniek (die staat al op /aanpak), maar één echte stap
   // eruit. Welke onderdelen en welke stap staat in de data (teaserStap), zodat dit blok
-  // vanzelf meeschuift als het kookboek verandert. Wijst een teaserStap buiten het bereik,
+  // vanzelf meeschuift als de recepten veranderen. Wijst een teaserStap buiten het bereik,
   // dan valt de kaart terug op de eerste stap in plaats van leeg te renderen.
   const voorproefje = HANDBOEK.filter(c => c.teaserStap && c.stappen && c.stappen.length)
     .map(c => ({ ...c, teaserStap: c.stappen[c.teaserStap - 1] ? c.teaserStap : 1 }));
   // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
-  // kookboek bundelt de stukken niet, het staat als trekpleister in het blok hierboven.
+  // de recepten bundelen de stukken niet, het staat als trekpleister in het blok hierboven.
   const ingangen = [
     ['rubrieken','Thema&#39;s','De rode draden van zeven jaar, van openbaarheid tot mandaten, schuld, vastgoed en privacy.','#/themas', c.themas+' thema&#39;s','thema'],
     ['verhaallijnen','Dossiers','Zaken die over jaren en vele stukken lopen, gebundeld als tijdlijn.','#/dossiers', c.dossiers+' dossiers','dossiers'],
@@ -888,13 +889,13 @@ function viewHome(){
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
-  +     '<p class="sec-lede">Het kookboek legt uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
+  +     '<p class="sec-lede">De recepten leggen uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
   +   '<div class="techrow">'+voorproefje.map(c =>
         '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
         + '<div class="tech-lab">zo doe je dat</div>'
         + '<p class="tech-stap">'+c.stappen[c.teaserStap - 1]+'</p></a>'
       ).join('')+'</div>'
-  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Open het kookboek <span class="ar">&#8594;</span></a></div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/aanpak">Bekijk alle recepten <span class="ar">&#8594;</span></a></div>'
   + '</div></section>'
   // ingangen: de manieren om het archief zelf te lezen
   + '<section><div class="shell">'
@@ -1130,7 +1131,7 @@ const HANDBOEK = [
         ['Kansen en uitdagingen van lokale journalistiek zijn talrijk. Dat maakte As Gau Paust met zijn bijdrage duidelijk.', 'Vereniging van Onderzoeksjournalisten (VVOJ)']
       ] },
     { kicker:'Tot slot', titel:'Volharding is gratis, tijd niet',
-      lead:`Lokale journalistiek is geen luxe, maar een vorm van controle op de macht. Ze heeft ook een prijs, en een eerlijk kookboek benoemt die: As Gau Paust maakte zeven jaar lang vele tientallen stukken, onafhankelijk en onbezoldigd, en staat sinds 2023 op pauze. Dat is geen detail. Subsidies voor de hyperlokale vierde macht zijn uiterst zeldzaam, terwijl net die onafhankelijke journalistiek structurele ondersteuning verdient.` },
+      lead:`Lokale journalistiek is geen luxe, maar een vorm van controle op de macht. Ze heeft ook een prijs, en een eerlijk recept benoemt die: As Gau Paust maakte zeven jaar lang vele tientallen stukken, onafhankelijk en onbezoldigd, en staat sinds 2023 op pauze. Dat is geen detail. Subsidies voor de hyperlokale vierde macht zijn uiterst zeldzaam, terwijl net die onafhankelijke journalistiek structurele ondersteuning verdient.` },
 ];
 function viewAanpak(){
   const stukjes = slugs => {
@@ -1159,8 +1160,8 @@ function viewAanpak(){
   ).join('');
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
-    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('pollepel')+'</div><div>'
-    +   '<div class="eyebrow">De aanpak, een kookboek</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
+    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('microscoop')+'</div><div>'
+    +   '<div class="eyebrow">De aanpak, in recepten</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
     + '<aside class="hb-banner">'
@@ -1285,7 +1286,7 @@ const INGANGEN = [
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
   ['dossiers','#/dossiers','dossiers','Dossiers','Dossiers'],
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
-  ['aanpak','#/aanpak','pollepel','Aanpak','De aanpak']
+  ['aanpak','#/aanpak','microscoop','Aanpak','De aanpak']
 ];
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
