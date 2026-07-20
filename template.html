@@ -227,7 +227,7 @@ a.stat:hover .l{color:var(--pink-text)}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-faint);margin-top:.45rem}
 
-/* iconen (artikel, dossierstapel, thema-tag, ster, garde) */
+/* iconen (artikel, dossierstapel, thema-tag, ster, koksmuts) */
 .ic-svg{display:block}
 .cell-ic{color:var(--pink);margin-bottom:.85rem}
 .cell-ic .ic-svg{width:30px;height:30px}
@@ -800,19 +800,18 @@ function ic(name){
     dossiers:'<rect x="8" y="4" width="11" height="14"/><rect x="5" y="7" width="11" height="14"/><line x1="8" y1="11" x2="13" y2="11"/><line x1="8" y1="14.5" x2="13" y2="14.5"/>',
     thema:'<path d="M13 3H4v9l9 9 9-9z"/><circle cx="7.6" cy="7.6" r="1.4" fill="currentColor" stroke="none"/>',
     ster:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.1 6.6 20l1-6.1L3.2 9.5l6.1-.9z"/>',
-    /* De aanpak is een kookboek, dus staat er een garde en geen radertjes. Drie dingen maken
-       hem herkenbaar op 20px, waar een eerdere poging faalde: hij staat SCHUIN (frontaal en
-       symmetrisch las hij als een lampje), de beugel is smal en langwerpig zoals een echte
-       klopper, en de draden zijn dik genoeg. Die vorige stonden op stroke 1,15, wat op 20px
-       neerkomt op 0,96px en dus wegvalt; deze staan op 1,5 en dat wordt 1,25px. Het ringetje
-       waar de steel en de draden samenkomen is klein maar cruciaal: dat zegt "garde". */
-    garde:'<g transform="rotate(-25 12 12)">'
-        + '<path d="M12 2.3v5.4" stroke-width="2.6" stroke-linecap="round"/>'
-        + '<path d="M9.8 8.2h4.4" stroke-width="1.8" stroke-linecap="round"/>'
-        + '<g stroke-width="1.5" stroke-linecap="round">'
-        + '<path d="M12 9.1c-6.3 2.4-6.3 8.4 0 10.8"/><path d="M12 9.1c6.3 2.4 6.3 8.4 0 10.8"/>'
-        + '<path d="M12 9.1c-2.4 2.8-2.4 8 0 10.8"/><path d="M12 9.1c2.4 2.8 2.4 8 0 10.8"/>'
-        + '</g></g>',
+    /* De aanpak is een kookboek, dus staat er een koksmuts. Drie dingen dragen de herkenning
+       op 20px, waar een eerdere poging als een paddenstoel las: de band is breed (bij een
+       echte toque loopt hij bijna even ver door als de kroon), de kroon steekt maar een
+       beetje over, en tussen de drie bollen zitten echte inkepingen. Zonder die inkepingen
+       wordt de bovenkant één bol en leest het als een wolk. De ronde uiteinden staan hier
+       expliciet, want de stylesheet zet stroke-linecap op square en dat hakt de bollen af. */
+    koksmuts:'<g stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+        + '<path d="M6.2 14.6C4.6 14.6 3.6 13.2 4 11.6 2.9 9.9 4.2 7.6 6.3 7.8'
+        +   ' 6.5 5.4 9.2 4.4 10.6 6.1 11 4 13 4 13.4 6.1 14.8 4.4 17.5 5.4 17.7 7.8'
+        +   ' 19.8 7.6 21.1 9.9 20 11.6 20.4 13.2 19.4 14.6 17.8 14.6"/>'
+        + '<path d="M6.2 14.6h11.6V20H6.2z"/>'
+        + '</g>',
     info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="11.5" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r=".95" fill="currentColor" stroke="none"/>'
   }[name] || '';
   return '<svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true">'+p+'</svg>';
@@ -849,11 +848,10 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 function viewHome(){
   const c = D.counts;
   // Het kookboek-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
-  // omschrijving VAN een hoofdstuk (die staat al op /aanpak), maar één echte stap UIT dat
-  // hoofdstuk. Welke hoofdstukken en welke stap staat in de data (teaserStap), zodat dit blok
+  // omschrijving VAN een pijler of techniek (die staat al op /aanpak), maar één echte stap
+  // eruit. Welke onderdelen en welke stap staat in de data (teaserStap), zodat dit blok
   // vanzelf meeschuift als het kookboek verandert. Wijst een teaserStap buiten het bereik,
   // dan valt de kaart terug op de eerste stap in plaats van leeg te renderen.
-  const hoofdstukken = HANDBOEK.filter(c => c.kort).length;
   const voorproefje = HANDBOEK.filter(c => c.teaserStap && c.stappen && c.stappen.length)
     .map(c => ({ ...c, teaserStap: c.stappen[c.teaserStap - 1] ? c.teaserStap : 1 }));
   // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
@@ -893,7 +891,7 @@ function viewHome(){
   + '<section><div class="shell">'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De aanpak</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
-  +     '<p class="sec-lede">Het kookboek telt '+hoofdstukken+' hoofdstukken over hoe deze stukken er kwamen, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
+  +     '<p class="sec-lede">Het kookboek legt uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
   +   '<div class="techrow">'+voorproefje.map(c =>
         '<a class="tech" href="#/aanpak/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
         + '<div class="tech-lab">zo doe je dat</div>'
@@ -1078,7 +1076,7 @@ const HBB_SKY = [
 const HANDBOEK = [
     { kicker:'Het magazine', titel:'Een onafhankelijk experiment',
       citaat:['As gau paust','dat de paus oep au paust','Paust dan ma gau eet anders'],
-      lead:`As Gau Paust was zeven jaar lang een onafhankelijk experiment voor lokale journalistiek, waarheidsgetrouw en met respect voor de journalistieke code. De naam is een eerbetoon aan het officieuze Mechelse volkslied (een klassieker van Günther Neefs met tekst van Mark Uytterhoeven): denk niet dat de macht aan jou denkt, blijf vooral zelf kritisch nadenken. Het magazine koos bewust voor minder en meer:`,
+      lead:`As Gau Paust was zeven jaar lang een onafhankelijk experiment voor lokale journalistiek, waarheidsgetrouw en met respect voor de journalistieke code. Het magazine koos bewust voor minder en meer:`,
       lijst:['minder gechambreerde persberichten, meer eigen nieuwsverhalen','minder morrelen in de marge, meer aandacht voor de structuren van het systeem','minder snelheid in de nieuwskaravaan, meer tijd om te reflecteren'] },
     { kicker:'Mindset', teaserStap:2, titel:'Kies de kant van de <em>feiten</em>', kort:`De feiten laten spreken: een uitspraak toetsen aan de begroting, het document, het cijfer.`,
       lead:`Veel lokale media blijven hangen in enerzijds, anderzijds: de burgemeester zegt iets, de oppositie het tegendeel, en de lezer zoekt het zelf maar uit. As Gau Paust deed dat anders. Klopt een uitspraak niet met de begroting, dan staat dat er ook zo. Wederhoor blijft, maar de waarheid ligt niet altijd in het midden. En het magazine schreef voor de meedenkende Mechelaar die wil weten waar zijn geld heen gaat, niet voor de burgemeester.`,
@@ -1122,8 +1120,8 @@ const HANDBOEK = [
       casussen:[{ titel:'met dank aan chatGPT', tekst:`Een schriftelijke vraag buiten de gemeenteraad leverde alle percelen van stad en OCMW op, maar dan als platte pdf: 1.941 stuks, waarvan er voorlopig 1.886 te identificeren vielen. Stagiair AGPbot zette voor de verandering zelf chatGPT in, als leverancier van Python-code, en goot de coördinaten uit het Grootschalig Referentiebestand in een kaart. Voortaan kon elke Maneblusser inzoomen en controleren of stad of OCMW iets in zijn buurt bezat. De redactie telde plots een wel heel erg vingervlugge datajournalist in haar rangen.` }],
       stukken:['gemeenteraad-live-27-02-onze-stagiair-bot-maakte-de-voorbeschouwing','dashboard-zet-spotlicht-op-mechelse-gemeenteraad','stadslijst-fractieleider-calvo-skipt-bijna-9-op-de-10-raadscommissies','ontdek-het-patrimonium-van-onze-stad','waartoe-een-dashboard-leiden-kan','en-wat-gebeurde-er-met-jan'] },
     { kicker:'Techniek 07', titel:'Leg je notitieboekje <em>open</em>', kort:`Losse notities en bevindingen delen terwijl je werkt, op het kanaal waar je lezers zitten.`,
-      lead:`Niet elke vondst werd meteen een volwaardig stuk. As Gau Paust deelde losse notities en tussenvondsten apart op Facebook, en noemde dat zijn open notitieboekje. Dat past bij de mug in de kamer: ook een klein spoor mag al licht krijgen, en wie wilde kon meekijken terwijl het zoeken nog liep. Waar je zulke notities deelt, hangt af van waar je nog onbekende lezers zitten. Facebook was het toen, vandaag bereik je hen eerder op Instagram, TikTok, Bluesky of het voormalige Twitter.`,
-      stappen:[`Deel losse notities en tussenvondsten terwijl je nog zoekt, niet pas bij het afgewerkte stuk.`,`Post daar waar je nieuwe lezers vindt, dus op een sociaal medium zoals Instagram, TikTok, Bluesky of het voormalige Twitter, niet in een nieuwsbrief die enkel je vaste publiek bereikt.`,`Laat lezers meekijken en aanvullen: wat zij herkennen, brengt je verder.`] },
+      lead:`Niet elke vondst werd meteen een volwaardig stuk. As Gau Paust deelde losse notities en tussenvondsten apart op Facebook, en noemde dat zijn open notitieboekje. Dat past bij de mug in de kamer: ook een klein spoor mag al licht krijgen, en wie wilde kon meekijken terwijl het zoeken nog liep. Waar je zulke notities deelt, hangt af van waar je nog onbekende lezers zitten. Facebook was het toen. Morgen zijn dat weer andere social media.`,
+      stappen:[`Deel losse notities en tussenvondsten terwijl je nog zoekt, niet pas bij het afgewerkte stuk.`,`Post daar waar je nieuwe lezers vindt, dus op de social media van dat moment, niet in een nieuwsbrief die enkel je vaste publiek bereikt.`,`Laat lezers meekijken en aanvullen: wat zij herkennen, brengt je verder.`] },
     { kicker:'Over het magazine', titel:'Wat anderen zeiden',
       lead:`Ook andere media, journalistieke verenigingen of organisaties hadden een mening over het magazine:`,
       quotes:[
@@ -1164,7 +1162,7 @@ function viewAanpak(){
   ).join('');
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap"><div class="aanpak-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MUG+'</div>'
-    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('garde')+'</div><div>'
+    + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('koksmuts')+'</div><div>'
     +   '<div class="eyebrow">De aanpak, een kookboek</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
@@ -1290,7 +1288,7 @@ const INGANGEN = [
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
   ['dossiers','#/dossiers','dossiers','Dossiers','Dossiers'],
   ['beste-van','#/beste-van','ster','Beste van','Beste van'],
-  ['aanpak','#/aanpak','garde','Aanpak','De aanpak']
+  ['aanpak','#/aanpak','koksmuts','Aanpak','De aanpak']
 ];
 document.getElementById('menulist').innerHTML = INGANGEN
   .map(t => '<a href="'+t[1]+'" data-r="'+t[0]+'"><span class="menu-num">'+ic(t[2])+'</span><span class="menu-name">'+t[4]+'</span></a>').join('');
