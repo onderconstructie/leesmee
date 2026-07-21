@@ -3,7 +3,7 @@
 Het **leesarchief van As Gau Paust**: zeven jaar hyperlokale journalistiek over Mechelen
 (2016 tot 2023), niet chronologisch gedumpt maar gebundeld per **thema** en **dossier**,
 met de sterkste stukken zoals het magazine ze destijds zelf uitlichtte, en met **de aanpak**
-erbij (de drie technieken achter de journalistiek).
+erbij (het kookboek met zeven technieken achter de journalistiek).
 
 Zusje van [Denk mee met Mechelen](https://denkmee.asgaupaust.be). Zelfde familie, ander
 werk: het ene volgt de stad van vandaag, het andere bewaart wat er al geschreven werd.
@@ -42,8 +42,8 @@ Stap 2 is idempotent (bestaande beelden worden overgeslagen) en faalt zacht: zon
   als data), toegewezen op tag en trefwoord.
 - **Beste van** wordt niet verzonnen: het script leest de links die het magazine zelf in
   zijn jaaroverzichten zette, en bundelt net die stukken per jaargang.
-- **De aanpak** (drie technieken) komt uit het method-manifest van het magazine en linkt
-  naar echte voorbeeldstukken uit het archief.
+- **De aanpak** (het kookboek, zeven technieken) komt uit het method-manifest van het magazine
+  en linkt naar echte voorbeeldstukken uit het archief.
 - **Verwante stukken** worden bepaald op gedeeld dossier, tag en thema.
 
 ---
