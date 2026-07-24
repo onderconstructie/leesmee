@@ -55,6 +55,21 @@ html = html.replace("__BEELDMATEN__", json.dumps(beeld_maten, ensure_ascii=False
 print("       handboek-beelden gemeten: %s" % (", ".join("%s %dx%d" % (k.split("/")[-1], v[0], v[1])
                                                          for k, v in beeld_maten.items()) or "geen"))
 
+# 2c) Veiligheidsklep: geen e-mailadressen op de site. Deze bouw vertrekt bij elke publicatie
+#     opnieuw van de rauwe WordPress-export, en die bevat contactformulier-inzendingen en
+#     betaalorders. parse_wp.py filtert daar structureel op gepubliceerde artikels, maar in de
+#     artikeltekst zelf staan soms adressen (een dienstadres van de stad, een lezer die reageert).
+#     Denk mee weigert al te bouwen bij zo'n adres; hier gebeurde dat niet, en dus stond er één
+#     in de gepubliceerde site. Zelfde klep, zelfde plek: vóór het schrijven van dist/.
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+EMAIL_OK = set()          # bewuste uitzonderingen; leeg tot er een reden is
+_lek = sorted({m.group(0) for m in EMAIL_RE.finditer(html)} - EMAIL_OK)
+if _lek:
+    sys.exit("[STOP] Build geweigerd: e-mailadres(sen) in de site: %s\n"
+             "       Haal ze uit de brontekst (parse_wp.py schoont die) of zet ze bewust in "
+             "EMAIL_OK hierboven." % ", ".join(_lek[:5]))
+print("       e-mailcontrole: geen adressen in de site ✓")
+
 # 3) Eindproduct schrijven.
 out_dir = BASE / "dist"
 out_dir.mkdir(exist_ok=True)

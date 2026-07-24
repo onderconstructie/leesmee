@@ -458,9 +458,17 @@ def _verwerk_imgs(s, inline_map):
     return re.sub(r"<img\b[^>]*>", repl, s, flags=re.IGNORECASE)
 
 
+EMAIL_RX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+
 def clean_content(raw, inline_map):
     """Legacy WordPress-content opschonen naar nette HTML."""
     s = raw
+    # 0) e-mailadressen redacteren. Het archief is een heruitgave: wat in 2017 in één artikel
+    #    stond, staat hier straks doorzoekbaar naast 268 andere stukken. Adressen horen daar niet
+    #    in, ook niet de functionele van een dienst of adviesraad. Zelfde regel als bij Denk mee
+    #    (schoon_brontekst.py), en build.py weigert te publiceren als er toch één doorglipt.
+    s = EMAIL_RX.sub("[e-mailadres]", s)
     # 1) dode scripts (jetpack/twitter) weg
     s = re.sub(r"<script\b[^>]*>.*?</script>", "", s, flags=re.DOTALL | re.IGNORECASE)
     # 2) [caption ...]<img ...> Bijschrift [/caption]  ->  <figure>...<figcaption>...</figcaption></figure>
@@ -659,7 +667,10 @@ def main():
             "excerpt": excerpt, "woorden": woorden, "leestijd": leestijd,
             "beeld": beeld, "beeld_bron": beeld_bron,
             "bron_url": bron_url, "html": html_clean,
-            "zoek": strip_html(raw).lower()[:1400],
+            # Ook hier redacteren: dit veld komt uit de RAUWE tekst, dus het omzeilt de
+            # opkuis in clean_content. Zonder deze regel bleef een adres doorzoekbaar terwijl
+            # het in het artikel zelf al vervangen was.
+            "zoek": EMAIL_RX.sub("[e-mailadres]", strip_html(raw)).lower()[:1400],
         })
         slug2id[slug] = pid
         if txt(it, "wp:post_name") and ("jaaroverzicht" in tagslugs or YEAR_OVERVIEW_RX.search(titel)):
