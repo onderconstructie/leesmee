@@ -458,6 +458,24 @@ def _verwerk_imgs(s, inline_map):
     return re.sub(r"<img\b[^>]*>", repl, s, flags=re.IGNORECASE)
 
 
+def _verwerk_achtergrondbeelden(s):
+    """Externe background-image's uit inline stijlen halen.
+
+    _verwerk_imgs pakt enkel <img src>. Een oud wp:cover-blok zet zijn beeld in een inline
+    stijl (style="background-image:url('https://asgaupaust.wordpress.com/...')"), en die
+    ontsnapte daardoor aan de opkuis: elke lezer van dat artikel stuurde zijn IP-adres en
+    referrer naar WordPress.com, terwijl de site belooft dat enkel onze host je IP ziet.
+    Zo'n verwijzing is bovendien niet te redden (de bron geeft 404), dus we schrappen de
+    declaratie; het cover-blok houdt zijn kleur en dimlaag. Generiek op elke externe URL,
+    niet op dat ene bestand: de belofte geldt voor alles wat het archief nog opdiept.
+    """
+    def repl(m):
+        return ""  # hele background-image-declaratie weg, inclusief afsluitende ;
+    return re.sub(
+        r"background-image\s*:\s*url\(\s*['\"]?\s*https?://[^)]*\)\s*;?",
+        repl, s, flags=re.IGNORECASE)
+
+
 EMAIL_RX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 
 
@@ -491,6 +509,7 @@ def clean_content(raw, inline_map):
     s = re.sub(r"\[[a-zA-Z][^\]]{0,120}\]", "", s)  # overige losse shortcodes
     # 4) inline beelden zelf-hosten (en dode externe beelden weg)
     s = _verwerk_imgs(s, inline_map)
+    s = _verwerk_achtergrondbeelden(s)   # ook de beelden die in een inline stijl verstopt zitten
     # 5) kleuren en maten uit de oude site wegen tegen de pagina waarop nu gelezen wordt
     s = _bgcolor_naar_stijl(s)
     s = _weeg_kleuren(s)
