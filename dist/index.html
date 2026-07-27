@@ -62,6 +62,18 @@
   --op-eiland:#f5f1e8; --op-eiland-85:rgba(245,241,232,.85); --op-eiland-65:rgba(245,241,232,.65);
   --op-eiland-15:rgba(245,241,232,.15); --op-eiland-10:rgba(245,241,232,.1);
   --eiland-pink:#ff4d94;
+  /* Roze VLAKKEN: kaartjes, de cockpit, knoppen en chips, alles met witte tekst erop.
+     Waarom niet het merkroze #FF0066 zelf: dat haalt met wit 3,86:1 en blijft onder AA.
+     Waarom niet --pink-deep #b3004a: dat zit op 35% helderheid en leest als bordeaux.
+     #e6005c is het LICHTSTE roze op dezelfde tint dat 4,5:1 haalt (4,66:1), dus zo dicht
+     bij het merkroze als leesbaar kan. Bij hover gaan we een stap DIEPER (5,69:1), niet
+     feller: de knop reageert zichtbaar en de tekst wordt onderweg beter leesbaar in
+     plaats van slechter. */
+  --pink-vlak:#e6005c; --pink-vlak-hover:#cc0052;
+  /* Aliassen: het portaal noemt deze tokens in het Nederlands. Beide namen laten
+     bestaan zodat CSS die je tussen de sites kopieert niet stil afbreekt. */
+  --tekst:#1a1712; --tekst-2:#514a40; --pink-tekst:#c80054;
+  --pink-zacht:rgba(255,0,102,.09);
   --r-kaart:18px; --r-chip:14px; --r-input:10px;
   --max:1180px; --pad-x:clamp(1.1rem,4vw,3rem);
   --display:clamp(2.3rem,6vw,4.4rem);
@@ -72,7 +84,7 @@
   --maat:620px;
 }
 *{box-sizing:border-box}
-*::selection{background:var(--pink);color:#fff}
+*::selection{background:var(--pink-vlak);color:#fff}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;
@@ -120,10 +132,10 @@ img{max-width:100%;height:auto;display:block}
 /* De aanpak is de trekpleister: het archief toont wat er gebeurde, de aanpak is wat een
    lezer elders zelf kan gebruiken. Daarom staat die ene link als knop tussen de tekstlinks.
    Deze regels staan na .on, want ze hebben dezelfde specificiteit. */
-.nav-links a.nav-cta{margin-left:.35rem;padding:.36rem .9rem;border:1px solid var(--pink);
-  border-radius:999px;background:var(--pink);color:#fff}
-.nav-links a.nav-cta:hover{background:var(--pink-deep);border-color:var(--pink-deep);color:#fff}
-.nav-links a.nav-cta.on{color:#fff;background:var(--pink-deep);border-color:var(--pink-deep)}
+.nav-links a.nav-cta{margin-left:.35rem;padding:.36rem .9rem;border:1px solid var(--pink-vlak);
+  border-radius:999px;background:var(--pink-vlak);color:#fff}
+.nav-links a.nav-cta:hover{background:var(--pink-vlak-hover);border-color:var(--pink-vlak-hover);color:#fff}
+.nav-links a.nav-cta.on{color:#fff;background:var(--pink-vlak);border-color:var(--pink-vlak)}
 .nav-burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-strong);
   width:40px;height:36px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color .15s}
 .nav-burger span{width:18px;height:2px;background:var(--ink);transition:transform .2s ease,opacity .2s ease}
@@ -217,8 +229,8 @@ section:first-of-type{border-top:0}
 .btn{display:inline-flex;align-items:center;gap:.55rem;padding:.8rem 1.25rem;cursor:pointer;
   font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
   border:1px solid var(--line-strong);background:none;color:var(--ink);border-radius:999px;transition:.16s}
-.btn.pink{background:var(--pink);color:#fff;border-color:var(--pink)}
-.btn.pink:hover{background:var(--pink-deep);border-color:var(--pink-deep)}
+.btn.pink{background:var(--pink-vlak);color:#fff;border-color:var(--pink-vlak)}
+.btn.pink:hover{background:var(--pink-vlak-hover);border-color:var(--pink-vlak-hover)}
 .btn.ghost:hover{background:var(--ink);color:var(--paper)}
 .btn .ar{transition:transform .16s}.btn:hover .ar{transform:translateX(4px)}
 /* Op een telefoon moeten de twee hero-knoppen naast elkaar blijven staan in plaats van onder
@@ -544,7 +556,7 @@ a.tech:hover{background:var(--paper-2)}
 .hb-lead b,.hb-lead strong{color:var(--pink-text);font-weight:600}
 .hb-lead a{color:var(--pink-text);border-bottom:1px solid var(--line-pink)}
 .hb-lead a:hover{border-bottom-color:var(--pink)}
-.hb-stappen{max-width:64ch;background:var(--pink-deep);color:#fff;padding:1.15rem 1.35rem 1.3rem;margin:0 0 1.4rem;border-radius:var(--r-kaart)}
+.hb-stappen{max-width:64ch;background:var(--pink-vlak);color:#fff;padding:1.15rem 1.35rem 1.3rem;margin:0 0 1.4rem;border-radius:var(--r-kaart)}
 .hb-stappen .lab{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#fff;margin-bottom:.95rem}
 .hb-stappen ol{margin:0;padding:0;list-style:none;counter-reset:stap;display:grid;gap:.75rem}
 .hb-stappen li{counter-increment:stap;position:relative;padding-left:2.3rem;line-height:1.5;font-size:.98rem}
@@ -576,8 +588,8 @@ a.tech:hover{background:var(--paper-2)}
 .hb-banner .hbb-cta{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.3rem;
   padding:.85rem 1.35rem;cursor:pointer;font-family:'JetBrains Mono',ui-monospace,monospace;
   font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;border:0;text-decoration:none;
-  border-radius:var(--r-chip);background:var(--pink);color:#fff;transition:.15s}
-.hb-banner .hbb-cta:hover{background:var(--pink-deep);color:#fff}
+  border-radius:var(--r-chip);background:var(--pink-vlak);color:#fff;transition:.15s}
+.hb-banner .hbb-cta:hover{background:var(--pink-vlak-hover);color:#fff}
 .hb-banner .hbb-cta:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
 @media(max-width:480px){.hbb-title .hou-samen{white-space:normal}}
 .hb-banner .hbb-sub{margin:.55rem 0 0;font-size:.95rem;color:var(--op-eiland-65);line-height:1.55;max-width:52ch}
@@ -608,7 +620,7 @@ a.tech:hover{background:var(--paper-2)}
   transition:opacity 0s linear .27s}
 /* Het diepere roze op de gevulde kaartvlakken: wit op --pink haalt 3,86:1 (onder AA),
    op --pink-deep 6,96:1. Het felle roze blijft voor het kleine en decoratieve werk. */
-.fc-front{background:var(--pink-deep)}
+.fc-front{background:var(--pink-vlak)}
 .fc-back{background:var(--bg-diep);border-color:var(--op-eiland-15);opacity:0;
   -webkit-transform:rotateY(180deg);transform:rotateY(180deg);justify-content:center}
 .flipcard.flipped .fc-front{opacity:0}
@@ -654,7 +666,7 @@ a.tech:hover{background:var(--paper-2)}
   transition:background .15s, color .15s, border-color .15s, transform .25s;
 }
 .hb-fig:hover .fc-draai,.hb-fig:focus-visible .fc-draai{
-  background:var(--pink); color:#fff; border-color:var(--pink); transform:rotate(-90deg);
+  background:var(--pink-vlak-hover); color:#fff; border-color:var(--pink-vlak-hover); transform:rotate(-90deg);
 }
 /* Op een telefoon stopt de cartoon met zweven en gaat ze gecentreerd onder de tekst staan,
    maar bewust bescheiden: van rand tot rand ging ze het hoofdstuk domineren in plaats van
@@ -671,7 +683,7 @@ a.tech:hover{background:var(--paper-2)}
 .yr{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--paper);color:inherit;border:1px solid var(--line-strong);
   padding:.45rem .8rem;cursor:pointer;transition:.15s}
 .yr:hover{border-color:var(--pink);color:var(--pink-text)}
-.yr.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.yr.on{background:var(--pink-vlak);color:#fff;border-color:var(--pink-vlak)}
 .bv-block{margin-bottom:2.6rem;scroll-margin-top:80px}
 .bv-block .bv-intro{font-style:italic;color:var(--ink-2);max-width:64ch;border-left:2px solid var(--pink);
   padding-left:1rem;margin:.2rem 0 1.3rem;line-height:1.55}
@@ -761,9 +773,9 @@ a.tech:hover{background:var(--paper-2)}
 .cn-text{margin:0;flex:1}
 .cn-text strong{color:var(--eiland-pink);font-weight:600}
 .cn-ok{flex:none;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;letter-spacing:.04em;
-  text-transform:uppercase;background:var(--pink);color:#fff;border:1px solid var(--pink);
+  text-transform:uppercase;background:var(--pink-vlak);color:#fff;border:1px solid var(--pink-vlak);
   padding:.55rem .9rem;border-radius:999px;cursor:pointer}
-.cn-ok:hover{background:var(--pink-deep);border-color:var(--pink-deep)}
+.cn-ok:hover{background:var(--pink-vlak-hover);border-color:var(--pink-vlak-hover)}
 
 /* mobiele knoppenbalk onderaan (zelfde patroon als Denk mee met Mechelen) */
 .tabbar{display:none}
