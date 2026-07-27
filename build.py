@@ -89,6 +89,19 @@ ROBOTS = """# %s
 User-agent: *
 Allow: /
 Disallow: /404.html
+
+# Zoekmachines en archieven blijven welkom: gevonden en bewaard worden is het punt.
+# Deze crawlers niet. Ze brengen geen lezers, ze verzamelen linkprofielen om door te
+# verkopen aan marketingbureaus, en ze halen daarvoor telkens de volledige pagina op.
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: BLEXBot
+User-agent: DataForSeoBot
+User-agent: Barkrowler
+User-agent: SEOkicks
+Disallow: /
 """
 (out_dir / "robots.txt").write_text(ROBOTS % CUSTOM_DOMAIN, encoding="utf-8")
 
