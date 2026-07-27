@@ -1,0 +1,6 @@
+# leesmee.asgaupaust.be
+# Van harte welkom. Deze site is openbaar en mag gelezen, geciteerd en hergebruikt worden.
+# De code staat publiek. Wil je zoiets voor je eigen stad bouwen, neem gerust contact op.
+User-agent: *
+Allow: /
+Disallow: /404.html

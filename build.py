@@ -80,6 +80,18 @@ out_dir.mkdir(exist_ok=True)
 #    CNAME-record 'leesmee' -> '<jouw-gebruiker>.github.io'.
 (out_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
 
+# robots.txt. Er stond er geen, dus elke bot kreeg tot nu toe helemaal geen signaal (en bij een
+# eigen domein zet GitHub Pages er zelf niets neer). Bewust OPEN: dit archief bestaat om gelezen
+# te worden, en het project draait om hergebruik. Enkel de eigen foutpagina blijft eruit.
+ROBOTS = """# %s
+# Van harte welkom. Deze site is openbaar en mag gelezen, geciteerd en hergebruikt worden.
+# De code staat publiek. Wil je zoiets voor je eigen stad bouwen, neem gerust contact op.
+User-agent: *
+Allow: /
+Disallow: /404.html
+"""
+(out_dir / "robots.txt").write_text(ROBOTS % CUSTOM_DOMAIN, encoding="utf-8")
+
 # 4b) Eigen 404-pagina. Zonder dit bestand toont GitHub Pages zijn Engelstalige "Page not
 #     found": geen merk, geen Nederlands, geen weg terug. Eén tikfout in een gedeelde link
 #     volstaat. De hash-routes vangt de site zelf op; dit is voor echte verkeerde paden.
