@@ -105,22 +105,6 @@ DOSSIERS = [
      "tags": {"wob", "openbaarheid"}, "kw": ["openbaarheidsverzoek", "beroepsinstantie", "weigert", "weigerde"]},
 ]
 
-# ---------------------------------------------------------------------------
-# De aanpak: de drie basistechnieken (uit het method-manifest van het magazine),
-# elk gekoppeld aan echte voorbeeldstukken via een slug-fragment.
-# ---------------------------------------------------------------------------
-AANPAK = [
-    {"nr": "01", "titel": "Openbaarheid afdwingen",
-     "omschrijving": "Documenten opvragen via de openbaarheidswetgeving, durven in beroep gaan (gratis in Vlaanderen) en desnoods een klacht indienen. Zo komen de basisdocumenten van de stad boven water.",
-     "thema": "bestuur", "voorbeeld_kw": ["informatieveilig", "e-mails van ambtenaren openbaar", "verborgen agenda"]},
-    {"nr": "02", "titel": "De gemeenteraad volgen",
-     "omschrijving": "De agenda van de raad bepaalt de newsbeat, niet het persbericht. Van een korte voorbeschouwing tot een volledige agenda-duiding en een live verslag, met een dashboard over wie er opdaagt en wie er vragen stelt.",
-     "thema": "bestuur", "voorbeeld_kw": ["staat van de mechelse gemeenteraad", "voorbeschouwing", "dashboard"]},
-    {"nr": "03", "titel": "Leren in het openbaar",
-     "omschrijving": "Openlijk tonen hoe een stuk gemaakt werd, en tegelijk zelf groeien in een onderwerp: reeksen als begrotingskunde voor beginners en een cursus statistiek voor wie het bestuur wil controleren.",
-     "thema": "metier", "voorbeeld_kw": ["begrotingskunde", "statistiek", "percelen", "zomerklas", "chatgpt", "leerproces"]},
-]
-
 YEAR_OVERVIEW_RX = re.compile(
     r"(stukjes die je moest gelezen|fiere stukjes|verhalen waar we trots|blijven meedenken|paust ma gau eet)",
     re.IGNORECASE)
@@ -798,20 +782,6 @@ def main():
                           "intro": intro, "post_ids": gelinkt})
     beste_van.sort(key=lambda b: b["jaar"])
 
-    # ---- de aanpak: koppel elke techniek aan echte voorbeeldstukken ----
-    id2post = {p["id"]: p for p in posts}
-    aanpak = []
-    for a in AANPAK:
-        vb = []
-        for p in posts:
-            h = (p["titel"] + " " + p["slug"]).lower()
-            if any(k in h for k in a["voorbeeld_kw"]):
-                vb.append(p["id"])
-            if len(vb) >= 4:
-                break
-        aanpak.append({**{k: a[k] for k in ("nr", "titel", "omschrijving", "thema")},
-                       "voorbeeld_ids": vb})
-
     # ---- tellingen per thema/dossier ----
     themas_out = []
     for th in THEMAS:
@@ -866,7 +836,6 @@ def main():
         "themas": [t for t in themas_out if t["count"]],
         "dossiers": dossiers_out,
         "beste_van": beste_van,
-        "aanpak": aanpak,
         "inline_beelden": inline_map,
         "posts": posts,
     }
@@ -887,9 +856,6 @@ def main():
     print("  beste van:        %d jaargangen" % len(beste_van))
     for b in beste_van:
         print("     - %s  %2d stukken  %s" % (b["jaar"], len(b["post_ids"]), b["titel"][:48]))
-    print("  aanpak-technieken:%d" % len(aanpak))
-    for a in aanpak:
-        print("     - %s %-24s voorbeelden: %d" % (a["nr"], a["titel"], len(a["voorbeeld_ids"])))
 
 
 if __name__ == "__main__":

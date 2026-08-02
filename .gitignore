@@ -17,5 +17,6 @@ export/
 
 # Lokale tooling / scratch
 .claude/
+CLAUDE.local.md
 _*.py
 *.bak
