@@ -305,12 +305,16 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
    ringen. Op alle schermbreedtes zichtbaar en klikbaar. */
 .formule-kompas{position:relative;display:grid;place-items:center;background:none;border:0;padding:0;
   cursor:pointer;width:clamp(140px,30vw,186px);aspect-ratio:1;margin:1.7rem auto .8rem}
-.formule-kompas .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,0,102,.45);
+/* De mug houdt zijn oorspronkelijke uitgrijsde watermerk-look: grijstint, opgehelderd en
+   zacht doorschijnend, met warme grijze ringen. Alleen bij hover of focus licht hij op tot
+   de volle kleur, als teken dat je erop kunt klikken. */
+.formule-kompas .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(72,56,38,.28);
   animation:agpRing 3.6s ease-out infinite;pointer-events:none}
-.formule-kompas .ring.r2{border-color:rgba(255,0,102,.35);animation-delay:1.8s}
+.formule-kompas .ring.r2{border-color:rgba(72,56,38,.20);animation-delay:1.8s}
 .formule-kompas img{width:100%;height:100%;border-radius:50%;display:block;
-  animation:bolPuls 5s ease-in-out infinite;transition:transform .18s ease}
-.formule-kompas:hover img,.formule-kompas:focus-visible img{transform:scale(1.05)}
+  filter:grayscale(1) brightness(1.6) drop-shadow(0 18px 50px rgba(72,56,38,.30));opacity:.3;
+  animation:bolPuls 5s ease-in-out infinite;transition:transform .18s ease,filter .2s ease,opacity .2s ease}
+.formule-kompas:hover img,.formule-kompas:focus-visible img{filter:none;opacity:1;transform:scale(1.05)}
 .formule-kompas:focus-visible{outline:2px solid var(--pink);outline-offset:8px;border-radius:50%}
 @media(min-width:1000px){
   /* Op een breed scherm staat de mug rechts naast de kop, waar het watermerk vroeger stond,
