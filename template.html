@@ -291,6 +291,31 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .stat .n b{color:var(--pink);font-weight:400}
 .stat .l{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-faint);margin-top:.45rem}
+/* De jaargangenlat: het archief als meetinstrument, geen sfeerbeeld. Elke balk is
+   letterlijk 1px per stuk hoog (geen schaal, geen suggestie), het exacte aantal rijdt
+   bovenop de balk, en elke jaargang is een echte link naar het jaarfilter van Lezen.
+   De doorlopende 2px inktlijn is de lat zelf; de balken staan erop als zetsel. */
+.jaarlat{margin-top:.6rem;background:rgba(255,255,255,.5);border:1px solid var(--line-kaart);
+  border-radius:var(--r-kaart);padding:.9rem 1.05rem 1rem}
+.jl-kop{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.7rem}
+.jl-lab{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-faint)}
+.jl-beste{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.04em;color:var(--pink-text)}
+.jl-beste .ar{display:inline-block;transition:transform .16s}
+.jl-beste:hover .ar{transform:translateX(3px)}
+.jl-veld{display:flex}
+.jl-jaar{flex:1 1 0;display:flex;flex-direction:column;align-items:center;min-width:0;
+  color:inherit;padding:.15rem .15rem 0;border-radius:6px 6px 0 0;transition:background .15s}
+.jl-jaar:hover{background:var(--pink-soft)}
+.jl-jaar:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+.jl-balkwrap{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-end;gap:.3rem;border-bottom:2px solid var(--ink)}
+.jl-n{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ink-faint);
+  font-variant-numeric:tabular-nums;line-height:1}
+.jl-jaar:hover .jl-n{color:var(--pink-text)}
+.jl-balk{width:min(60%,34px);background:var(--pink);display:block}
+.jl-y{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;
+  color:var(--ink-2);padding:.4rem 0 .1rem}
 
 /* iconen (artikel, dossierstapel, thema-tag, ster, labofles) */
 .ic-svg{display:block}
@@ -1044,6 +1069,26 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 /* ================= VIEWS ================= */
 
+// De jaargangenlat op de startpagina: elke balk is exact 1px per stuk hoog, het aantal
+// staat erbij, en elke jaargang linkt naar het bestaande jaarfilter van Lezen. De lat
+// vervangt de oude 'jaargangen'-teltegel; het beste van elk jaar blijft via de koplink.
+function jaarlat(){
+  // Alleen 2016 tot en met 2023, oplopend: dat zijn de jaargangen van het magazine.
+  // Het losse 2026-filmpje hoort niet bij die framing en blijft gewoon vindbaar via Lezen.
+  const jaren = D.jaren.filter(j => j >= '2016' && j <= '2023').slice().sort();
+  const per = jaren.map(j => ({ j: j, n: D.posts.filter(p => p.jaar === j).length }));
+  const kolommen = per.map(x =>
+    '<a class="jl-jaar" href="#/lezen?jaar='+x.j+'" aria-label="'+x.n+' stukken uit '+x.j+'">'
+    + '<span class="jl-balkwrap"><span class="jl-n">'+x.n+'</span><span class="jl-balk" style="height:'+x.n+'px"></span></span>'
+    + '<span class="jl-y">'+x.j+'</span>'
+    + '</a>').join('');
+  return '<div class="jaarlat">'
+    + '<div class="jl-kop"><span class="jl-lab">Per jaar, 2016 tot 2023</span>'
+    + '<a class="jl-beste" href="#/beste-van">het beste van elk jaar <span class="ar">&#8594;</span></a></div>'
+    + '<div class="jl-veld">'+kolommen+'</div>'
+    + '</div>';
+}
+
 function viewHome(){
   const c = D.counts;
   // Het formule-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
@@ -1085,10 +1130,10 @@ function viewHome(){
   +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
-  +     '<a class="stat" href="#/beste-van"><div class="n">'+D.beste_van.length+'</div><div class="l">jaargangen</div></a>'
   +     '<a class="stat" href="#/themas"><div class="n">'+c.themas+'</div><div class="l">thema&#39;s</div></a>'
   +     '<a class="stat" href="#/dossiers"><div class="n">'+c.dossiers+'</div><div class="l">dossiers</div></a>'
   +   '</div>'
+  +   jaarlat()
   + '</div></header>'
   // de aanpak (de trekpleister, dus meteen na de hero)
   + '<section class="formule-sec"><div class="shell">'
