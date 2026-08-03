@@ -303,8 +303,10 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
    formule (zelfde patroon als de mug op het portaal). Was eerder een bleek watermerk; nu een
    present, klikbaar embleem in het roze van de familie, met de hartslag en de twee uitdijende
    ringen. Op alle schermbreedtes zichtbaar en klikbaar. */
+/* Op smartphone klein en rechts uitgelijnd, in de bovenhoek naast de kop, precies zoals de
+   mug op het portaal daar staat: geen groot embleem centraal, maar een compact tik-teken. */
 .formule-kompas{position:relative;display:grid;place-items:center;background:none;border:0;padding:0;
-  cursor:pointer;width:clamp(140px,30vw,186px);aspect-ratio:1;margin:1.7rem auto .8rem}
+  cursor:pointer;width:clamp(84px,24vw,104px);aspect-ratio:1;margin:.2rem 0 1.1rem auto}
 /* De mug houdt zijn oorspronkelijke uitgrijsde watermerk-look: grijstint, opgehelderd en
    zacht doorschijnend, met warme grijze ringen. Alleen bij hover of focus licht hij op tot
    de volle kleur, als teken dat je erop kunt klikken. */
@@ -322,6 +324,12 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   .formule-kompas{position:absolute;right:0;bottom:0;transform:translateY(28%);margin:0;
     width:clamp(150px,16vw,190px)}
   .aanpak-sec .aanpak-head-wrap .sec-head > div:last-child{padding-right:220px}
+  /* De zwarte lijn onder de kop vloeit naar rechts weg, richting de mug, zodat ze niet dwars
+     door het embleem snijdt. De echte border wordt doorzichtig; een gradient-::after tekent
+     de lijn die links vol is en naar rechts uitfadet. */
+  .aanpak-sec .aanpak-head-wrap .sec-head{position:relative;border-bottom-color:transparent}
+  .aanpak-sec .aanpak-head-wrap .sec-head::after{content:'';position:absolute;left:0;right:0;bottom:-2px;
+    height:2px;background:linear-gradient(to left,transparent 0,transparent 260px,var(--ink) 380px,var(--ink) 100%)}
 }
 
 /* Modale vensters (het formule-overzicht). Zelfde bouw als het hamburgermenu: hidden-toggle,
