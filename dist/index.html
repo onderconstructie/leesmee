@@ -305,7 +305,10 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
    ringen. Op alle schermbreedtes zichtbaar en klikbaar. */
 /* Op smartphone klein en rechts uitgelijnd, in de bovenhoek naast de kop, precies zoals de
    mug op het portaal daar staat: geen groot embleem centraal, maar een compact tik-teken. */
-.formule-kompas{position:relative;display:grid;place-items:center;background:none;border:0;padding:0;
+/* z-index tilt de knop boven de kop: hij staat vóór .sec-head in de DOM, en zonder dit schildert
+   de browser de kop (die op desktop met padding-right naar rechts uitrekt) eroverheen, waardoor
+   die onzichtbare doos de klik in het midden van de mug opvangt. */
+.formule-kompas{position:relative;z-index:2;display:grid;place-items:center;background:none;border:0;padding:0;
   cursor:pointer;width:clamp(84px,24vw,104px);aspect-ratio:1;margin:.2rem 0 1.1rem auto}
 /* De mug houdt zijn oorspronkelijke uitgrijsde watermerk-look: grijstint, opgehelderd en
    zacht doorschijnend, met warme grijze ringen. Alleen bij hover of focus licht hij op tot
