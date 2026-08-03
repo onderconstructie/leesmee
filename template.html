@@ -1526,7 +1526,7 @@ document.getElementById('burger').addEventListener('click', toggleMenu);
     + '<span class="kp-pijl" aria-hidden="true">&#8594;</span></a></li>';
   const groep = (lab, items) => '<div class="fk-groep"><div class="fk-lab">' + lab + '</div>'
     + '<ul class="kp-lijst">' + items.map(item).join('') + '</ul></div>';
-  host.innerHTML = groep('De principes', pijlers) + groep('De technieken', tech);
+  host.innerHTML = groep('Principes', pijlers) + groep('Technieken', tech);
 })();
 let fk_opener = null;
 function openFormuleKompas(){
