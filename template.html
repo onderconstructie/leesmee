@@ -318,6 +318,14 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   animation:bolPuls 5s ease-in-out infinite;transition:transform .18s ease,filter .2s ease,opacity .2s ease}
 .formule-kompas:hover img,.formule-kompas:focus-visible img{filter:none;opacity:1;transform:scale(1.05)}
 .formule-kompas:focus-visible{outline:2px solid var(--pink);outline-offset:8px;border-radius:50%}
+@media(max-width:640px){
+  /* Op smartphone hangt de mug rechts naast de titel, ter hoogte van "transparant" (de tweede
+     regel van de kop). Absoluut geplaatst, zodat de kop bovenaan aansluit zonder gat erboven.
+     Het midden van die tweede regel ligt ~112px onder de wrap-top (stabiel, want de kopfont is
+     op mobiel geplafonneerd op 22,4px); die waarde centreert de mug daarop, ongeacht de
+     schermbreedte. De mug staat rechts, waar de titelregels niet komen. */
+  .formule-kompas{position:absolute;right:0;top:calc(112px - clamp(84px,24vw,104px) / 2);margin:0}
+}
 @media(min-width:1000px){
   /* Op een breed scherm staat de mug rechts naast de kop, waar het watermerk vroeger stond,
      en houdt de kop rechts ruimte vrij zodat tekst en mug elkaar niet raken. */
@@ -914,8 +922,8 @@ a.tech:hover{background:var(--paper-2)}
   <div class="ov-modal-overlay"></div>
   <div class="ov-modal-card">
     <button type="button" class="ov-modal-close" aria-label="Sluit het overzicht">&#10005;</button>
-    <span class="eyebrow">De mug wijst de weg</span>
-    <h3 id="fkTitel">De principes en de formule</h3>
+    <span class="eyebrow">As Gau Paust</span>
+    <h3 id="fkTitel">De formule</h3>
     <div id="fkLijst"></div>
   </div>
 </div>
@@ -1518,7 +1526,7 @@ document.getElementById('burger').addEventListener('click', toggleMenu);
     + '<span class="kp-pijl" aria-hidden="true">&#8594;</span></a></li>';
   const groep = (lab, items) => '<div class="fk-groep"><div class="fk-lab">' + lab + '</div>'
     + '<ul class="kp-lijst">' + items.map(item).join('') + '</ul></div>';
-  host.innerHTML = groep('De principes', pijlers) + groep('De formule, techniek per techniek', tech);
+  host.innerHTML = groep('De principes', pijlers) + groep('De technieken', tech);
 })();
 let fk_opener = null;
 function openFormuleKompas(){
