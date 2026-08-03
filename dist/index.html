@@ -46,6 +46,8 @@
      semantisch: --paper is het vlak, --ink is de tekst. Enkel de waarden draaien. */
   --paper:#f5f1e8; --paper-2:#fffdf7; --paper-3:#ece7db;
   --bg-diep:#1a1712; --kaart-a:#fffefb; --kaart-b:#fffdf7;
+  /* Papierkorrel, hetzelfde recept als Denk mee en het portaal: één vel voor de familie. */
+  --grain-ruis:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   /* Warme inkt, nooit hard zwart. De grijstrappen zijn vast, niet doorzichtig: op een
      lichte grond zou alfa het papier laten doorschijnen en het contrast onvoorspelbaar maken. */
   --ink:#1a1712; --ink-2:#514a40; --ink-dim:#635a4d; --ink-faint:#635a4d;
@@ -90,6 +92,10 @@ body{margin:0;background:var(--paper);color:var(--ink);
   font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;
   -webkit-font-smoothing:antialiased;font-feature-settings:"kern","liga";
   background-image:radial-gradient(rgba(26,23,18,.03) 1px,transparent 1px);background-size:3px 3px;}
+/* De ruiskorrel bóven het stippenraster, over het hele vel (ook de kaarten: alles is van
+   hetzelfde papier). Menu en modals (z-index 200) liggen erboven en blijven strak. */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  opacity:.05;background-image:var(--grain-ruis);mix-blend-mode:multiply}
 .shell{max-width:var(--max);margin:0 auto;padding:0 var(--pad-x)}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 a{color:inherit;text-decoration:none}
@@ -108,8 +114,15 @@ img{max-width:100%;height:auto;display:block}
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--pink);width:0;z-index:60;transition:width .1s linear}
 
 /* nav */
-.nav{position:sticky;top:0;z-index:40;background:rgba(245,241,232,.82);
-  backdrop-filter:blur(20px) saturate(140%);border-bottom:1px solid var(--line)}
+/* Krantlijn, geen matglas: dicht papier met eigen korrel (de balk ligt boven de
+   ruislaag), en een 2px inkt-masthead-regel die aanzet zodra je scrolt. */
+.nav{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  opacity:.05;background-image:var(--grain-ruis);mix-blend-mode:multiply}
+.nav::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:var(--ink);transform:scaleY(0);transform-origin:bottom;
+  transition:transform .22s ease;pointer-events:none}
+.nav.krant::after{transform:scaleY(1)}
 /* 67px + de 1px onderrand = 68px, exact de nav-hoogte van Denk mee. Samen met de identieke
    hero-padding hieronder begint de inhoud op beide deelsites op dezelfde hoogte. */
 .nav-in{display:flex;align-items:center;gap:1.2rem;height:67px}
@@ -1583,11 +1596,13 @@ app.addEventListener('click', e => {
   }
 });
 const prog = document.getElementById('progress'), totop = document.getElementById('totop');
+const navEl = document.querySelector('.nav');
 totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 window.addEventListener('scroll', () => {
   const st = document.documentElement.scrollTop, h = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (h > 0 ? (st/h*100) : 0) + '%';
   totop.classList.toggle('show', st > 600);
+  if(navEl) navEl.classList.toggle('krant', st > 4);   // masthead-regel aan zodra je in de krant zit
 }, {passive:true});
 
 // Eerlijke privacymelding: enkel bij het eerste bezoek, daarna onthouden dat ze gezien is.
