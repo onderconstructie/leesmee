@@ -306,8 +306,11 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .hero-mark .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,0,102,.45);
   animation:agpRing 3.6s ease-out infinite;pointer-events:none}
 .hero-mark .ring.r2{border-color:rgba(255,0,102,.35);animation-delay:1.8s}
-.hero-mark>svg{width:100%;height:100%;display:block;transform-origin:50% 50%;animation:bolPuls 5s ease-in-out infinite;
+.hero-mark svg{width:100%;height:100%;display:block;transform-origin:50% 50%;animation:bolPuls 5s ease-in-out infinite;
   filter:drop-shadow(0 18px 50px rgba(255,0,102,.4))}
+/* De toren is een knop (verras me): de hele bol is het tikvlak, de ringen vangen geen klik. */
+.hm-knop{display:block;width:100%;height:100%;padding:0;border:none;background:none;cursor:pointer;border-radius:50%}
+.hm-knop:focus-visible{outline:2px solid var(--pink);outline-offset:6px}
 @keyframes bolPuls{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes agpRing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.45);opacity:0}}
 .aanpak-sec .shell{position:relative}
@@ -914,7 +917,9 @@ a.tech:hover{background:var(--paper-2)}
     <a href="#/themas" data-r="themas">Thema&#39;s</a>
     <a href="#/dossiers" data-r="dossiers">Dossiers</a>
     <a href="#/beste-van" data-r="beste-van">Beste van</a>
-    <a class="nav-cta" href="#/formule" data-r="formule">Ontdek de formule</a>
+    <!-- Zelfde gedrag als de mug op de formulepagina: de knop opent het formule-kompas
+         (de popup met principes en technieken). De href blijft het vangnet zonder JS. -->
+    <a class="nav-cta" href="#/formule" data-r="formule" aria-haspopup="dialog" onclick="event.preventDefault();openFormuleKompas()">Ontdek de formule</a>
   </div>
   <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
@@ -1044,6 +1049,16 @@ function sorterOud(a,b){ return a.datum > b.datum ? 1 : -1; }
 
 /* ================= VIEWS ================= */
 
+// De toren-knop in de hero: één klik opent een willekeurig stuk uit het beste van zeven
+// jaargangen (de selectie die het magazine zelf uitlichtte). Valt de reeks ooit weg, dan
+// is de klik een gewone sprong naar het beste-van-overzicht.
+function verrasBesteVan(){
+  const posts = (D.beste_van || []).flatMap(b => b.post_ids || []).map(id => byId[id]).filter(Boolean);
+  if(!posts.length){ location.hash = '#/beste-van'; return; }
+  const p = posts[Math.floor(Math.random() * posts.length)];
+  location.hash = '#/artikel/' + p.slug;
+}
+
 function viewHome(){
   const c = D.counts;
   // Het formule-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
@@ -1082,7 +1097,11 @@ function viewHome(){
   +     '<p class="hero-lede">Zeven jaar hyperlokale journalistiek over Mechelen, van 2016 tot 2023. <b>'+c.posts+' stukken</b>, niet zomaar op een rij maar gebundeld per thema en dossier, met de sterkste verhalen die het magazine zelf uitlichtte.</p>'
   +     '<div class="cta-row"><a class="btn pink" href="#/formule">Doe ons na <span class="ar">&#8594;</span></a>'
   +       '<a class="btn ghost" href="#/ingangen">Kies en lees <span class="ar">&#8594;</span></a></div>'
-  +   '</div><div class="hero-mark" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div></div>'
+  // De toren is een knop: één tik opent een willekeurig stuk uit het beste van zeven
+  // jaargangen. Letterlijk de tagline "Laat je inspireren"; zelfde speelse familie-taal
+  // als de mug-klik op het portaal. De ringen blijven decor.
+  +   '</div><div class="hero-mark"><span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>'
+  +     '<button type="button" class="hm-knop" onclick="verrasBesteVan()" title="Verras me: een stuk uit het beste van" aria-label="Verras me: open een willekeurig stuk uit het beste van zeven jaargangen">'+MARK+'</button></div></div>'
   +   '<div class="strip">'
   +     '<a class="stat" href="#/lezen"><div class="n"><b>'+c.posts+'</b></div><div class="l">stukken</div></a>'
   +     '<a class="stat" href="#/beste-van"><div class="n">'+D.beste_van.length+'</div><div class="l">jaargangen</div></a>'
