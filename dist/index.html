@@ -1064,12 +1064,12 @@ function viewHome(){
   // Het formule-blok geeft een voorproefje in plaats van de inhoudstafel te herhalen: geen
   // omschrijving VAN een pijler of techniek (die staat al op /aanpak), maar één echte stap
   // eruit. Welke onderdelen en welke stap staat in de data (teaserStap), zodat dit blok
-  // vanzelf meeschuift als de formules veranderen. Wijst een teaserStap buiten het bereik,
+  // vanzelf meeschuift als de formule verandert. Wijst een teaserStap buiten het bereik,
   // dan valt de kaart terug op de eerste stap in plaats van leeg te renderen.
   const voorproefje = HANDBOEK.filter(c => c.teaserStap && c.stappen && c.stappen.length)
     .map(c => ({ ...c, teaserStap: c.stappen[c.teaserStap - 1] ? c.teaserStap : 1 }));
   // Enkel manieren om het archief zelf te lezen. De aanpak hoort hier niet tussen: het
-  // de formules bundelen de stukken niet, het staat als trekpleister in het blok hierboven.
+  // de formule bundelt de stukken niet, ze staat als trekpleister in het blok hierboven.
   const ingangen = [
     ['rubrieken','Thema&#39;s','De rode draden van zeven jaar, van openbaarheid tot mandaten, schuld, vastgoed en privacy.','#/themas', c.themas+' thema&#39;s','thema'],
     ['verhaallijnen','Dossiers','Zaken die over jaren en vele stukken lopen, gebundeld als tijdlijn.','#/dossiers', c.dossiers+' dossiers','dossiers'],
@@ -1116,13 +1116,13 @@ function viewHome(){
   +   '<div class="formule-bol" aria-hidden="true"><span class="ring"></span><span class="ring r2"></span>'+MARK+'</div>'
   +   '<div class="sec-head no-num"><div>'
   +     '<div class="eyebrow">De formule</div><h2 class="sec-h2">Zo bouw je mee aan een <em>transparantere stad</em></h2>'
-  +     '<p class="sec-lede">De formules leggen uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
+  +     '<p class="sec-lede">De formule legt uit hoe deze stukken er kwamen, pijler per pijler en techniek per techniek, elk met stappen die je zelf kunt volgen. Hieronder alvast '+voorproefje.length+' van die stappen.</p></div></div>'
   +   '<div class="techrow">'+voorproefje.map(c =>
         '<a class="tech" href="#/formule/'+hbSlug(c.kicker)+'"><div class="tech-k">'+c.kicker+'</div><h3>'+c.titel+'</h3>'
         + '<div class="tech-lab">zo doe je dat</div>'
         + '<p class="tech-stap">'+c.stappen[c.teaserStap - 1]+'</p></a>'
       ).join('')+'</div>'
-  +   '<div class="cta-row"><a class="btn pink" href="#/formule">Bekijk alle formules <span class="ar">&#8594;</span></a></div>'
+  +   '<div class="cta-row"><a class="btn pink" href="#/formule">Bekijk de formule <span class="ar">&#8594;</span></a></div>'
   + '</div></section>'
   // ingangen: de manieren om het archief zelf te lezen
   + '<section id="ingangen"><div class="shell">'
