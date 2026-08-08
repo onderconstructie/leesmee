@@ -48,6 +48,7 @@
   --bg-diep:#1a1712; --kaart-a:#fffefb; --kaart-b:#fffdf7;
   /* Papierkorrel, hetzelfde recept als Denk mee en het portaal: één vel voor de familie. */
   --grain-ruis:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --grain-stip:radial-gradient(rgba(26,23,18,.04) 1px, transparent 1px);
   /* Warme inkt, nooit hard zwart. De grijstrappen zijn vast, niet doorzichtig: op een
      lichte grond zou alfa het papier laten doorschijnen en het contrast onvoorspelbaar maken. */
   --ink:#1a1712; --ink-2:#514a40; --ink-dim:#635a4d; --ink-faint:#635a4d;
@@ -892,6 +893,11 @@ a.tech:hover{background:var(--paper-2)}
   .stat .l{margin-top:.25rem}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Huidlaag-pariteit met Denk mee (za 08/08/2026): hetzelfde puntjesraster over het vel en op
+   de nav, bovenop de bestaande ruislaag. De deelsite had dit al; nu draagt de hele familie het. */
+body{ background-image:var(--grain-stip); background-size:3px 3px; }
+.nav{ background-image:var(--grain-stip); background-size:3px 3px; }
 </style>
 </head>
 <body>
