@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#FF0066">
+<meta name="theme-color" content="#5852b0">
 <title>Lees mee met Mechelen, het archief van As Gau Paust</title>
 <meta name="description" content="Zeven jaar hyperlokale journalistiek over Mechelen, gebundeld per thema en dossier. Het leesarchief van As Gau Paust.">
 <link rel="canonical" href="https://leesmee.asgaupaust.be/">
@@ -52,31 +52,39 @@
   /* Warme inkt, nooit hard zwart. De grijstrappen zijn vast, niet doorzichtig: op een
      lichte grond zou alfa het papier laten doorschijnen en het contrast onvoorspelbaar maken. */
   --ink:#1a1712; --ink-2:#514a40; --ink-dim:#635a4d; --ink-faint:#635a4d;
-  --pink:#FF0066; --pink-text:#c80054; --pink-deep:#b3004a; --pink-soft:rgba(255,0,102,.09);
+  /* DE APP-KLEUR. Sinds de verzelfstandiging (08/2026) is asgaupaust.be het portaal in het
+     roze, en draagt elke app op dat portaal een eigen basiskleur die ermee accordeert. Denk mee
+     is petrol; Lees mee is INKT-INDIGO (het leesarchief draagt de kleur van inkt). De --pink-
+     tokens hieronder blijven bestaan als ALIASSEN van de app-kleur: honderden regels verwijzen
+     ernaar en de namen zijn historisch; nieuwe code gebruikt --app*. Het echte portaalroze leeft
+     nog op precies twee plekken, als merkteken van de weg terug: het merkwoord in de nav en de
+     portaaltoets in de app-balk (--portaal-roze-*). Contrasten gemeten: app-text op papier
+     8,4:1, wit op app-vlak 6,3:1, eiland-app op eiland 8,9:1, alle ruim AA. */
+  --app:#5852b0; --app-text:#3f3a86; --app-deep:#47419c; --app-soft:rgba(88,82,176,.09);
+  --portaal-roze:#FF0066; --portaal-roze-tekst:#c80054;
+  --pink:var(--app); --pink-text:var(--app-text); --pink-deep:var(--app-deep); --pink-soft:var(--app-soft);
   /* De kaartlift is op licht geplafonneerd op ~1,13:1, dus de haarlijn draagt de kaartvorm:
      --line-kaart staat bewust sterker dan --line. */
   --line:rgba(26,23,18,.10); --line-kaart:rgba(26,23,18,.12);
-  --line-strong:rgba(26,23,18,.22); --line-pink:rgba(255,0,102,.4);
+  --line-strong:rgba(26,23,18,.22); --line-pink:rgba(88,82,176,.4);
   --shadow-soft:0 1px 2px rgba(72,56,38,.05),0 10px 30px -12px rgba(72,56,38,.16);
-  --shadow-lift:0 2px 4px rgba(72,56,38,.07),0 24px 50px -18px rgba(255,0,102,.28);
+  --shadow-lift:0 2px 4px rgba(72,56,38,.07),0 24px 50px -18px rgba(88,82,176,.28);
   /* Donkere eilanden (banner, privacymelding): blokken die ook op licht donker blijven.
      Alles binnenin gebruikt deze tokens, nooit een hardcoded tint; bij een volgende
      themawissel hoeven enkel de waarden hier om. */
   --op-eiland:#f5f1e8; --op-eiland-85:rgba(245,241,232,.85); --op-eiland-65:rgba(245,241,232,.65);
   --op-eiland-15:rgba(245,241,232,.15); --op-eiland-10:rgba(245,241,232,.1);
-  --eiland-pink:#ff4d94;
-  /* Roze VLAKKEN: kaartjes, de cockpit, knoppen en chips, alles met witte tekst erop.
-     Waarom niet het merkroze #FF0066 zelf: dat haalt met wit 3,86:1 en blijft onder AA.
-     Waarom niet --pink-deep #b3004a: dat zit op 35% helderheid en leest als bordeaux.
-     #e6005c is het LICHTSTE roze op dezelfde tint dat 4,5:1 haalt (4,66:1), dus zo dicht
-     bij het merkroze als leesbaar kan. Bij hover gaan we een stap DIEPER (5,69:1), niet
-     feller: de knop reageert zichtbaar en de tekst wordt onderweg beter leesbaar in
-     plaats van slechter. */
-  --pink-vlak:#e6005c; --pink-vlak-hover:#cc0052;
+  --eiland-app:#b3b0ea; --eiland-pink:var(--eiland-app);
+  /* App-VLAKKEN: kaartjes, de cockpit, knoppen en chips, alles met witte tekst erop. Anders dan
+     het oude merkroze (dat pas op #e6005c leesbaar werd) haalt het indigo zelf al ruim AA met
+     wit (6,3:1), dus --app-vlak is gewoon --app. Bij hover een stap DIEPER, niet feller: de knop
+     reageert zichtbaar en de tekst wordt onderweg beter leesbaar. */
+  --app-vlak:var(--app); --app-vlak-hover:#47419c;
+  --pink-vlak:var(--app-vlak); --pink-vlak-hover:var(--app-vlak-hover);
   /* Aliassen: het portaal noemt deze tokens in het Nederlands. Beide namen laten
      bestaan zodat CSS die je tussen de sites kopieert niet stil afbreekt. */
-  --tekst:#1a1712; --tekst-2:#514a40; --pink-tekst:#c80054;
-  --pink-zacht:rgba(255,0,102,.09);
+  --tekst:#1a1712; --tekst-2:#514a40; --pink-tekst:var(--app-text);
+  --pink-zacht:var(--app-soft);
   --r-kaart:18px; --r-chip:14px; --r-input:10px;
   --max:1180px; --pad-x:clamp(1.1rem,4vw,3rem);
   --display:clamp(2.3rem,6vw,4.4rem);
@@ -137,7 +145,7 @@ img{max-width:100%;height:auto;display:block}
 .brand{display:flex;align-items:center;gap:.65rem;font-family:'JetBrains Mono',monospace;
   font-weight:600;font-size:1rem;letter-spacing:-.01em}
 .brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
-.brand em{color:var(--pink-text);font-style:normal;font-weight:600}
+.brand em{color:var(--portaal-roze-tekst);font-style:normal;font-weight:600}
 .nav-links{display:flex;gap:1.3rem;margin-left:auto;font-family:'JetBrains Mono',monospace;
   font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .nav-links a{padding:.2rem 0;border-bottom:2px solid transparent;transition:.15s}
@@ -176,7 +184,7 @@ img{max-width:100%;height:auto;display:block}
   border-bottom:1px solid var(--line);flex-shrink:0}
 .menu-head .brand{display:flex;align-items:center;gap:.6rem;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1rem;letter-spacing:-.01em}
 .menu-head .brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
-.menu-head .brand em{color:var(--pink-text);font-style:normal;font-weight:600}
+.menu-head .brand em{color:var(--portaal-roze-tekst);font-style:normal;font-weight:600}
 .menu-close{font-size:1.9rem;width:38px;height:38px;color:var(--ink);cursor:pointer;line-height:1;background:none;border:0;flex-shrink:0}
 .menu-close:hover{color:var(--pink-text)}
 .menu-list{display:flex;flex-direction:column;flex:1}
@@ -203,8 +211,8 @@ img{max-width:100%;height:auto;display:block}
 /* 2,5rem = 40px onder de Experiment-regel: exact de ruimte die Denk mee daar laat, zodat
    niet alleen "Experiment" maar ook de hoofdtitel eronder op dezelfde hoogte begint. */
 .hero-meta{display:flex;gap:12px;align-items:center;margin:0 0 2.5rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-text)}
-.hero-meta .pulse{width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,0,102,.5);animation:pulse 2s infinite;flex:none}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,0,102,.5)}70%{box-shadow:0 0 0 7px rgba(255,0,102,0)}100%{box-shadow:0 0 0 0 rgba(255,0,102,0)}}
+.hero-meta .pulse{width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(88,82,176,.5);animation:pulse 2s infinite;flex:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(88,82,176,.5)}70%{box-shadow:0 0 0 7px rgba(88,82,176,0)}100%{box-shadow:0 0 0 0 rgba(88,82,176,0)}}
 h1,h2,h3{font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:-.02em;line-height:1.08}
 .pink{color:var(--pink-text)}
 
@@ -230,7 +238,7 @@ section:first-of-type{border-top:0}
    daardoor op élke schermbreedte op dezelfde hoogte als op de zustersite. De onderpadding
    blijft van Lees mee zelf, die bepaalt alleen de lengte van de hero. */
 .hero{position:relative;overflow:hidden;padding:clamp(1.5rem,3vw,2.5rem) 0 clamp(1.6rem,4vw,2.6rem);
-  background:radial-gradient(1100px 480px at 78% -10%, rgba(255,0,102,.16), transparent 65%)}
+  background:radial-gradient(1100px 480px at 78% -10%, rgba(88,82,176,.16), transparent 65%)}
 .hero-title{font-size:var(--display);margin:.85rem 0 0;max-width:17ch;letter-spacing:-.035em;line-height:1.16;text-wrap:balance}
 .hero-title .box{color:var(--pink);background:var(--ink);
   padding:0 .1em;margin-right:-.22em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
@@ -304,11 +312,11 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .hero-grid{display:grid;grid-template-columns:1.6fr .9fr;gap:clamp(1.5rem,5vw,4rem);align-items:center}
 .hero-mark{position:relative;justify-self:center;width:clamp(200px,28vw,340px);aspect-ratio:1;flex:none;
   display:grid;place-items:center}
-.hero-mark .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,0,102,.45);
+.hero-mark .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(88,82,176,.45);
   animation:agpRing 3.6s ease-out infinite;pointer-events:none}
-.hero-mark .ring.r2{border-color:rgba(255,0,102,.35);animation-delay:1.8s}
+.hero-mark .ring.r2{border-color:rgba(88,82,176,.35);animation-delay:1.8s}
 .hero-mark svg{width:100%;height:100%;display:block;transform-origin:50% 50%;animation:bolPuls 5s ease-in-out infinite;
-  filter:drop-shadow(0 18px 50px rgba(255,0,102,.4))}
+  filter:drop-shadow(0 18px 50px rgba(88,82,176,.4))}
 /* De toren is een knop (verras me): de hele bol is het tikvlak, de ringen vangen geen klik. */
 .hm-knop{display:block;width:100%;height:100%;padding:0;border:none;background:none;cursor:pointer;border-radius:50%}
 .hm-knop:focus-visible{outline:2px solid var(--pink);outline-offset:6px}
@@ -334,7 +342,7 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   animation:agpRing 3.6s ease-out infinite;pointer-events:none}
 .formule-kompas .ring.r2{border-color:rgba(72,56,38,.20);animation-delay:1.8s}
 .formule-kompas img{width:100%;height:100%;border-radius:50%;display:block;
-  filter:grayscale(1) brightness(1.6) drop-shadow(0 18px 50px rgba(72,56,38,.30));opacity:.3;
+  filter:grayscale(.55) drop-shadow(0 18px 50px rgba(72,56,38,.28));opacity:.45;
   animation:bolPuls 5s ease-in-out infinite;transition:transform .18s ease,filter .2s ease,opacity .2s ease}
 .formule-kompas:hover img,.formule-kompas:focus-visible img{filter:none;opacity:1;transform:scale(1.05)}
 .formule-kompas:focus-visible{outline:2px solid var(--pink);outline-offset:8px;border-radius:50%}
@@ -434,8 +442,8 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   .formule-bol>svg{width:100%;height:100%;display:block;transform-origin:50% 50%;
     animation:bolPuls 5s ease-in-out infinite}
   .formule-bol .ring{position:absolute;inset:0;border-radius:50%;
-    border:1px solid rgba(255,0,102,.55);animation:agpRing 3.6s ease-out infinite;pointer-events:none}
-  .formule-bol .ring.r2{border-color:rgba(255,0,102,.4);animation-delay:1.8s}
+    border:1px solid rgba(88,82,176,.55);animation:agpRing 3.6s ease-out infinite;pointer-events:none}
+  .formule-bol .ring.r2{border-color:rgba(88,82,176,.4);animation-delay:1.8s}
 }
 
 /* filter-groepen op de lezen-pagina */
@@ -534,7 +542,7 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .lees h2{font-size:1.5rem;margin:2rem 0 .7rem;letter-spacing:-.02em;color:var(--ink)}
 .lees h3{font-size:1.2rem;margin:1.6rem 0 .5rem;color:var(--ink)}
 .lees p{margin:0 0 1.1rem}
-.lees a{color:var(--pink-text);border-bottom:1px solid var(--line-pink,rgba(255,0,102,.4))}
+.lees a{color:var(--pink-text);border-bottom:1px solid var(--line-pink,rgba(88,82,176,.4))}
 .lees a:hover{border-bottom-color:var(--pink)}
 .lees ul,.lees ol{margin:0 0 1.2rem;padding-left:1.3rem}
 .lees li{margin:.3rem 0}
@@ -862,13 +870,16 @@ a.tech:hover{background:var(--paper-2)}
     padding:.6rem 0 .55rem;color:var(--ink-faint);transition:color .15s}
   .tabbar a .ic-svg{width:22px;height:22px;flex:none}
   .tabbar a .tab-mug{width:22px;height:22px;flex:none;border-radius:50%;display:block}
-  /* Kleine mono-caps, net als op het portaal: dit is nu een sitewissel-balk (Start, Denk
-     mee, Lees mee, En meer, Contact), niet meer de enige navigatie. De sectie-navigatie
-     van deze site zit in het menu. "DENK MEE" past met nowrap binnen een vak van 75px. */
+  /* Kleine mono-caps. Sinds de verzelfstandiging is dit weer een APP-balk: de vier onderdelen
+     van deze app plus de portaaltoets als weg terug. De labels blijven kort (Lezen, Thema's,
+     Dossiers, Formule, Portaal) zodat elk vak past. */
   .tabbar a span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.55rem;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
   .tabbar a:hover{color:var(--pink-text)}
-  .tabbar a[aria-current="page"]{color:var(--pink-text)}
-  .tabbar a[aria-current="page"]::before{content:'';position:absolute;top:0;left:24%;right:24%;height:2px;background:var(--pink)}
+  /* De portaaltoets is de enige plek in de app met het portaalroze: de kleur zegt al "hier
+     verlaat je de app". De mug is al roze; het label kleurt mee. */
+  .tabbar .tab-portaal span{color:var(--portaal-roze-tekst)}
+  .tabbar a[aria-current]{color:var(--pink-text)}
+  .tabbar a[aria-current]::before{content:'';position:absolute;top:0;left:24%;right:24%;height:2px;background:var(--pink)}
   body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
   .totop{bottom:calc(70px + env(safe-area-inset-bottom))}
   .cookie-note{bottom:calc(70px + env(safe-area-inset-bottom))}
@@ -958,22 +969,23 @@ body{ background-image:var(--grain-stip); background-size:3px 3px; }
 <main id="app"></main>
 
 <footer class="colofon"><div class="co-shell">
-  <a class="co-mark" href="#/" aria-label="Lees mee met Mechelen, naar de startpagina"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></a>
+  <a class="co-mark" href="#/" aria-label="Lees mee met Mechelen, naar de startpagina"><svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="240" cy="240" r="212" fill="#5852b0"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#5852b0"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg></a>
   <div class="co-body">
     <p class="co-zin"><strong class="co-naam">Lees mee <em>met Mechelen</em></strong> is het leesarchief van <strong>As Gau Paust</strong>, zeven jaar hyperlokale journalistiek over Mechelen (2016 tot 2023).</p>
     <p class="co-fam">Onderdeel van <a href="https://asgaupaust.be">asgaupaust.be</a> &middot; <a href="https://asgaupaust.be/privacy/">Privacy</a></p>
   </div>
 </div></footer>
 
-<!-- Sitewissel-balk (app-navigatie op smartphone): exact dezelfde balk op alle sites van
-     As Gau Paust. Start (de mug) gaat naar het portaal, dan de deelsites, En meer en Contact.
-     De sectie-navigatie van deze site (Lezen, Thema's, ...) zit in het hamburgermenu. -->
-<nav class="tabbar" id="tabbar" aria-label="As Gau Paust, spring tussen de sites">
-  <a href="https://asgaupaust.be/"><img class="tab-mug" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512"><span>Start</span></a>
-  <a href="https://denkmee.asgaupaust.be/"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><g transform="translate(2.4 -1.5) scale(0.8)"><path stroke-width="2" d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></g><circle cx="7.6" cy="17.2" r="1.3"/><circle cx="5.1" cy="20.9" r=".75"/></svg><span>Denk mee</span></a>
-  <a href="https://leesmee.asgaupaust.be/" aria-current="page"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg><span>Lees mee</span></a>
-  <a href="https://asgaupaust.be/en-meer/"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" stroke-dasharray="3 2.4"/><line x1="12" y1="8.5" x2="12" y2="15.5"/><line x1="8.5" y1="12" x2="15.5" y2="12"/></svg><span>En meer</span></a>
-  <a href="https://asgaupaust.be/#contact"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3.6 7l8.4 6.4L20.4 7"/></svg><span>Contact</span></a>
+<!-- De app-balk (op smartphone). Sinds de verzelfstandiging geen sitewissel-balk meer: de
+     toetsen zijn de vier onderdelen van deze app zelf (dezelfde als in het hamburgermenu),
+     plus één portaaltoets als de weg terug naar het moederschip. Die toets draagt als enige
+     het portaalroze: de kleur zelf zegt al "hier verlaat je de app". -->
+<nav class="tabbar" id="tabbar" aria-label="Lees mee, spring naar een onderdeel">
+  <a href="#/lezen" data-r="lezen"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg><span>Lezen</span></a>
+  <a href="#/themas" data-r="themas"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><path d="M13 3H4v9l9 9 9-9z"/><circle cx="7.6" cy="7.6" r="1.4" fill="currentColor" stroke="none"/></svg><span>Thema&#39;s</span></a>
+  <a href="#/dossiers" data-r="dossiers"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="4" width="11" height="14"/><rect x="5" y="7" width="11" height="14"/><line x1="8" y1="11" x2="13" y2="11"/><line x1="8" y1="14.5" x2="13" y2="14.5"/></svg><span>Dossiers</span></a>
+  <a href="#/formule" data-r="formule"><svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true"><g stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 6.8h4.8"/><path d="M10.5 6.8v3.8L5.6 19.6h12.8l-4.9-9V6.8"/><path d="M7.9 16h8.2"/><circle cx="12" cy="3.3" r="1.2" fill="currentColor" stroke="none"/><circle cx="14.8" cy="4.6" r=".85" fill="currentColor" stroke="none"/><circle cx="9.4" cy="4.4" r=".7" fill="currentColor" stroke="none"/></g></svg><span>Formule</span></a>
+  <a class="tab-portaal" href="https://asgaupaust.be/" aria-label="Naar het portaal asgaupaust.be"><img class="tab-mug" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512"><span>Portaal</span></a>
 </nav>
 
 <button class="totop" id="totop" aria-label="Naar boven">&#8593;</button>
@@ -996,12 +1008,8 @@ const dossierBy = {}; D.dossiers.forEach(d => dossierBy[d.slug] = d);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const app = document.getElementById('app');
 
-const MARK = '<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-label="Sint-Romboutstoren"><circle cx="240" cy="240" r="212" fill="#FF0066"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#FF0066"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg>';
+const MARK = '<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" aria-label="Sint-Romboutstoren"><circle cx="240" cy="240" r="212" fill="#5852b0"/><g transform="translate(-36,-36) scale(1.15)"><g fill="#f5f1e8"><rect x="188" y="150" width="104" height="222"/><rect x="194" y="130" width="16" height="20"/><rect x="218" y="130" width="16" height="20"/><rect x="242" y="130" width="16" height="20"/><rect x="266" y="130" width="16" height="20"/></g><g fill="#5852b0"><rect x="218" y="195" width="8" height="85"/><rect x="236" y="182" width="8" height="110"/><rect x="254" y="195" width="8" height="85"/><polygon points="224,372 224,338 240,318 256,338 256,372"/></g></g></svg>';
 
-// De mug in de kamer: het platform-teken van As Gau Paust (identiek aan asgaupaust.be:
-// papierwitte lijnen, muggengaas in de vleugels), hier enkel bij het handboek; de toren
-// blijft het sitemerk. mug.png is een bewerkt eigen bestand, geen gefetcht beeld.
-const MUG = '<img src="/beelden/mug.png" alt="De mug in de kamer" width="512" height="512">';
 
 function ic(name){
   const p = {
@@ -1392,14 +1400,14 @@ function viewAanpak(){
   return '<section class="aanpak-sec"><div class="shell">'
     + '<div class="aanpak-head-wrap">'
     + '<button type="button" class="formule-kompas" onclick="openFormuleKompas()" aria-haspopup="dialog" aria-label="Overzicht van de principes en de formule">'
-    +   '<span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>'+MUG+'</button>'
+    +   '<span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span><img src="/beelden/mug-indigo.png" alt="" aria-hidden="true" width="512" height="512"></button>'
     + '<div class="sec-head"><div class="sec-num sec-ic">'+ic('labofles')+'</div><div>'
     +   '<div class="eyebrow">De formule, stap voor stap</div><h1 class="sec-h2" tabindex="-1">Zo maak je een stad <em>transparant</em></h1>'
     +   '<p class="sec-lede">As Gau Paust wilde de mug in de kamer zijn: te klein om te verjagen, vervelend genoeg om het licht aan te doen. En in die klaarte kon iedereen meekijken.</p></div></div></div>'
     + blok
     + '<aside class="hb-banner">'
     +   '<div class="hbb-geo" aria-hidden="true">'
-    +     '<img src="beelden/mug.png" alt="De mug in de kamer" width="512" height="512" loading="lazy">'
+    +     '<img src="beelden/mug-indigo.png" alt="De mug in de kamer" width="512" height="512" loading="lazy">'
     +   '</div>'
     +   '<div class="hbb-txt">'
     +     '<div class="hbb-kicker">Oproep</div>'
@@ -1471,8 +1479,9 @@ function setActiveNav(root){
     return aan;
   };
   document.querySelectorAll('#navlinks a').forEach(a => a.classList.toggle('on', merk(a)));
-  // De tabbalk onderaan is nu een vaste sitewissel-balk (Lees mee staat er met aria-current
-  // vast in de HTML). Alleen het menu volgt nog de interne route.
+  // De app-balk onderaan volgt dezelfde route: de vier onderdeel-toetsen dragen data-r en
+  // krijgen aria-current als je op dat onderdeel zit. De portaaltoets (zonder data-r) niet.
+  document.querySelectorAll('#tabbar a[data-r]').forEach(merk);
 }
 function render(isNav){
   const { parts, params } = parseHash();
