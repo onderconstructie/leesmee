@@ -394,9 +394,17 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .formule-sec{overflow-x:clip}
 .formule-sec .shell{position:relative}
 .formule-bol{display:none}
+/* Smalle band (700-820px): de toren zakte hier als eigen blok onder de knoppen en tellers
+   en at zo een half scherm hoogte op. Zoals Denk mee dat in deze band doet, wordt hij een
+   accent rechts van de titel: uit de flow, tegen de rechterrand (het stukje erbuiten knipt
+   de hero zelf af), vervaagd zodat de kop erover leesbaar blijft. De tekstkolom krijgt
+   De bol ligt bovenop (z-index:2): de tekstkolom is als doos volle breedte en zou de
+   verras-me-knop anders onklikbaar afdekken, terwijl titel en lede de bol zelf nergens
+   raken (titel is max 17ch, de bol begint pas rechts daarvan). */
 @media(max-width:820px){
   .hero-grid{grid-template-columns:1fr}
-  .hero-mark{width:clamp(140px,42vw,200px);margin:.6rem auto 0}
+  .hero .shell{position:relative}
+  .hero-mark{position:absolute;right:-1.2rem;top:-.5rem;width:clamp(150px,26vw,210px);margin:0;opacity:.5;z-index:2}
 }
 /* Smartphone: de vier tellers moeten meteen in beeld staan, dus die schuiven boven de toren.
    display:contents haalt het hero-raster als doos weg, waardoor de tekstkolom, de tellers en
