@@ -146,30 +146,19 @@ img{max-width:100%;height:auto;display:block}
   font-weight:600;font-size:1rem;letter-spacing:-.01em}
 .brand .mk{width:34px;height:34px;flex:none;display:block;border-radius:50%}
 .brand em{color:var(--portaal-roze-tekst);font-style:normal;font-weight:600}
-.nav-links{display:flex;gap:1.3rem;margin-left:auto;font-family:'JetBrains Mono',monospace;
-  font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
-.nav-links a{padding:.2rem 0;border-bottom:2px solid transparent;transition:.15s}
-.nav-links a:hover{color:var(--pink-text)}
-.nav-links a.on{color:var(--ink);border-bottom-color:var(--pink)}
-/* De aanpak is de trekpleister: het archief toont wat er gebeurde, de aanpak is wat een
-   lezer elders zelf kan gebruiken. Daarom staat die ene link als knop tussen de tekstlinks.
-   Deze regels staan na .on, want ze hebben dezelfde specificiteit. */
-.nav-links a.nav-cta{margin-left:.35rem;padding:.36rem .9rem;border:1px solid var(--pink-vlak);
-  border-radius:999px;background:var(--pink-vlak);color:#fff}
-.nav-links a.nav-cta:hover{background:var(--pink-vlak-hover);border-color:var(--pink-vlak-hover);color:#fff}
-.nav-links a.nav-cta.on{color:#fff;background:var(--pink-vlak);border-color:var(--pink-vlak)}
-.nav-burger{display:none;margin-left:auto;background:none;border:1px solid var(--line-strong);
-  width:40px;height:36px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color .15s}
+/* Sinds de verzelfstandiging is de hamburger op elke breedte de enige sectienavigatie
+   bovenaan, net als op Denk mee: merkwoord links, burger rechts, de ingangen zitten in
+   het menu erachter. De vroegere krantlijn-linkrij (met de formule-knop) is daarin
+   opgegaan; op smalle schermen draagt de app-balk onderaan dezelfde ingangen. */
+.nav-burger{display:flex;margin-left:auto;background:none;border:1px solid var(--pink);
+  width:40px;height:36px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color .15s,background .15s}
+.nav-burger:hover{background:var(--pink-soft)}
 .nav-burger span{width:18px;height:2px;background:var(--ink);transition:transform .2s ease,opacity .2s ease}
 .nav-burger span:nth-child(2){background:var(--pink)}
 .nav-burger.open{border-color:var(--pink)}
 .nav-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .nav-burger.open span:nth-child(2){opacity:0}
 .nav-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-@media(max-width:760px){
-  .nav-links{display:none}
-  .nav-burger{display:flex}
-}
 
 /* Fullscreen hamburgermenu, zelfde opbouw als Denk mee met Mechelen */
 .menu-overlay{position:fixed;inset:0;z-index:200;background:rgba(5,4,3,.68);
@@ -929,15 +918,6 @@ body{ background-image:var(--grain-stip); background-size:3px 3px; }
     <img class="mk" src="/beelden/mug.png" alt="" aria-hidden="true" width="512" height="512">
     As Gau <em>Paust</em>
   </a>
-  <div class="nav-links" id="navlinks">
-    <a href="#/lezen" data-r="lezen">Lezen</a>
-    <a href="#/themas" data-r="themas">Thema&#39;s</a>
-    <a href="#/dossiers" data-r="dossiers">Dossiers</a>
-    <a href="#/beste-van" data-r="beste-van">Beste van</a>
-    <!-- Zelfde gedrag als de mug op de formulepagina: de knop opent het formule-kompas
-         (de popup met principes en technieken). De href blijft het vangnet zonder JS. -->
-    <a class="nav-cta" href="#/formule" data-r="formule" aria-haspopup="dialog" onclick="event.preventDefault();openFormuleKompas()">Ontdek de formule</a>
-  </div>
   <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menuOverlay"><span></span><span></span><span></span></button>
 </div></nav>
 
@@ -1478,8 +1458,7 @@ function setActiveNav(root){
     if(aan) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     return aan;
   };
-  document.querySelectorAll('#navlinks a').forEach(a => a.classList.toggle('on', merk(a)));
-  // De app-balk onderaan volgt dezelfde route: de vier onderdeel-toetsen dragen data-r en
+  // De app-balk onderaan volgt de route: de vier onderdeel-toetsen dragen data-r en
   // krijgen aria-current als je op dat onderdeel zit. De portaaltoets (zonder data-r) niet.
   document.querySelectorAll('#tabbar a[data-r]').forEach(merk);
 }
@@ -1533,8 +1512,9 @@ function render(isNav){
   if(after) after();
 }
 /* De vijf ingangen van deze site, op een plek: [route, href, icoon, kort label, lang label].
-   Het hamburgermenu tekent hieruit. (De knoppenbalk onderaan is nu de vaste sitewissel-balk
-   van As Gau Paust, met de andere sites, en staat rechtstreeks in de HTML.) */
+   Het hamburgermenu tekent hieruit en is op elke breedte de enige navigatie bovenaan.
+   (De app-balk onderaan staat rechtstreeks in de HTML: vier van deze ingangen plus de
+   portaaltoets als weg terug.) */
 const INGANGEN = [
   ['lezen','#/lezen','artikel','Lezen','Lezen'],
   ['themas','#/themas','thema','Thema\'s','Thema\'s'],
