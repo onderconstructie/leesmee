@@ -9,6 +9,8 @@ __pycache__/
 # De rauwe WordPress-export NIET publiceren: ze bevat contactformulier-inzendingen
 # en betaalorders. Enkel de gepubliceerde artikels (via leesmee_data.json) horen publiek.
 export/
+*.wxr
+*.xml
 
 # Bron-afbeeldingen (enkel de map in de repo-root): opnieuw op te halen met
 # fetch_beelden.py. De gepubliceerde kopie in dist/beelden/ wordt WEL meegecommit,
@@ -18,5 +20,14 @@ export/
 # Lokale tooling / scratch
 .claude/
 CLAUDE.local.md
-_*.py
+_*
 *.bak
+
+# Losse werkbestanden en controle-uitvoer. Aanleiding: op 07/09/2026 belandde een met curl
+# opgehaalde kopie van de LIVE pagina (p.tmp) in een commit, en die live pagina draagt wel de
+# naam die nergens in git mag staan. Alles wat van de live site komt of een meting wegschrijft,
+# hoort in de kladmap buiten de repo; deze regels zijn het vangnet als dat toch misloopt.
+# Let op: GEEN *.txt hier. De OFL-licenties van de lettertypes zijn .txt en moeten in git.
+*.tmp
+*.log
+*.out
