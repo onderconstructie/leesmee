@@ -105,8 +105,16 @@ def main():
                 klachten.append("%s: naam van de privacylijst (%s)" % (pad, gemaskeerd))
                 break
 
-        if GEBOORTE.search(tekst) and RAUWE_DATUM.search(tekst):
-            klachten.append("%s: rauwe dd/mm/jj naast de kop Geboortedatum" % pad)
+        # Alleen binnen een VENSTER na de tabelkop kijken, niet over het hele bestand. dist/index.html
+        # draagt de volledige dataset: daarin staat de kop ergens en staat elders altijd wel een
+        # dd/mm/jj (eedaflegging, ontvangst, einde mandaat, budgetcodes). Een bestandsbrede scan
+        # meldt dan altijd een lek, ook als de geboortedatums netjes gemaskeerd zijn. build.py van
+        # denkmee doet dit per stuk; hier is een venster van 400 tekens de goedkope variant.
+        for m in GEBOORTE.finditer(tekst):
+            venster = tekst[m.end():m.end() + 400]
+            if RAUWE_DATUM.search(venster):
+                klachten.append("%s: rauwe dd/mm/jj vlak na de kop Geboortedatum" % pad)
+                break
 
     if klachten:
         sys.stderr.write("\nCOMMIT GEWEIGERD door de pre-commit-poort:\n")
