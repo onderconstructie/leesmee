@@ -125,16 +125,19 @@ Disallow: /
 # 4b) Eigen 404-pagina. Zonder dit bestand toont GitHub Pages zijn Engelstalige "Page not
 #     found": geen merk, geen Nederlands, geen weg terug. Eén tikfout in een gedeelde link
 #     volstaat. De hash-routes vangt de site zelf op; dit is voor echte verkeerde paden.
-#     Zelfstandig bestand met eigen stijl inline.
+#     Zelfstandig bestand met eigen stijl inline. De preloads dragen exact de url uit de
+#     @font-face eronder, anders haalt de browser elk lettertype twee keer op.
 PAGINA_404 = """<!doctype html>
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FF0066">
 <title>Pagina niet gevonden, Lees mee met Mechelen</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="/beelden/mug.png">
+<link rel="preload" href="/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jbmono-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/geist-var.woff2') format('woff2')}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;src:url('/fonts/jbmono-var.woff2') format('woff2')}

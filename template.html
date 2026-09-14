@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#5852b0">
 <title>Lees mee met Mechelen, het archief van As Gau Paust</title>
 <meta name="description" content="Zeven jaar hyperlokale journalistiek over Mechelen, gebundeld per thema en dossier. Het leesarchief van As Gau Paust.">
@@ -27,7 +27,10 @@
 
 <!-- Zelf-gehoste lettertypes: geen Google Fonts, geen bezoekers-IP naar derden.
      Geist (leestekst) en JetBrains Mono (structuur/data) onder de SIL Open Font License 1.1;
-     de licenties staan in /fonts/Geist-OFL.txt en /fonts/JetBrainsMono-OFL.txt. -->
+     de licenties staan in /fonts/Geist-OFL.txt en /fonts/JetBrainsMono-OFL.txt.
+     De preloads dragen exact de url uit @font-face, anders haalt de browser elk lettertype twee keer op. -->
+<link rel="preload" href="/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jbmono-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/geist-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD;}
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;src:url('/fonts/jbmono-var.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD;}
@@ -243,7 +246,9 @@ section:first-of-type{border-top:0}
 .btn.pink{background:var(--pink-vlak);color:#fff;border-color:var(--pink-vlak)}
 .btn.pink:hover{background:var(--pink-vlak-hover);border-color:var(--pink-vlak-hover)}
 .btn.ghost:hover{background:var(--ink);color:var(--paper)}
-.btn .ar{transition:transform .16s}.btn:hover .ar{transform:translateX(4px)}
+.btn .ar{transition:transform .16s}
+/* Hover-bewegingen enkel met een echte cursor: op touch bleven ze na een tik hangen. */
+@media (hover:hover){ .btn:hover .ar{transform:translateX(4px)} }
 /* Op een telefoon moeten de twee hero-knoppen naast elkaar blijven staan in plaats van onder
    elkaar te vallen. Ze delen de rij gelijk (flex:1 1 0) en de zijpadding krimpt, wat bij een
    rij van 340px zo'n 120px per label overlaat: goed voor veertien tekens. Blijven de labels
@@ -281,9 +286,13 @@ a.stat{position:relative}
    en dan zou de tegel er als dood tekstblok bij liggen. */
 a.stat::after{content:'\2192';position:absolute;right:.85rem;top:.9rem;font-family:'JetBrains Mono',monospace;
   font-size:.78rem;color:var(--pink);opacity:.6;transition:transform .16s,opacity .16s}
-a.stat:hover{background:var(--paper-2);border-color:var(--pink);box-shadow:var(--shadow-soft)}
-a.stat:hover .l{color:var(--pink-text)}
-a.stat:hover::after,a.stat:focus-visible::after{opacity:1;transform:translateX(3px)}
+/* Enkel met een echte cursor: op touch bleef de schaduw na een tik hangen. */
+@media (hover:hover){
+  a.stat:hover{background:var(--paper-2);border-color:var(--pink);box-shadow:var(--shadow-soft)}
+  a.stat:hover .l{color:var(--pink-text)}
+  a.stat:hover::after{opacity:1;transform:translateX(3px)}
+}
+a.stat:focus-visible::after{opacity:1;transform:translateX(3px)}
 a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .stat .n{font-family:'JetBrains Mono',monospace;font-weight:300;font-size:1.9rem;line-height:1;letter-spacing:-.02em}
 .stat .n b{color:var(--pink);font-weight:400}
@@ -333,7 +342,8 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .formule-kompas img{width:100%;height:100%;border-radius:50%;display:block;
   filter:grayscale(.55) drop-shadow(0 18px 50px rgba(72,56,38,.28));opacity:.45;
   animation:bolPuls 5s ease-in-out infinite;transition:transform .18s ease,filter .2s ease,opacity .2s ease}
-.formule-kompas:hover img,.formule-kompas:focus-visible img{filter:none;opacity:1;transform:scale(1.05)}
+@media (hover:hover){ .formule-kompas:hover img{filter:none;opacity:1;transform:scale(1.05)} }
+.formule-kompas:focus-visible img{filter:none;opacity:1;transform:scale(1.05)}
 .formule-kompas:focus-visible{outline:2px solid var(--pink);outline-offset:8px;border-radius:50%}
 @media(max-width:640px){
   /* Op smartphone hangt de mug rechts naast de titel, ter hoogte van "transparant" (de tweede
@@ -383,7 +393,7 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .kp-waar{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--pink-text);margin-top:.15rem}
 .kp-pijl{margin-left:auto;color:var(--ink-faint);transition:transform .15s,color .15s}
-.kp-lijst a:hover .kp-pijl{transform:translateX(3px);color:var(--pink-text)}
+@media (hover:hover){ .kp-lijst a:hover .kp-pijl{transform:translateX(3px);color:var(--pink-text)} }
 /* Watermerk achter de formule-kop, alleen op smartphone: daar verhuist de toren uit de hero
    hierheen. Dezelfde techniek als de bol hierboven (absoluut in de shell, z-index -1), maar
    in het roze van de hero. De dekking is laag genoeg om de kop ruim leesbaar te houden en
@@ -454,7 +464,8 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   flex-direction:column;min-height:160px;transition:background .2s}
 .cell::after{content:'';position:absolute;left:0;top:0;height:3px;width:0;background:var(--pink);
   transition:width .35s cubic-bezier(.16,1,.3,1)}
-.cell:hover{background:var(--paper-2)}.cell:hover::after{width:100%}
+.cell:hover{background:var(--paper-2)}
+@media (hover:hover){ .cell:hover::after{width:100%} }
 .cell .k{font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
 .cell h3{font-size:1.2rem;margin:.45rem 0 .5rem}
 .cell p{font-size:.9rem;color:var(--ink-2);margin:0;line-height:1.5}
@@ -469,11 +480,14 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
   transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s,border-color .28s}
 .acard::after{content:'';position:absolute;left:0;top:0;height:3px;width:0;background:var(--pink);z-index:2;
   transition:width .35s cubic-bezier(.16,1,.3,1)}
-.acard:hover{border-color:var(--pink);box-shadow:var(--shadow-lift);transform:translateY(-4px)}
-.acard:hover::after{width:100%}
+/* De lift enkel met een echte cursor: op een telefoon bleef een getikte kaart opgetild hangen. */
+@media (hover:hover){
+  .acard:hover{border-color:var(--pink);box-shadow:var(--shadow-lift);transform:translateY(-4px)}
+  .acard:hover::after{width:100%}
+}
 .acard .thumb{aspect-ratio:16/9;overflow:hidden;background:var(--bg-diep);border-bottom:1px solid var(--line)}
 .acard .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
-.acard:hover .thumb img{transform:scale(1.04)}
+@media (hover:hover){ .acard:hover .thumb img{transform:scale(1.04)} }
 .acard .body{padding:1.1rem 1.15rem 1.25rem;display:flex;flex-direction:column;flex:1}
 .topline{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;
   color:var(--ink-faint);display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
@@ -548,6 +562,13 @@ a.stat:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .lees ul li::before{content:'';position:absolute;left:-1.1rem;top:.62em;width:.4em;height:.4em;background:var(--pink)}
 .lees figure{margin:1.6rem 0;max-width:100%;border:1px solid var(--line)}
 .lees img{width:100%}
+/* Lange url's en woorden breken desnoods midden in een woord, zodat de pagina op een
+   telefoon niet zijwaarts schuift. Tabellen niet: daar blijft elk woord (en elk bedrag) heel en
+   schuift de tabel in haar eigen omhulsel, de WordPress-figure of het schuifvlak dat render()
+   rond een losse tabel zet. Afbreektekens en compactere tabellen staan in het gsm-blok. */
+.lees,.art-title,.tl .tt{overflow-wrap:anywhere}
+.lees figure.wp-block-table,.lees .tabel-schuif{overflow-x:auto}
+.lees table{overflow-wrap:normal}
 .lees blockquote{margin:1.5rem 0;padding:.4rem 0 .4rem 1.2rem;border-left:2px solid var(--pink);
   font-style:italic;color:var(--ink)}
 .lees strong{color:var(--ink)}
@@ -715,7 +736,8 @@ a.tech:hover{background:var(--paper-2)}
    hover of focus. De knop heeft al een aria-label, dus het icoon mag aria-hidden zijn. */
 .fc-hint{margin-top:auto;padding-top:.7rem;align-self:flex-end;font-size:1.2rem;line-height:1;
   color:#fff;opacity:.85;transition:transform .25s ease,opacity .2s}
-.flipcard:hover .fc-hint,.flipcard:focus-visible .fc-hint{opacity:1;transform:rotate(-45deg)}
+@media (hover:hover){ .flipcard:hover .fc-hint{opacity:1;transform:rotate(-45deg)} }
+.flipcard:focus-visible .fc-hint{opacity:1;transform:rotate(-45deg)}
 .flipcard:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
 .fc-lab{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--op-eiland-65);margin-bottom:.5rem}
 .fc-src{font-family:'JetBrains Mono',monospace;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;color:var(--eiland-pink);line-height:1.3}
@@ -745,7 +767,12 @@ a.tech:hover{background:var(--paper-2)}
   font-size:.8rem; line-height:1;
   transition:background .15s, color .15s, border-color .15s, transform .25s;
 }
-.hb-fig:hover .fc-draai,.hb-fig:focus-visible .fc-draai{
+@media (hover:hover){
+  .hb-fig:hover .fc-draai{
+    background:var(--pink-vlak-hover); color:#fff; border-color:var(--pink-vlak-hover); transform:rotate(-90deg);
+  }
+}
+.hb-fig:focus-visible .fc-draai{
   background:var(--pink-vlak-hover); color:#fff; border-color:var(--pink-vlak-hover); transform:rotate(-90deg);
 }
 /* Op een telefoon stopt de cartoon met zweven en gaat ze gecentreerd onder de tekst staan,
@@ -805,7 +832,7 @@ a.tech:hover{background:var(--paper-2)}
 /* De mug-png op het portaal is een VOLLE schijf; de toren-svg tekent r=212 in
    een viewBox van 480, dus 88,33%. Daar zet een inzet op de img dat gelijk. */
 .co-mark img{ width:88.33%; height:88.33%; margin:5.833%; }
-.co-mark:hover{ box-shadow:0 0 0 4px var(--c-pink-zacht); }
+@media (hover:hover){ .co-mark:hover{ box-shadow:0 0 0 4px var(--c-pink-zacht); } }
 .co-mark:focus-visible{ outline:2px solid var(--c-pink); outline-offset:3px; }
 .co-body{ max-width:33rem; }     /* rem, niet ch: 'ch' meet de brede nul van Geist */
 .co-zin{
@@ -842,8 +869,9 @@ a.tech:hover{background:var(--paper-2)}
 .totop.show:hover,.totop.show:focus-visible{opacity:1;border-color:var(--pink);color:var(--pink-text)}
 
 /* Eerlijke privacymelding bij het eerste bezoek (geen consent-banner: niets om toe te staan).
-   Zelfde patroon als op Denk mee met Mechelen. */
-.cookie-note{position:fixed;left:1rem;right:1rem;bottom:1rem;z-index:150;max-width:540px;margin:0 auto;
+   Zelfde patroon als op Denk mee met Mechelen. bottom wijkt voor de thuisbalk, zoals op
+   het portaal; onder 700px wint de regel bij de app-balk. */
+.cookie-note{position:fixed;left:1rem;right:1rem;bottom:max(1rem, env(safe-area-inset-bottom));z-index:150;max-width:540px;margin:0 auto;
   display:flex;align-items:center;gap:1rem;padding:.9rem 1.1rem;
   /* Donker eiland op het lichte vel, net als op denkmee en het portaal: als wit kaartje
      was dit het grootste witte vlak van de pagina. */
@@ -885,6 +913,9 @@ a.tech:hover{background:var(--paper-2)}
      12px lager, ook al klopte het op desktop al. */
   .hero{padding-top:1rem}
   .hero-meta{margin-bottom:.85rem}
+  /* In de smalle kolom breken koppen met een afbreekteken en staan tabellen compacter. */
+  .art-title,.lees h2,.lees h3{hyphens:auto}
+  .lees table{border-collapse:collapse;font-size:.92rem}
 }
 /* KORTE telefoon (SE-formaat, of zodra de adresbalk in beeld staat): daar viel de onderste rij
    tellers 24px onder de vouw, dus zag je de cockpit maar half. Hier wordt alles boven de
@@ -906,6 +937,38 @@ a.tech:hover{background:var(--paper-2)}
    de nav, bovenop de bestaande ruislaag. De deelsite had dit al; nu draagt de hele familie het. */
 body{ background-image:var(--grain-stip); background-size:3px 3px; }
 .nav{ background-image:var(--grain-stip); background-size:3px 3px; }
+
+/* App-gevoel in de hand, hetzelfde recept als Denk mee: geen tik-flits, geen wachttijd voor een
+   dubbeltik, en een korte indruk bij aanraken. Enkel op touch; met een muis verandert er niets. */
+html{ -webkit-tap-highlight-color:transparent; }
+a, button, summary, input, label{ touch-action:manipulation; }
+@media (hover:none){
+  .tabbar a:active, .acard:active, .cell:active, a.stat:active, .btn:active,
+  .fc:active, .yr:active, .doslink:active, .menu-list a:active,
+  .crumb:active, a.tech:active, .flipcard:active, .formule-kompas:active,
+  .hbb-cta:active, .nav-burger:active, .totop.show:active{
+    transform:scale(.97);
+    transition:transform .08s ease-out;
+  }
+  /* De tijdlijntitel is een inline link, en die schaalt niet: hij kleurt bij aanraken. */
+  .tl a.tt:active{ color:var(--pink-text); }
+}
+/* Vanaf 1000px staat de mug met translateY(28%) naast de kop: de indruk komt daar bovenop. */
+@media (hover:none) and (min-width:1000px){
+  .formule-kompas:active{ transform:translateY(28%) scale(.97); }
+}
+
+/* Veilige zones zijwaarts, zoals Denk mee en het portaal. Met viewport-fit=cover letterboxt Safari
+   een liggende iPhone met notch niet meer, dus de zijmarge wijkt zelf voor de uitsparing. Enkel op
+   een laag liggend venster (een telefoon); staand is de zij-inzet 0 en verandert er niets. De nav
+   is ook .shell. */
+@media (orientation:landscape) and (max-height:500px){
+  .shell, .menu-head, .co-shell{
+    padding-left:max(var(--pad-x), env(safe-area-inset-left));
+    padding-right:max(var(--pad-x), env(safe-area-inset-right));
+  }
+  .totop{ right:max(1.1rem, env(safe-area-inset-right)); }
+}
 </style>
 </head>
 <body>
@@ -1497,6 +1560,14 @@ function render(isNav){
     default: out = viewNietGevonden();
   }
   app.innerHTML = out;
+  // Een tabel buiten een WordPress-figure krijgt een eigen schuifvlak. Zo blijft ze voor een
+  // schermlezer een echte tabel.
+  if(root === 'artikel') app.querySelectorAll('.lees table').forEach(t => {
+    if(t.parentElement.closest('table, figure.wp-block-table, .tabel-schuif')) return;
+    const w = document.createElement('div');
+    w.className = 'tabel-schuif';
+    t.before(w); w.append(t);
+  });
   setActiveNav(root);
   const _mov = document.getElementById('menuOverlay');
   if(_mov && !_mov.hidden){ _mov.hidden = true; document.getElementById('burger').classList.remove('open'); document.getElementById('burger').setAttribute('aria-expanded','false'); document.body.style.overflow = ''; }
@@ -1507,8 +1578,9 @@ function render(isNav){
   const BASIS = 'Lees mee met Mechelen, het archief van As Gau Paust';
   document.title = (root === '' || root === 'ingangen' || !kop) ? BASIS : (kop.textContent.trim() + ' · Lees mee met Mechelen');
 
-  // niet scrollen bij een anker binnen beste-van
-  if(!location.hash.includes('#bv-')) window.scrollTo(0, 0);
+  // niet scrollen bij een anker binnen beste-van. 'instant' wint van scroll-behavior:smooth op
+  // html: anders glijdt de pagina zichtbaar over het nieuwe stuk omhoog.
+  if(!location.hash.includes('#bv-')) window.scrollTo({top:0, behavior:'instant'});
 
   // Bij een routewissel de focus naar de nieuwe paginakop, zodat een schermlezer de wissel
   // aankondigt en een toetsenbordgebruiker meteen in de inhoud staat. Niet bij de eerste
