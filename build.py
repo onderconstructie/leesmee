@@ -132,7 +132,7 @@ PAGINA_404 = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#FF0066">
+<meta name="theme-color" content="#f5f1e8">
 <title>Pagina niet gevonden, Lees mee met Mechelen</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="/beelden/mug.png">
