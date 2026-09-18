@@ -89,7 +89,10 @@
   --tekst:#1a1712; --tekst-2:#514a40; --pink-tekst:var(--app-text);
   --pink-zacht:var(--app-soft);
   --r-kaart:18px; --r-chip:14px; --r-input:10px;
-  --max:1180px; --pad-x:clamp(1.1rem,4vw,3rem);
+  /* Zijmarge van de schil. De ondergrens is 1rem, gelijk op de vier sites, zodat het merkwoord
+     met de mug op een telefoon overal op dezelfde plek staat. Vanaf 440px stuurt 4vw en blijft
+     het beeld precies zoals het was. */
+  --max:1180px; --pad-x:clamp(1rem,4vw,3rem);
   --display:clamp(2.3rem,6vw,4.4rem);
   --h2:clamp(1.4rem,2.6vw,2rem);
   /* Leesmaat voor lopende tekst: ~72 tekens per regel (het ideaal ligt op 60 tot 75).
