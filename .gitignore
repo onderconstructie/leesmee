@@ -31,3 +31,6 @@ _*
 *.tmp
 *.log
 *.out
+
+# Lokale knoppen (dubbelklik op dit toestel), niet nodig om te bouwen
+*.bat

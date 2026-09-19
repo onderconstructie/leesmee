@@ -1,27 +1,17 @@
 # Lees mee met Mechelen
 
-Het leesarchief van As Gau Paust: zeven jaar hyperlokale journalistiek over Mechelen
-(2016 tot 2023), gebundeld per thema en dossier, met de formule erbij: zeven overdraagbare
-technieken om een stad transparant te maken. Live op
-[leesmee.asgaupaust.be](https://leesmee.asgaupaust.be), onderdeel van
-[asgaupaust.be](https://asgaupaust.be).
+Zeven jaar hyperlokale journalistiek over Mechelen, gebundeld per thema en dossier, met de formule erbij:
+zo maak je zelf een stad transparant.
 
-Wat het archief is en hoe de formule werkt, staat op de site zelf; deze README herhaalt
-dat bewust niet. Wat er met bezoekersgegevens gebeurt:
-[asgaupaust.be/privacy](https://asgaupaust.be/privacy/).
+**[leesmee.asgaupaust.be](https://leesmee.asgaupaust.be)**
 
-## Zelf draaien
+## Zelf bouwen
 
-```bash
-python -m pip install requests     # enkel nodig om de beelden op te halen
-python run_all.py                  # de hele pijplijn → dist/
+```
+python build.py
 ```
 
-`run_all.py` orkestreert de stappen; elk script documenteert zichzelf in zijn docstring.
-De rauwe WordPress-export (`export/*.wxr`) staat bewust niet in de repo; enkel de
-gepubliceerde artikels gaan, via `leesmee_data.json`, mee naar de site.
+De artikels uit `leesmee_data.json` gaan naar `dist/`. Elke push naar `main` zet ze online.
+Elk script legt in zijn docstring uit wat het doet.
 
-## Publiceren
-
-`dist/` is de publiceerbare map: upload ze, of gebruik de GitHub Pages-workflow
-(`.github/workflows/pages.yml`, Settings → Pages → Source = "GitHub Actions").
+Onderdeel van [As Gau Paust](https://asgaupaust.be) · [Privacy](https://asgaupaust.be/privacy/)
